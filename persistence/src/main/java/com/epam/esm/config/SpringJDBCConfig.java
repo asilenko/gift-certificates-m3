@@ -1,8 +1,7 @@
 package com.epam.esm.config;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -29,31 +28,19 @@ public class SpringJDBCConfig {
     private Environment env;
 
     /**
-     * Configuration of connection pool.
-     *
-     * @return HikariConfig
-     */
-    @Bean
-    @Profile("prod")
-    public HikariConfig hikariConfigPGSQL() {
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(env.getProperty("db_url"));
-        config.setUsername(env.getProperty("db_username"));
-        config.setPassword(env.getProperty("db_password"));
-        config.setDriverClassName(env.getProperty("db_driver"));
-        return config;
-    }
-
-    /**
      * Configuration of data source for prod profile.
      *
-     * @param hikariConfigPGSQL
      * @return DataSource
      */
     @Bean
     @Profile("prod")
-    public DataSource dataSource(HikariConfig hikariConfigPGSQL) {
-        return new HikariDataSource(hikariConfigPGSQL);
+    public DataSource dataSource() {
+        DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
+        dataSourceBuilder.driverClassName(env.getProperty("db_driver"));
+        dataSourceBuilder.url(env.getProperty("db_url"));
+        dataSourceBuilder.username(env.getProperty("db_username"));
+        dataSourceBuilder.password(env.getProperty("db_password"));
+        return dataSourceBuilder.build();
     }
 
     /**

@@ -1,16 +1,24 @@
-# REST API Basics
+# REST API Advanced
 This repository holds solution for [Java Laboratory task](https://github.com/mjc-school/MJC-School/blob/old/stage%20%233/java/module%20%233.%20REST%20API%20Advanced/rest_api_advanced.md).
 
-### Task
-#### General requirements
+There are two profiles: dev and prod. Active profile can be set as JVM option, e.g.: `-Dspring.profiles.active=prod`  
+
+## Run Application: 
+- set chosen profile in api/.../resources/application.properties   
+- run:  
+  - from terminal using `mvn clean install && mvn spring-boot:run -pl api`   
+  - from IDE: run main method in api/.../GiftCertificatesApp
+
+## Task
+### General requirements
 
 - [ ] Code should be clean and should not contain any “developer-purpose” constructions.
 - [ ] App should be designed and written with respect to OOD and SOLID principles.
 - [ ] Code should contain valuable comments where appropriate.
-- [ ] Public APIs should be documented (Javadoc).
+- [x] Public APIs should be documented (Javadoc).
 - [ ] Clear layered structure should be used with responsibilities of each application layer defined.
-- [ ] JSON should be used as a format of client-server communication messages.
-- [ ] Convenient error/exception handling mechanism should be implemented: all errors should be meaningful and localized on backend side. Example: handle 404 error:
+- [x] JSON should be used as a format of client-server communication messages.
+- [x] Convenient error/exception handling mechanism should be implemented: all errors should be meaningful and localized on backend side. Example: handle 404 error:
 
       HTTP Status: 404
       response body    
@@ -21,11 +29,11 @@ This repository holds solution for [Java Laboratory task](https://github.com/mjc
 
   where *errorCode” is your custom code (it can be based on http status and requested resource - certificate or tag)
 - [ ] Abstraction should be used everywhere to avoid code duplication.
-- [ ] Several configurations should be implemented.
+- [x] Several configurations should be implemented.
 
 #### Part 1
 
-- [ ] Migrate your existing [Spring application from a previous module](https://github.com/asilenko/gift-certificates) to a Spring Boot application.
+- [x] Migrate your existing [Spring application from a previous module](https://github.com/asilenko/gift-certificates) to a Spring Boot application.
 
 #### Part 2
 
@@ -78,8 +86,8 @@ This sub-module covers following topics:
 - Hibernate specific features.
 - Spring Data
 
-# Demo
-## Practical part
+## Demo
+### Practical part
 
 -[ ] Generate for a demo at least
   -[ ] 1000 users
