@@ -1,6 +1,6 @@
 package com.epam.esm.service;
 
-import com.epam.esm.dao.jdbc.JdbcTagDAO;
+import com.epam.esm.dao.jdbc.JPATagDAO;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.model.TagBusinessModel;
@@ -26,7 +26,7 @@ class TagServiceImplTest {
     private final DataProvider dataProvider = new DataProvider();
 
     @Mock
-    private JdbcTagDAO jdbcTagDAO;
+    private JPATagDAO JPATagDAO;
 
     @Mock
     private TagMapper tagMapper;
@@ -42,7 +42,7 @@ class TagServiceImplTest {
     @Test
     void shouldReturnProperTagBusinessModelWhenResourceIsFound() throws ResourceNotFoundException {
         //GIVEN
-        when(jdbcTagDAO.findById(TAG_ID)).thenReturn(Optional.of(tag));
+        when(JPATagDAO.findById(TAG_ID)).thenReturn(Optional.of(tag));
         when(tagMapper.toTagBusinessModel(tag)).thenReturn(tagBusinessModel);
         TagBusinessModel expected = tagBusinessModel;
         //WHEN
@@ -57,7 +57,7 @@ class TagServiceImplTest {
         Set<TagBusinessModel> expected = Set.of(tagBusinessModel);
         Set<Tag> tags = Set.of(tag);
         //WHEN
-        when(jdbcTagDAO.findAll()).thenReturn(tags);
+        when(JPATagDAO.findAll()).thenReturn(tags);
         when(tagMapper.toTagBusinessModel(tag)).thenReturn(tagBusinessModel);
         Set <TagBusinessModel> actual = tagService.getAll();
         //THEN
@@ -69,7 +69,7 @@ class TagServiceImplTest {
         //GIVEN
         TagBusinessModel expected = tagBusinessModel;
         //WHEN
-        when(jdbcTagDAO.create(tag)).thenReturn(tag);
+        when(JPATagDAO.create(tag)).thenReturn(tag);
         when(tagMapper.toTag(tagBusinessModel)).thenReturn(tag);
         when(tagMapper.toTagBusinessModel(tag)).thenReturn(tagBusinessModel);
         TagBusinessModel actual = tagService.addNewTag(tagBusinessModel);
@@ -78,11 +78,11 @@ class TagServiceImplTest {
     }
 
     @Test
-    void deleteMethodShouldBeCalledWhileTagIsBeingRemoved() {
+    void deleteMethodShouldBeCalledWhileTagIsBeingRemoved() throws ResourceNotFoundException {
         //GIVEN
         //WHEN
         tagService.removeTag(TAG_ID);
         //THEN
-        verify(jdbcTagDAO, Mockito.times(1)).delete(TAG_ID);
+        verify(JPATagDAO, Mockito.times(1)).delete(TAG_ID);
     }
 }

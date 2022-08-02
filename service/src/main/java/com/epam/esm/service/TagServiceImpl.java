@@ -55,7 +55,7 @@ public class TagServiceImpl implements TagService {
      * {@inheritDoc}
      */
     @Override
-    public void removeTag(Long id) {
+    public void removeTag(Long id) throws ResourceNotFoundException {
         tagDAO.delete(id);
     }
 }

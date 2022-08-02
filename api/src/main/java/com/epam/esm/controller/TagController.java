@@ -1,8 +1,8 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.service.TagService;
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.model.TagBusinessModel;
+import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -74,7 +74,7 @@ public class TagController {
      * @param id
      */
     @DeleteMapping("/{id}")
-    public void deleteTagById(@PathVariable Long id) {
+    public void deleteTagById(@PathVariable Long id) throws ResourceNotFoundException {
         tagservice.removeTag(id);
     }
 }

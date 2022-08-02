@@ -15,7 +15,7 @@ import java.util.Set;
  */
 public class DataProvider {
 
-    private static final String NAME = "Name";
+    private static final String NAME = "name";
     private static final long ID = 1L;
     private static final int SET_QUANTITY = 3;
     private static final String DESCRIPTION = "Certificate description";

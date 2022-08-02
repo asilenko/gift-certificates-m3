@@ -3,10 +3,9 @@ package com.epam.esm.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -14,6 +13,9 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.sql.DataSource;
 
 /**
@@ -21,8 +23,7 @@ import javax.sql.DataSource;
  */
 @Configuration
 @PropertySource(value = "classpath:db.properties")
-@ComponentScan("com.epam.esm")
-public class SpringJDBCConfig {
+public class SpringConfig {
 
     @Autowired
     private Environment env;
@@ -57,6 +58,23 @@ public class SpringJDBCConfig {
     }
 
     @Bean
+    @Profile("prod")
+    public EntityManagerFactory entityManagerFactory() {
+        return Persistence.createEntityManagerFactory("prod");
+    }
+
+    @Bean
+    @Profile("dev")
+    public EntityManagerFactory devEntityManagerFactory() {
+        return Persistence.createEntityManagerFactory("dev");
+    }
+
+    @Bean
+    public EntityManager entityManager(EntityManagerFactory entityManagerFactory){
+        return entityManagerFactory.createEntityManager();
+    }
+
+    @Bean
     public DataSourceTransactionManager dataSourceTransactionManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
@@ -64,12 +82,6 @@ public class SpringJDBCConfig {
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource);
-    }
-
-    @Bean
-    public SimpleJdbcInsert simpleJdbcInsertTag(DataSource dataSource) {
-        return new SimpleJdbcInsert(dataSource)
-                .withTableName("tags").usingGeneratedKeyColumns("id");
     }
 
     @Bean

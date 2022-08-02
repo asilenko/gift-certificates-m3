@@ -22,7 +22,7 @@ public class TagMapper {
      */
     public Tag toTag(TagBusinessModel tagBusinessModel) {
         Tag tag = new Tag();
-        tag.setName(tagBusinessModel.getName());
+        tag.setName(tagBusinessModel.getName().toLowerCase());
         tag.setId(tagBusinessModel.getId());
         return tag;
     }

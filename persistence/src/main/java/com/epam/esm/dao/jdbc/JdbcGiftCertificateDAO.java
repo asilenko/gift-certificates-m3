@@ -2,6 +2,7 @@ package com.epam.esm.dao.jdbc;
 
 import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.domain.GiftCertificate;
+import com.epam.esm.domain.Tag;
 import com.epam.esm.exception.InvalidSortTypeException;
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.rowmappers.GiftCertificatesRowMapper;
@@ -10,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;

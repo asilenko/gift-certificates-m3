@@ -2,6 +2,12 @@ package com.epam.esm.domain;
 
 import org.springframework.stereotype.Component;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -10,14 +16,33 @@ import java.util.Objects;
  * Model for gift certificate entity.
  */
 @Component
+@Entity
+@Table(name = "GiftCertificates")
 public class GiftCertificate {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private Long id;
+
+    @Column(nullable = false, length = 40)
     private String name;
+
+    @Column(nullable = false, length = 500)
     private String description;
+
+    @Column(nullable = false)
     private BigDecimal price;
+
+    @Column(nullable = false)
     private int duration;
+
+    @Column(name="create_date", nullable = false)
     private LocalDateTime createDate;
+
+    @Column(name="last_update_date", nullable = false)
     private LocalDateTime lastUpdateDate;
+
+
 
     public Long getId() {
         return this.id;

@@ -2,8 +2,8 @@ package com.epam.esm.service;
 
 import com.epam.esm.dao.GiftCertificatesTagsDAO;
 import com.epam.esm.dao.jdbc.CertificateSearchCriteria;
+import com.epam.esm.dao.jdbc.JPATagDAO;
 import com.epam.esm.dao.jdbc.JdbcGiftCertificateDAO;
-import com.epam.esm.dao.jdbc.JdbcTagDAO;
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.exception.InvalidSortTypeException;
@@ -34,7 +34,7 @@ class GiftCertificateServiceImplTest {
     private JdbcGiftCertificateDAO giftCertificateDAO;
 
     @Mock
-    private JdbcTagDAO tagDAO;
+    private JPATagDAO tagDAO;
 
     @Mock
     private GiftCertificateMapper giftCertificateMapper;

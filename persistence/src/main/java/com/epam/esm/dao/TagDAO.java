@@ -1,6 +1,7 @@
 package com.epam.esm.dao;
 
 import com.epam.esm.domain.Tag;
+import com.epam.esm.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -43,7 +44,7 @@ public interface TagDAO {
      *
      * @param id
      */
-    void delete(Long id);
+    void delete(Long id) throws ResourceNotFoundException;
 
     /**
      * Retrieve all tags related to gift certificate by specified gift certificate id.

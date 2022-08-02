@@ -44,6 +44,6 @@ public interface TagService {
      *
      * @param id
      */
-    void removeTag(Long id);
+    void removeTag(Long id) throws ResourceNotFoundException;
 
 }
