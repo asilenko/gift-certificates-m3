@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -70,7 +69,7 @@ public class SpringConfig {
     }
 
     @Bean
-    public EntityManager entityManager(EntityManagerFactory entityManagerFactory){
+    public EntityManager entityManager(EntityManagerFactory entityManagerFactory) {
         return entityManagerFactory.createEntityManager();
     }
 
@@ -82,11 +81,5 @@ public class SpringConfig {
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource);
-    }
-
-    @Bean
-    public SimpleJdbcInsert simpleJdbcInsertCertificate(DataSource dataSource) {
-        return new SimpleJdbcInsert(dataSource)
-                .withTableName("GiftCertificates").usingGeneratedKeyColumns("id");
     }
 }

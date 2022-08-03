@@ -3,7 +3,7 @@ package com.epam.esm.service;
 import com.epam.esm.dao.GiftCertificatesTagsDAO;
 import com.epam.esm.dao.jdbc.CertificateSearchCriteria;
 import com.epam.esm.dao.jdbc.JPATagDAO;
-import com.epam.esm.dao.jdbc.JdbcGiftCertificateDAO;
+import com.epam.esm.dao.jdbc.JPAGiftCertificateDAO;
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.exception.InvalidSortTypeException;
@@ -31,7 +31,7 @@ class GiftCertificateServiceImplTest {
     private final DataProvider dataProvider = new DataProvider();
 
     @Mock
-    private JdbcGiftCertificateDAO giftCertificateDAO;
+    private JPAGiftCertificateDAO giftCertificateDAO;
 
     @Mock
     private JPATagDAO tagDAO;
@@ -87,7 +87,7 @@ class GiftCertificateServiceImplTest {
     }
 
     @Test
-    void deleteMethodShouldBeCalledWhileCertificateIsBeingRemoved() {
+    void deleteMethodShouldBeCalledWhileCertificateIsBeingRemoved() throws ResourceNotFoundException {
         //GIVEN
         //WHEN
         giftCertificateService.deleteById(ID);

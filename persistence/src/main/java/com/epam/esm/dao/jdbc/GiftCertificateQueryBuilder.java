@@ -15,7 +15,7 @@ import java.util.StringJoiner;
 /**
  * Builder for queries for GiftCertificate.
  *
- * @see JdbcGiftCertificateDAO
+ * @see JPAGiftCertificateDAO
  */
 @Component
 public class GiftCertificateQueryBuilder {

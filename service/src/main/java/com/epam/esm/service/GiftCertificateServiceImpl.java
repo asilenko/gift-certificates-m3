@@ -72,7 +72,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      * {@inheritDoc}
      */
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(Long id) throws ResourceNotFoundException {
         giftCertificateDAO.delete(id);
     }
 

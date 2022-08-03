@@ -37,7 +37,7 @@ public interface GiftCertificateService {
      *
      * @param id
      */
-    void deleteById(Long id);
+    void deleteById(Long id) throws ResourceNotFoundException;
 
     /**
      * Updates gift certificate with tags.

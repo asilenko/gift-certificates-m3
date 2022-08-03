@@ -25,8 +25,6 @@ import java.util.Set;
 @Repository
 public class JPATagDAO implements TagDAO {
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-    @Autowired
     EntityManager entityManager;
     private static final String GET_ALL = "FROM Tag";
     private static final String FIND_BY_NAME = "FROM Tag t WHERE t.name = ?1";
@@ -34,7 +32,7 @@ public class JPATagDAO implements TagDAO {
             "FROM GiftCertificates g " +
             "LEFT JOIN GiftCertificatesTags a ON g.ID = a.gift_certificate_id " +
             "LEFT JOIN tags t ON t.ID = a.tag_id " +
-            "WHERE gift_certificate_id = ?";
+            "WHERE gift_certificate_id = ?1";
 
     /**
      * {@inheritDoc}
@@ -94,7 +92,9 @@ public class JPATagDAO implements TagDAO {
     @Override
     @Transactional
     public Set<Tag> findAllTagsForByGiftCertificateId(long id) {
-        List<Tag> tags = jdbcTemplate.query(FIND_TAGS_RELATED_TO_CERTIFICATE, new TagRowMapper(), id);
+        List<Tag> tags = entityManager.createNativeQuery(FIND_TAGS_RELATED_TO_CERTIFICATE, Tag.class)
+                .setParameter(1, id)
+                .getResultList();
         return new HashSet<>(tags);
     }
 

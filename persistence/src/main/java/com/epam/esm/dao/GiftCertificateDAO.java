@@ -61,5 +61,5 @@ public interface GiftCertificateDAO {
      *
      * @param id
      */
-    void delete(long id);
+    void delete(long id) throws ResourceNotFoundException;
 }

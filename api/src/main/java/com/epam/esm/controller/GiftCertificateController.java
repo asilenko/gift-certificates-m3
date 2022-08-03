@@ -75,7 +75,7 @@ class GiftCertificateController {
      * @param id
      */
     @DeleteMapping("/{id}")
-    public void removeCertificateByID(@PathVariable Long id) {
+    public void removeCertificateByID(@PathVariable Long id) throws ResourceNotFoundException {
         giftCertificateService.deleteById(id);
     }
 
