@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
  * @see GiftCertificateBusinessModel
  */
 @Component
+@Transactional
 public class GiftCertificateMapper {
 
     private final TagMapper tagMapper;
@@ -26,13 +28,11 @@ public class GiftCertificateMapper {
     }
 
     /**
-     * Maps gift certificate and related tags to GiftCertificateBusinessModel.
+     * Maps GiftCertificate to GiftCertificateBusinessModel.
      *
-     * @param tags related to gift certificate
      * @return GiftCertificateBusinessModel
      */
-    @Transactional
-    public GiftCertificateBusinessModel toGiftCertificateBusinessModel(GiftCertificate giftCertificate, Set<Tag> tags) {
+    public GiftCertificateBusinessModel toGiftCertificateBusinessModel(GiftCertificate giftCertificate) {
         GiftCertificateBusinessModel giftCertificateBusinessModel = new GiftCertificateBusinessModel();
         giftCertificateBusinessModel.setId(giftCertificate.getId());
         giftCertificateBusinessModel.setName(giftCertificate.getName());
@@ -41,18 +41,16 @@ public class GiftCertificateMapper {
         giftCertificateBusinessModel.setDuration(giftCertificate.getDuration());
         giftCertificateBusinessModel.setCreateDate(dateAsISO8601(giftCertificate.getCreateDate()));
         giftCertificateBusinessModel.setLastUpdateDate(dateAsISO8601(giftCertificate.getLastUpdateDate()));
-        Set<TagBusinessModel> tagsBM = tags.stream().map(tagMapper::toTagBusinessModel).collect(Collectors.toSet());
-        giftCertificateBusinessModel.setTags(tagsBM);
+        giftCertificateBusinessModel.setTags(mapToTagBMSet(giftCertificate));
         return giftCertificateBusinessModel;
     }
 
     /**
-     * Extracts gift certificate from GiftCertificateBusinessModel.
+     * Maps GiftCertificateBusinessModel to GiftCertificate.
      *
-     * @param certificateBusinessModel
-     * @return
+     * @return GiftCertificate
      */
-    public GiftCertificate extractCertificateFromBusinessModel(GiftCertificateBusinessModel certificateBusinessModel) {
+    public GiftCertificate toGiftCertificateEntityModel(GiftCertificateBusinessModel certificateBusinessModel) {
         GiftCertificate giftCertificate = new GiftCertificate();
         giftCertificate.setId(certificateBusinessModel.getId());
         giftCertificate.setName(certificateBusinessModel.getName());
@@ -61,19 +59,22 @@ public class GiftCertificateMapper {
         giftCertificate.setDuration(certificateBusinessModel.getDuration());
         giftCertificate.setCreateDate(prepareDate(certificateBusinessModel.getCreateDate()));
         giftCertificate.setLastUpdateDate(prepareDate(certificateBusinessModel.getLastUpdateDate()));
+        giftCertificate.setTags(new HashSet<>(mapToTagSet(certificateBusinessModel)));
         return giftCertificate;
     }
 
-    /**
-     * Extracts tags related to gift certificate from GiftCertificateBusinessModel.
-     *
-     * @param certificateBusinessModel
-     * @return
-     */
-    public Set<Tag> extractTagsFromCertificateBusinessModel(GiftCertificateBusinessModel certificateBusinessModel) {
+
+    private Set<Tag> mapToTagSet(GiftCertificateBusinessModel certificateBusinessModel) {
         return certificateBusinessModel.getTags()
                 .stream()
                 .map(tagMapper::toTag)
+                .collect(Collectors.toSet());
+    }
+
+    private Set<TagBusinessModel> mapToTagBMSet(GiftCertificate giftCertificate) {
+        return giftCertificate.getTags()
+                .stream()
+                .map(tagMapper::toTagBusinessModel)
                 .collect(Collectors.toSet());
     }
 

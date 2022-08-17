@@ -6,6 +6,7 @@ import com.epam.esm.model.TagBusinessModel;
 import com.epam.esm.model.TagMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
  * {@inheritDoc}
  */
 @Service
+@Transactional
 public class TagServiceImpl implements TagService {
 
     @Autowired

@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -56,12 +55,22 @@ public class SpringConfig {
                 .build();
     }
 
+    /**
+     * Creates EntityManagerFactory for "prod" profile, based on persistence.xml
+     *
+     * @return EntityManageFactory
+     */
     @Bean
     @Profile("prod")
     public EntityManagerFactory entityManagerFactory() {
         return Persistence.createEntityManagerFactory("prod");
     }
 
+    /**
+     * Creates EntityManagerFactory for "dev" profile, based on persistence.xml
+     *
+     * @return EntityManageFactory
+     */
     @Bean
     @Profile("dev")
     public EntityManagerFactory devEntityManagerFactory() {
@@ -76,10 +85,5 @@ public class SpringConfig {
     @Bean
     public DataSourceTransactionManager dataSourceTransactionManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
-    }
-
-    @Bean
-    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
-        return new JdbcTemplate(dataSource);
     }
 }

@@ -50,6 +50,7 @@ public class DataProvider {
         giftCertificate.setDuration(DURATION);
         giftCertificate.setCreateDate(CREATE_DATE_LDT);
         giftCertificate.setLastUpdateDate(LAST_UPDATE_DATE_LDT);
+        giftCertificate.setTags(createTagsSet());
         return giftCertificate;
     }
 

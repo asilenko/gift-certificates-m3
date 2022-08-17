@@ -3,6 +3,7 @@ package com.epam.esm.model;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -20,7 +21,7 @@ public class GiftCertificateBusinessModel {
     private int duration;
     private String createDate;
     private String lastUpdateDate;
-    private Set<TagBusinessModel> tags;
+    private Set<TagBusinessModel> tags = new HashSet<>();
 
     public Long getId() {
         return id;

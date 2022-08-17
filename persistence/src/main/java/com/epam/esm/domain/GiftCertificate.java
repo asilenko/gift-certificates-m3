@@ -7,10 +7,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Model for gift certificate entity.
@@ -18,7 +24,7 @@ import java.util.Objects;
 @Component
 @Entity
 @Table(name = "GiftCertificates")
-public class GiftCertificate {
+public class GiftCertificate implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
@@ -36,12 +42,18 @@ public class GiftCertificate {
     @Column(nullable = false)
     private int duration;
 
-    @Column(name="create_date", nullable = false)
+    @Column(name = "create_date", nullable = false)
     private LocalDateTime createDate;
 
-    @Column(name="last_update_date", nullable = false)
+    @Column(name = "last_update_date", nullable = false)
     private LocalDateTime lastUpdateDate;
 
+    @ManyToMany
+    @JoinTable(
+            name = "GiftCertificatesTags",
+            joinColumns = @JoinColumn(name = "gift_certificate_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private Set<Tag> tags = new HashSet<>();
 
 
     public Long getId() {
@@ -100,6 +112,14 @@ public class GiftCertificate {
         this.lastUpdateDate = lastUpdateDate;
     }
 
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
+
     @Override
     public String toString() {
         return "GiftCertificate{" +
@@ -118,8 +138,9 @@ public class GiftCertificate {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GiftCertificate that = (GiftCertificate) o;
-        return duration == that.duration && Objects.equals(id, that.id) && Objects.equals(name, that.name)
-                && Objects.equals(description, that.description) && Objects.equals(price, that.price);
+        return duration == that.duration && id.equals(that.id) && name.equals(that.name)
+                && description.equals(that.description) && price.equals(that.price)
+                && Objects.equals(tags, that.tags);
     }
 
     @Override

@@ -1,11 +1,9 @@
 package com.epam.esm.service;
 
-import com.epam.esm.dao.GiftCertificatesTagsDAO;
 import com.epam.esm.dao.jdbc.CertificateSearchCriteria;
-import com.epam.esm.dao.jdbc.JPATagDAO;
 import com.epam.esm.dao.jdbc.JPAGiftCertificateDAO;
+import com.epam.esm.dao.jdbc.JPATagDAO;
 import com.epam.esm.domain.GiftCertificate;
-import com.epam.esm.domain.Tag;
 import com.epam.esm.exception.InvalidSortTypeException;
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.model.GiftCertificateBusinessModel;
@@ -16,9 +14,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -39,25 +37,18 @@ class GiftCertificateServiceImplTest {
     @Mock
     private GiftCertificateMapper giftCertificateMapper;
 
-    @Mock
-    private GiftCertificatesTagsDAO giftCertificatesTagsDAO;
-
     @InjectMocks
     private GiftCertificateServiceImpl giftCertificateService;
 
     private final GiftCertificateBusinessModel giftCertificateBusinessModel = dataProvider
             .createGifCertificateBusinessModel();
     private final GiftCertificate giftCertificate = dataProvider.createGifCertificate();
-    private final Set<Tag> tags = dataProvider.createTagsSet();
-
-    private final Tag tag = dataProvider.createTestTag();
 
     @Test
     void shouldReturnProperGiftCertificateBusinessModelWhenResourceIsFound() throws ResourceNotFoundException {
         //GIVEN
         when(giftCertificateDAO.findById(ID)).thenReturn(Optional.of(giftCertificate));
-        when(tagDAO.findAllTagsForByGiftCertificateId(ID)).thenReturn(tags);
-        when(giftCertificateMapper.toGiftCertificateBusinessModel(giftCertificate, tags))
+        when(giftCertificateMapper.toGiftCertificateBusinessModel(giftCertificate))
                 .thenReturn(giftCertificateBusinessModel);
         GiftCertificateBusinessModel expected = dataProvider.createGifCertificateBusinessModel();
         //WHEN
@@ -67,19 +58,15 @@ class GiftCertificateServiceImplTest {
     }
 
     @Test
+    @DirtiesContext
     void shouldReturnProperGiftCertificateBusinessModelWhenSuccessfullyAdded() {
         //GIVEN
         GiftCertificateBusinessModel expected = giftCertificateBusinessModel;
-        expected.setTags(Set.of(dataProvider.createTestTagBusinessModel()));
-        Set<Tag> tagsToAdd = Set.of(tag);
         //WHEN
-        when(giftCertificateMapper.extractCertificateFromBusinessModel(giftCertificateBusinessModel))
+        when(giftCertificateMapper.toGiftCertificateEntityModel(giftCertificateBusinessModel))
                 .thenReturn(giftCertificate);
-        when(giftCertificateMapper.extractTagsFromCertificateBusinessModel(giftCertificateBusinessModel))
-                .thenReturn(tagsToAdd);
         when(giftCertificateDAO.create(giftCertificate)).thenReturn(giftCertificate);
-        when(tagDAO.create(tag)).thenReturn(tag);
-        when(giftCertificateMapper.toGiftCertificateBusinessModel(giftCertificate, tagsToAdd))
+        when(giftCertificateMapper.toGiftCertificateBusinessModel(giftCertificate))
                 .thenReturn(giftCertificateBusinessModel);
         GiftCertificateBusinessModel actual = giftCertificateService.addNewCertificate(giftCertificateBusinessModel);
         //THEN
@@ -96,8 +83,7 @@ class GiftCertificateServiceImplTest {
     }
 
     @Test
-    void updateShouldThrowWhenCertificateWithNullIDIsPassed()
-            throws InvalidFieldValueException, ResourceNotFoundException {
+    void updateShouldThrowWhenCertificateWithNullIDIsPassed() {
         //GIVEN
         GiftCertificateBusinessModel certificate = new GiftCertificateBusinessModel();
         //WHEN

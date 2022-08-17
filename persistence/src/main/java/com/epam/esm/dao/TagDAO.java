@@ -46,11 +46,4 @@ public interface TagDAO {
      */
     void delete(Long id) throws ResourceNotFoundException;
 
-    /**
-     * Retrieve all tags related to gift certificate by specified gift certificate id.
-     *
-     * @param id of gift certificate.
-     * @return List of tags related to specified gift certificate.
-     */
-    Set <Tag> findAllTagsForByGiftCertificateId(long id);
 }
