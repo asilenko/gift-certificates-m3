@@ -1,6 +1,7 @@
 package com.epam.esm.service;
 
 import com.epam.esm.dao.TagDAO;
+import com.epam.esm.domain.Tag;
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.model.TagBusinessModel;
 import com.epam.esm.model.TagMapper;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -49,9 +51,15 @@ public class TagServiceImpl implements TagService {
      */
     @Override
     public TagBusinessModel addNewTag(TagBusinessModel tagBusinessModel) {
-        var createdTag = tagDAO.create(tagMapper.toTag(tagBusinessModel));
-        return tagMapper.toTagBusinessModel(createdTag);
-    }
+        Optional<Tag> tagFromDB = tagDAO.findByName(tagBusinessModel.getName());
+        if (tagFromDB.isEmpty()) {
+            tagBusinessModel.setId(null);
+            var createdTag = tagDAO.create(tagMapper.toTag(tagBusinessModel));
+            return tagMapper.toTagBusinessModel(createdTag);
+        } else {
+            return tagMapper.toTagBusinessModel(tagFromDB.get());
+        }
+}
 
     /**
      * {@inheritDoc}

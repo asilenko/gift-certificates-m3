@@ -1,8 +1,7 @@
 package com.epam.esm.service;
 
-import com.epam.esm.dao.jdbc.CertificateSearchCriteria;
-import com.epam.esm.dao.jdbc.JPAGiftCertificateDAO;
-import com.epam.esm.dao.jdbc.JPATagDAO;
+import com.epam.esm.dao.jpa.CertificateSearchCriteria;
+import com.epam.esm.dao.jpa.JPAGiftCertificateDAO;
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.exception.InvalidSortTypeException;
 import com.epam.esm.exception.ResourceNotFoundException;
@@ -14,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Optional;
 
@@ -27,13 +25,10 @@ import static org.mockito.Mockito.when;
 class GiftCertificateServiceImplTest {
     private static final long ID = 1L;
     private final DataProvider dataProvider = new DataProvider();
-
     @Mock
     private JPAGiftCertificateDAO giftCertificateDAO;
-
     @Mock
-    private JPATagDAO tagDAO;
-
+    private TagService tagService;
     @Mock
     private GiftCertificateMapper giftCertificateMapper;
 
@@ -58,7 +53,6 @@ class GiftCertificateServiceImplTest {
     }
 
     @Test
-    @DirtiesContext
     void shouldReturnProperGiftCertificateBusinessModelWhenSuccessfullyAdded() {
         //GIVEN
         GiftCertificateBusinessModel expected = giftCertificateBusinessModel;

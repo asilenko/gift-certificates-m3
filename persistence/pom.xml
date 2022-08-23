@@ -21,7 +21,7 @@
         <version.h2>2.1.214</version.h2>
         <version.guava>31.1-jre</version.guava>
         <version.hikariCP>5.0.1</version.hikariCP>
-        <version.postgresql>42.4.0</version.postgresql>
+        <version.postgresql>42.4.2</version.postgresql>
     </properties>
 
     <dependencies>

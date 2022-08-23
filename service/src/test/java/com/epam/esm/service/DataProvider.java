@@ -67,7 +67,7 @@ public class DataProvider {
 
     public Set<TagBusinessModel> createTagsBMSet(){
         Set<TagBusinessModel> tags = new HashSet<>();
-        for (int i = 0; i < SET_QUANTITY; i++) {
+        for (long i = 0L; i < SET_QUANTITY; i++) {
             TagBusinessModel tag = new TagBusinessModel();
             tag.setId(i);
             tag.setName(NAME + i);

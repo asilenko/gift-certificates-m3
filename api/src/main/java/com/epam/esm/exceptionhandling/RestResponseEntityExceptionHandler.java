@@ -49,7 +49,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
      * @see InvalidSortTypeException
      */
     @ExceptionHandler({InvalidSortTypeException.class})
-    public ResponseEntity<ErrorResponseBody> handleInvalidFieldValueException(final InvalidSortTypeException ex) {
+    public ResponseEntity<ErrorResponseBody> handleInvalidSortValueException(final InvalidSortTypeException ex) {
         ErrorResponseBody erb = new ErrorResponseBody(ex.getMessage(), ErrorCodes.INVALID_SORT_VALUE.getCode());
         return new ResponseEntity<>(erb, HttpStatus.BAD_REQUEST);
     }

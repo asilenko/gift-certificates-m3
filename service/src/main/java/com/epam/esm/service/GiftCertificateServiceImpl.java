@@ -2,8 +2,7 @@ package com.epam.esm.service;
 
 
 import com.epam.esm.dao.GiftCertificateDAO;
-import com.epam.esm.dao.TagDAO;
-import com.epam.esm.dao.jdbc.CertificateSearchCriteria;
+import com.epam.esm.dao.jpa.CertificateSearchCriteria;
 import com.epam.esm.exception.InvalidSortTypeException;
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.model.GiftCertificateBusinessModel;
@@ -27,7 +26,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     GiftCertificateDAO giftCertificateDAO;
 
     @Autowired
-    TagDAO tagDAO;
+    TagService tagService;
 
     @Autowired
     GiftCertificateMapper giftCertificateMapper;
@@ -47,12 +46,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      */
     @Override
     public GiftCertificateBusinessModel addNewCertificate(GiftCertificateBusinessModel certificate) {
+        prepareTags(certificate);
         var giftCertificateToCreate = giftCertificateMapper.toGiftCertificateEntityModel(certificate);
-        var tags = giftCertificateToCreate.getTags()
-                .stream()
-                .map(t -> tagDAO.create(t))
-                .collect(Collectors.toSet());
-        giftCertificateToCreate.setTags(tags);
+        giftCertificateToCreate.setId(null);
         var giftCertificateCreated = giftCertificateDAO.create(giftCertificateToCreate);
         return giftCertificateMapper.toGiftCertificateBusinessModel(giftCertificateCreated);
     }
@@ -75,14 +71,18 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         if (certificateID == null) {
             throw new InvalidFieldValueException("Certificate ID must be specified for update.");
         }
+        prepareTags(certificate);
         var certificateToUpdate = giftCertificateMapper.toGiftCertificateEntityModel(certificate);
-        var tags = certificateToUpdate.getTags()
-                .stream()
-                .map(t -> tagDAO.create(t))
-                .collect(Collectors.toSet());
-        certificateToUpdate.setTags(tags);
         var updatedGCEM = giftCertificateDAO.update(certificateToUpdate);
         return giftCertificateMapper.toGiftCertificateBusinessModel(updatedGCEM);
+    }
+
+    private void prepareTags(GiftCertificateBusinessModel certificate) {
+        var preparedTags = certificate.getTags()
+                .stream()
+                .map(t->tagService.addNewTag(t))
+                .collect(Collectors.toSet());
+        certificate.setTags(preparedTags);
     }
 
     /**

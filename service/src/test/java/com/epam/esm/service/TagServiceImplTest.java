@@ -1,6 +1,6 @@
 package com.epam.esm.service;
 
-import com.epam.esm.dao.jdbc.JPATagDAO;
+import com.epam.esm.dao.jpa.JPATagDAO;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.model.TagBusinessModel;
