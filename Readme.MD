@@ -1,8 +1,6 @@
 # REST API Advanced
 This repository holds solution for [Java Laboratory task](https://github.com/mjc-school/MJC-School/blob/old/stage%20%233/java/module%20%233.%20REST%20API%20Advanced/rest_api_advanced.md).
 
-There are two profiles: dev and prod. Active profile can be set as JVM option, e.g.: `-Dspring.profiles.active=prod`  
-
 ## Run Application: 
 - set chosen profile in api/.../resources/application.properties   
 - run:  

@@ -7,6 +7,8 @@ import com.epam.esm.model.GiftCertificateBusinessModel;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.InvalidFieldValueException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -35,8 +37,9 @@ class GiftCertificateController {
      * @return GiftCertificateBusinessModel
      */
     @GetMapping("/{id}")
-    public GiftCertificateBusinessModel getCertificateByID(@PathVariable Long id) throws ResourceNotFoundException {
-        return giftCertificateService.findCertificateById(id);
+    public ResponseEntity<GiftCertificateBusinessModel> getById(@PathVariable Long id) throws ResourceNotFoundException {
+        var giftCertificate = giftCertificateService.findCertificateById(id);
+        return new ResponseEntity<>(giftCertificate, HttpStatus.OK);
     }
 
     /**
@@ -45,7 +48,7 @@ class GiftCertificateController {
      * @param searchCriteria
      * @return List of matching certificates with tags according to search criteria. All existing certificates will be
      * returned in case no search criteria or no request body provided.
-     *
+     * <p>
      * Request example:
      * <pre>
      * GET /api/certificates/ HTTP/1.1
@@ -64,9 +67,10 @@ class GiftCertificateController {
      * @throws InvalidSortTypeException
      */
     @GetMapping
-    public List<GiftCertificateBusinessModel> getAllMatching
+    public ResponseEntity<List<GiftCertificateBusinessModel>> getAllMatching
     (@RequestBody(required = false) CertificateSearchCriteria searchCriteria) throws InvalidSortTypeException {
-        return giftCertificateService.findAllMatching(Optional.ofNullable(searchCriteria));
+        var giftCertificates = giftCertificateService.findAllMatching(Optional.ofNullable(searchCriteria));
+        return new ResponseEntity<>(giftCertificates, HttpStatus.OK);
     }
 
     /**
@@ -75,8 +79,9 @@ class GiftCertificateController {
      * @param id
      */
     @DeleteMapping("/{id}")
-    public void removeCertificateByID(@PathVariable Long id) throws ResourceNotFoundException {
+    public ResponseEntity<Void> deleteByID(@PathVariable Long id) throws ResourceNotFoundException {
         giftCertificateService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     /**
@@ -122,8 +127,9 @@ class GiftCertificateController {
      * </pre>
      */
     @PostMapping
-    public GiftCertificateBusinessModel addNewCertificate(@RequestBody GiftCertificateBusinessModel certificate) {
-        return giftCertificateService.addNewCertificate(certificate);
+    public ResponseEntity<GiftCertificateBusinessModel> create(@RequestBody GiftCertificateBusinessModel certificate) {
+        var giftCertificate = giftCertificateService.addNewCertificate(certificate);
+        return new ResponseEntity<>(giftCertificate, HttpStatus.CREATED);
     }
 
     /**
@@ -132,7 +138,7 @@ class GiftCertificateController {
      *     <li> if gift certificate is passed with tags, all other fields should be specified as well. If new tags
      *     are passed, they are being added to database.</li>
      *     <li>if certificate is passed without tags, only specified fields will be updated</li>
-     *</ul>
+     * </ul>
      * Fields with null values may be omitted.
      *
      * @param certificate
@@ -173,8 +179,9 @@ class GiftCertificateController {
      * </pre>
      */
     @PatchMapping
-    public GiftCertificateBusinessModel updateCertificate(@RequestBody GiftCertificateBusinessModel certificate)
+    public ResponseEntity<GiftCertificateBusinessModel> updateCertificate(@RequestBody GiftCertificateBusinessModel certificate)
             throws ResourceNotFoundException, InvalidFieldValueException {
-        return giftCertificateService.updateCertificate(certificate);
+        var giftCertificate = giftCertificateService.updateCertificate(certificate);
+        return new ResponseEntity<>(giftCertificate, HttpStatus.OK);
     }
 }

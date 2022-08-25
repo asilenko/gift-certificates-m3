@@ -4,6 +4,8 @@ import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.model.TagBusinessModel;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,8 +33,9 @@ public class TagController {
      * @return TagBusinessModel
      */
     @GetMapping("/{id}")
-    public TagBusinessModel getTagByID(@PathVariable Long id) throws ResourceNotFoundException {
-        return tagservice.getTagById(id);
+    public ResponseEntity<TagBusinessModel> getByID(@PathVariable Long id) throws ResourceNotFoundException {
+        var tag = tagservice.getTagById(id);
+        return new ResponseEntity<>(tag, HttpStatus.OK);
     }
 
     /**
@@ -41,8 +44,9 @@ public class TagController {
      * @return List of TagBusinessModel
      */
     @GetMapping
-    public Set<TagBusinessModel> getAllTags() {
-        return tagservice.getAll();
+    public ResponseEntity<Set<TagBusinessModel>> getAll() {
+        var tag = tagservice.getAll();
+        return new ResponseEntity<>(tag, HttpStatus.OK);
     }
 
     /**
@@ -50,7 +54,7 @@ public class TagController {
      *
      * @param tag
      * @return TagBusinessModel
-     *
+     * <p>
      * Request example:
      * <pre>
      * POST /api/tags/ HTTP/1.1
@@ -64,8 +68,9 @@ public class TagController {
      * </pre>
      */
     @PostMapping
-    public TagBusinessModel addNewTag(@RequestBody TagBusinessModel tag) {
-        return tagservice.addNewTag(tag);
+    public ResponseEntity<TagBusinessModel> create(@RequestBody TagBusinessModel tag) {
+        var createdTag = tagservice.addNewTag(tag);
+        return new ResponseEntity<>(createdTag, HttpStatus.CREATED);
     }
 
     /**
@@ -74,7 +79,8 @@ public class TagController {
      * @param id
      */
     @DeleteMapping("/{id}")
-    public void deleteTagById(@PathVariable Long id) throws ResourceNotFoundException {
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) throws ResourceNotFoundException {
         tagservice.removeTag(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
