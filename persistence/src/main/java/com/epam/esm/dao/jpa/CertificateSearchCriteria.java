@@ -2,12 +2,15 @@ package com.epam.esm.dao.jpa;
 
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Transfer data with search criteria for certificate.
  */
 @Component
 public class CertificateSearchCriteria {
-    private String tagName;
+    private List<String> tags = new ArrayList<>();
     private String certificateName;
     private String certificateDescription;
     private String sortByNameType;
@@ -16,21 +19,21 @@ public class CertificateSearchCriteria {
     public CertificateSearchCriteria() {
     }
 
-    public CertificateSearchCriteria(String tagName, String certificateName, String certificateDescription,
+    public CertificateSearchCriteria(List<String> tags, String certificateName, String certificateDescription,
                                      String sortByName, String sortByDateType) {
-        this.tagName = tagName;
+        this.tags = tags;
         this.certificateName = certificateName;
         this.certificateDescription = certificateDescription;
         this.sortByNameType = sortByName;
         this.sortByDateType = sortByDateType;
     }
 
-    public String getTagName() {
-        return tagName;
+    public List<String> getTags() {
+        return tags;
     }
 
-    public void setTagName(String tagName) {
-        this.tagName = tagName;
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
     public String getCertificateName() {

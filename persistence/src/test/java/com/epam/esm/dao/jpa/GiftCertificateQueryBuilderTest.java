@@ -5,6 +5,7 @@ import com.epam.esm.exception.InvalidSortTypeException;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -88,7 +89,7 @@ class GiftCertificateQueryBuilderTest {
     void searchQueryShouldContainAllValuesIfAllValuesArePassed() throws InvalidSortTypeException {
         //GIVEN
         CertificateSearchCriteria certificateSearchCriteria =
-                new CertificateSearchCriteria("jewelry", "hin", "Poland", "ASC", "DESC");
+                new CertificateSearchCriteria(List.of("jewelry"), "hin", "Poland", "ASC", "DESC");
         String expected = "SELECT g.* " +
                 "FROM GiftCertificates g " +
                 "LEFT JOIN GiftCertificatesTags a ON g.ID = a.gift_certificate_id " +

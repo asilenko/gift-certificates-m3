@@ -78,7 +78,7 @@ public class GiftCertificateQueryBuilder {
     }
 
     String generateSearchQuery(CertificateSearchCriteria certificateSearchCriteria) throws InvalidSortTypeException {
-        String searchQuery = (certificateSearchCriteria.getTagName() == null) ?
+        String searchQuery = (certificateSearchCriteria.getTags()==null) ?
                 SEARCH_QUERY_NO_TAG_PREFIX : SEARCH_QUERY_WITH_TAG_PREFIX;
         searchQuery = collectSearchCriteria(certificateSearchCriteria, searchQuery);
         searchQuery = collectSortParams(certificateSearchCriteria, searchQuery);
@@ -114,8 +114,8 @@ public class GiftCertificateQueryBuilder {
 
     private String collectSearchCriteria(CertificateSearchCriteria certificateSearchCriteria, String searchQuery) {
         List<String> whereParams = new ArrayList<>();
-        if (certificateSearchCriteria.getTagName() != null) {
-            whereParams.add(String.format(WHERE_TAG_NAME, certificateSearchCriteria.getTagName()));
+        if (certificateSearchCriteria.getTags() != null) {
+            whereParams.add(String.format(WHERE_TAG_NAME, certificateSearchCriteria.getTags().get(0)));
         }
         if (certificateSearchCriteria.getCertificateName() != null) {
             whereParams.add(String.format(WHERE_CERTIFICATE_NAME, certificateSearchCriteria.getCertificateName()));

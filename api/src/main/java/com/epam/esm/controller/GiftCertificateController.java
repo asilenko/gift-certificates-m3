@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -45,31 +46,39 @@ class GiftCertificateController {
     /**
      * Return list of gift certificates with tags. Results might be sorted by certificate name or creation date.
      *
-     * @param searchCriteria
+     * Output can be narrowed by search criteria:
+     * <ul>
+     *     <li> list of tags related to gift certificate,
+     *     <li> gift certificate name or part of it,
+     *     <li> gift certificate description or part of it.
+     * </ul>
      * @return List of matching certificates with tags according to search criteria. All existing certificates will be
-     * returned in case no search criteria or no request body provided.
+     * returned in case no search criteria were provided.
      * <p>
-     * Request example:
-     * <pre>
-     * GET /api/certificates/ HTTP/1.1
+     * Request example for search with few params specified:
+     * GET /certificates/?name=food&sortByDateType=DESC HTTP/1.1
      * Host: localhost:8080
-     * Content-Type: application/json
-     * Content-Length: 168
-     *
-     * {
-     *     "tagName": "drinks",
-     *     "certificateName": "Queen",
-     *     "certificateDescription": "restaurant",
-     *     "sortByNameType": "ASC",
-     *     "sortByDateType": "DESC"
-     * }
-     * </pre>
+     * <p>
+     * Request example for search with all params specified:
+     * GET /certificates/?tags=food&name=Queen&description=restaurant&sortByNameType=ASC&sortByDateType=DESC HTTP/1.1
+     * Host: localhost:8080
+     * <p>
+     * Request example to find all gift certificates:
+     * GET /certificates/ HTTP/1.1
+     * Host: localhost:8080
+     * <p>
      * @throws InvalidSortTypeException
      */
     @GetMapping
     public ResponseEntity<List<GiftCertificateBusinessModel>> getAllMatching
-    (@RequestBody(required = false) CertificateSearchCriteria searchCriteria) throws InvalidSortTypeException {
-        var giftCertificates = giftCertificateService.findAllMatching(Optional.ofNullable(searchCriteria));
+    (@RequestParam(required = false) List<String> tags,
+     @RequestParam(required = false) String name,
+     @RequestParam(required = false) String description,
+     @RequestParam(required = false) String sortByNameType,
+     @RequestParam(required = false) String sortByDateType)
+            throws InvalidSortTypeException {
+        CertificateSearchCriteria searchCriteria = new CertificateSearchCriteria(tags, name, description, sortByNameType, sortByDateType);
+        var giftCertificates = giftCertificateService.findAllMatching(Optional.of(searchCriteria));
         return new ResponseEntity<>(giftCertificates, HttpStatus.OK);
     }
 

@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -103,7 +104,7 @@ class GiftCertificateServiceImplTest {
     void findAllMatchingParamsMethodShouldBeCalledWhenSearchParamPassed() throws InvalidSortTypeException {
         //GIVEN
         Optional<CertificateSearchCriteria> searchCriteria =
-                Optional.of(new CertificateSearchCriteria("food","","","ASC",""));
+                Optional.of(new CertificateSearchCriteria(List.of("food"),"","","ASC",""));
         //WHEN
         giftCertificateService.findAllMatching(searchCriteria);
         //THEN
