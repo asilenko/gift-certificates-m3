@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -40,7 +41,7 @@ public class GiftCertificate implements Serializable {
     private BigDecimal price;
 
     @Column(nullable = false)
-    private int duration;
+    private Integer duration;
 
     @Column(name = "create_date", nullable = false)
     private LocalDateTime createDate;
@@ -48,7 +49,7 @@ public class GiftCertificate implements Serializable {
     @Column(name = "last_update_date", nullable = false)
     private LocalDateTime lastUpdateDate;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "GiftCertificatesTags",
             joinColumns = @JoinColumn(name = "gift_certificate_id"),
@@ -88,11 +89,11 @@ public class GiftCertificate implements Serializable {
         this.price = price;
     }
 
-    public int getDuration() {
+    public Integer getDuration() {
         return duration;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(Integer duration) {
         this.duration = duration;
     }
 

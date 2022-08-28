@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -23,9 +25,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Transactional
 public class JPAGiftCertificateDAO extends AbstractCrdDao<GiftCertificate> implements GiftCertificateDAO {
     @Autowired
-    private GiftCertificateQueryBuilder giftCertificateQueryBuilder;
+    private GiftCertificateQueryBuilder queryBuilder;
 
-    public JPAGiftCertificateDAO(){
+    public JPAGiftCertificateDAO() {
         setClazz(GiftCertificate.class);
     }
 
@@ -41,12 +43,11 @@ public class JPAGiftCertificateDAO extends AbstractCrdDao<GiftCertificate> imple
      * {@inheritDoc}
      */
     @Override
-    public List<GiftCertificate> findAllMatchingPrams(CertificateSearchCriteria certificateSearchCriteria)
+    public List<GiftCertificate> findAllMatchingPrams(CertificateSearchCriteria searchCriteria)
             throws InvalidSortTypeException {
-        String searchQuery = giftCertificateQueryBuilder.generateSearchQuery(certificateSearchCriteria);
-        return entityManager
-                .createNativeQuery(searchQuery, GiftCertificate.class)
-                .getResultList();
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<GiftCertificate> criteriaQuery = queryBuilder.buildCriteriaQuery(criteriaBuilder, searchCriteria);
+        return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
     /**
@@ -56,18 +57,26 @@ public class JPAGiftCertificateDAO extends AbstractCrdDao<GiftCertificate> imple
     public GiftCertificate update(GiftCertificate giftCertificate) throws ResourceNotFoundException {
         checkNotNull(giftCertificate, "Gift certificate entity is null!");
         var id = giftCertificate.getId();
-        String updateQuery = giftCertificateQueryBuilder.generateUpdateQuery(id, giftCertificate);
-        if (!updateQuery.isEmpty()) {
-            entityManager.getTransaction().begin();
-            if (giftCertificate.getTags().isEmpty()) {
-                entityManager.createNativeQuery(updateQuery).executeUpdate();
-            } else {
-                entityManager.merge(giftCertificate);
-            }
-            entityManager.getTransaction().commit();
-            entityManager.clear();
+        entityManager.getTransaction().begin();
+        GiftCertificate certificateToUpdate = findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No resource with id " + id));
+        if (giftCertificate.getName() != null) {
+            certificateToUpdate.setName(giftCertificate.getName());
         }
-        return findById(id).orElseThrow(() -> new ResourceNotFoundException("No resource with id " + id));
+        if ((giftCertificate.getDescription() != null)) {
+            certificateToUpdate.setDescription(giftCertificate.getDescription());
+        }
+        if ((giftCertificate.getPrice() != null)) {
+            certificateToUpdate.setPrice(giftCertificate.getPrice());
+        }
+        if (giftCertificate.getDuration() != null) {
+            certificateToUpdate.setDuration(giftCertificate.getDuration());
+        }
+        if (giftCertificate.getTags() != null & !giftCertificate.getTags().isEmpty()) {
+            certificateToUpdate.setTags(giftCertificate.getTags());
+        }
+        entityManager.getTransaction().commit();
+        entityManager.clear();
+        return certificateToUpdate;
     }
-
 }
