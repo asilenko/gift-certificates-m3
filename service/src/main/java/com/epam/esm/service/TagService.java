@@ -29,7 +29,7 @@ public interface TagService {
      *
      * @return List of tags.
      */
-    Set<TagBusinessModel> getAll();
+    Set<TagBusinessModel> getAll(Integer pageNumber, Integer pageSize);
 
     /**
      * Adds new tag to database.

@@ -39,8 +39,8 @@ public class TagServiceImpl implements TagService {
      * {@inheritDoc}
      */
     @Override
-    public Set<TagBusinessModel> getAll() {
-        return tagDAO.findAll()
+    public Set<TagBusinessModel> getAll(Integer pageNumber, Integer pageSize) {
+        return tagDAO.findAll(pageNumber, pageSize)
                 .stream()
                 .map(tagMapper::toTagBusinessModel)
                 .collect(Collectors.toSet());

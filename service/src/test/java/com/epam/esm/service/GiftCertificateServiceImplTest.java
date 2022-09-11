@@ -25,6 +25,10 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class GiftCertificateServiceImplTest {
     private static final long ID = 1L;
+    private static final Integer PAGE_NUMBER = 1;
+    private static final Integer PAGE_SIZE = 10;
+    private static final int NUMBER_OF_INVOCATIONS = 1;
+    private static final String EMPTY_STRING = "";
     private final DataProvider dataProvider = new DataProvider();
     @Mock
     private JPAGiftCertificateDAO giftCertificateDAO;
@@ -74,7 +78,7 @@ class GiftCertificateServiceImplTest {
         //WHEN
         giftCertificateService.deleteById(ID);
         //THEN
-        verify(giftCertificateDAO, Mockito.times(1)).delete(ID);
+        verify(giftCertificateDAO, Mockito.times(NUMBER_OF_INVOCATIONS)).delete(ID);
     }
 
     @Test
@@ -95,20 +99,20 @@ class GiftCertificateServiceImplTest {
         //GIVEN
         Optional<CertificateSearchCriteria> searchCriteria = Optional.empty();
         //WHEN
-        giftCertificateService.findAllMatching(searchCriteria);
+        giftCertificateService.findAllMatching(searchCriteria, PAGE_NUMBER, PAGE_SIZE);
         //THEN
-        verify(giftCertificateDAO, Mockito.times(1)).findAll();
+        verify(giftCertificateDAO, Mockito.times(NUMBER_OF_INVOCATIONS)).findAll(PAGE_NUMBER, PAGE_SIZE);
     }
 
     @Test
     void findAllMatchingParamsMethodShouldBeCalledWhenSearchParamPassed() throws InvalidSortTypeException {
         //GIVEN
         Optional<CertificateSearchCriteria> searchCriteria =
-                Optional.of(new CertificateSearchCriteria(List.of("food"),"","","ASC",""));
+                Optional.of(new CertificateSearchCriteria(List.of("food"),EMPTY_STRING,EMPTY_STRING,"ASC",EMPTY_STRING));
         //WHEN
-        giftCertificateService.findAllMatching(searchCriteria);
+        giftCertificateService.findAllMatching(searchCriteria, PAGE_NUMBER,PAGE_SIZE);
         //THEN
-        verify(giftCertificateDAO, Mockito.times(1)).findAllMatchingPrams(searchCriteria.get());
+        verify(giftCertificateDAO, Mockito.times(NUMBER_OF_INVOCATIONS)).findAllMatchingPrams(
+                searchCriteria.get(), PAGE_NUMBER, PAGE_SIZE);
     }
-
 }

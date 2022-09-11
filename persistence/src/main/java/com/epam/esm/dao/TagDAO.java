@@ -1,6 +1,5 @@
 package com.epam.esm.dao;
 
-import com.epam.esm.dao.jpa.CrdDao;
 import com.epam.esm.domain.Tag;
 import org.springframework.stereotype.Repository;
 

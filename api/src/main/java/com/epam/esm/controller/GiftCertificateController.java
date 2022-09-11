@@ -27,9 +27,13 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/certificates")
-class GiftCertificateController {
+public class GiftCertificateController {
+    private GiftCertificateService giftCertificateService;
+
     @Autowired
-    GiftCertificateService giftCertificateService;
+    private GiftCertificateController(GiftCertificateService giftCertificateService) {
+        this.giftCertificateService = giftCertificateService;
+    }
 
     /**
      * Get Gift certificate resource by specified id.
@@ -60,7 +64,7 @@ class GiftCertificateController {
      * Host: localhost:8080
      * <p>
      * Request example for search with all params specified:
-     * GET /certificates/?tags=food&name=Queen&description=restaurant&sortByNameType=ASC&sortByDateType=DESC HTTP/1.1
+     * GET /certificates/?tags=food,handmade&name=Queen&description=restaurant&sortByNameType=ASC&sortByDateType=DESC&pageNumber=1&pageSize=2 HTTP/1.1
      * Host: localhost:8080
      * <p>
      * Request example to find all gift certificates:
@@ -75,10 +79,14 @@ class GiftCertificateController {
      @RequestParam(required = false) String name,
      @RequestParam(required = false) String description,
      @RequestParam(required = false) String sortByNameType,
-     @RequestParam(required = false) String sortByDateType)
+     @RequestParam(required = false) String sortByDateType,
+     @RequestParam(defaultValue = "1") Integer pageNumber,
+     @RequestParam(defaultValue = "20") Integer pageSize)
             throws InvalidSortTypeException {
-        CertificateSearchCriteria searchCriteria = new CertificateSearchCriteria(tags, name, description, sortByNameType, sortByDateType);
-        var giftCertificates = giftCertificateService.findAllMatching(Optional.of(searchCriteria));
+        CertificateSearchCriteria searchCriteria = new CertificateSearchCriteria(tags, name, description,
+                sortByNameType, sortByDateType);
+        var giftCertificates = giftCertificateService.findAllMatching(
+                Optional.of(searchCriteria), pageNumber, pageSize);
         return new ResponseEntity<>(giftCertificates, HttpStatus.OK);
     }
 

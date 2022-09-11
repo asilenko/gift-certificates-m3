@@ -23,6 +23,9 @@ import static org.mockito.Mockito.when;
 class TagServiceImplTest {
 
     private static final Long TAG_ID = 1L;
+    private static final Integer PAGE_NUMBER = 1;
+    private static final Integer PAGE_SIZE = 10;
+    private static final int NUMBER_OF_INVOCATIONS = 1;
     private final DataProvider dataProvider = new DataProvider();
 
     @Mock
@@ -57,9 +60,9 @@ class TagServiceImplTest {
         Set<TagBusinessModel> expected = Set.of(tagBusinessModel);
         Set<Tag> tags = Set.of(tag);
         //WHEN
-        when(JPATagDAO.findAll()).thenReturn(tags);
+        when(JPATagDAO.findAll(PAGE_NUMBER, PAGE_SIZE)).thenReturn(tags);
         when(tagMapper.toTagBusinessModel(tag)).thenReturn(tagBusinessModel);
-        Set <TagBusinessModel> actual = tagService.getAll();
+        Set <TagBusinessModel> actual = tagService.getAll(PAGE_NUMBER,PAGE_SIZE);
         //THEN
         assertEquals(expected, actual);
     }
@@ -83,6 +86,6 @@ class TagServiceImplTest {
         //WHEN
         tagService.removeTag(TAG_ID);
         //THEN
-        verify(JPATagDAO, Mockito.times(1)).delete(TAG_ID);
+        verify(JPATagDAO, Mockito.times(NUMBER_OF_INVOCATIONS)).delete(TAG_ID);
     }
 }

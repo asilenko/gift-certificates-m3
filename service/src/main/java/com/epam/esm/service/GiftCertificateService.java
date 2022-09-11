@@ -57,6 +57,7 @@ public interface GiftCertificateService {
      * returned in case no search criteria or no request body provided.
      * @throws InvalidSortTypeException
      */
-    List<GiftCertificateBusinessModel> findAllMatching(Optional<CertificateSearchCriteria> searchCriteria)
+    List<GiftCertificateBusinessModel> findAllMatching(Optional<CertificateSearchCriteria> searchCriteria,
+                                                       Integer pageNumber, Integer pageSize)
             throws InvalidSortTypeException;
 }

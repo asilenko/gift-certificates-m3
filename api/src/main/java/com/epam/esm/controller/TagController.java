@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Set;
@@ -42,10 +43,18 @@ public class TagController {
      * Gets all tags.
      *
      * @return List of TagBusinessModel
+     *
+     * Request example:
+     * <pre>
+     * GET /tags/?pageNumber=2&pageSize=10 HTTP/1.1
+     * </pre>
      */
     @GetMapping
-    public ResponseEntity<Set<TagBusinessModel>> getAll() {
-        var tag = tagservice.getAll();
+    public ResponseEntity<Set<TagBusinessModel>> getAll(
+            @RequestParam(defaultValue = "1") Integer pageNumber,
+            @RequestParam(defaultValue = "20") Integer pageSize
+    ) {
+        var tag = tagservice.getAll(pageNumber, pageSize);
         return new ResponseEntity<>(tag, HttpStatus.OK);
     }
 

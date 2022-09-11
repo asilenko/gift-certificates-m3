@@ -1,6 +1,5 @@
 package com.epam.esm.dao;
 
-import com.epam.esm.dao.jpa.CrdDao;
 import com.epam.esm.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,7 +12,7 @@ import java.util.Optional;
  * Provides implementation for CRD methods for entities.
  */
 public abstract class AbstractCrdDao<T extends Serializable> implements CrdDao<T> {
-    public Class<T> clazz;
+    protected Class<T> clazz;
 
     @Autowired
     public EntityManager entityManager;
@@ -32,8 +31,11 @@ public abstract class AbstractCrdDao<T extends Serializable> implements CrdDao<T
     /**
      * {@inheritDoc}
      */
-    public Collection<T> findAll() {
-        return entityManager.createQuery("from " + clazz.getName(), clazz).getResultList();
+    public Collection<T> findAll(Integer pageNumber, Integer pageSize) {
+        return entityManager.createQuery("from " + clazz.getName(), clazz)
+                .setFirstResult(pageSize * (pageNumber-1))
+                .setMaxResults(pageSize)
+                .getResultList();
     }
 
     /**

@@ -1,7 +1,6 @@
 package com.epam.esm.dao;
 
 import com.epam.esm.dao.jpa.CertificateSearchCriteria;
-import com.epam.esm.dao.jpa.CrdDao;
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.exception.InvalidSortTypeException;
 import com.epam.esm.exception.ResourceNotFoundException;
@@ -21,7 +20,8 @@ public interface GiftCertificateDAO extends CrdDao<GiftCertificate> {
      *
      * @return List of GiftCertificates.
      */
-    List<GiftCertificate> findAllMatchingPrams(CertificateSearchCriteria certificateSearchCriteria)
+    List<GiftCertificate> findAllMatchingPrams(CertificateSearchCriteria certificateSearchCriteria,
+                                               Integer pageNumber, Integer pageSize)
             throws InvalidSortTypeException;
 
     /**

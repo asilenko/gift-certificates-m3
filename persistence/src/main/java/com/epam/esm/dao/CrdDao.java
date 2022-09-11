@@ -1,4 +1,4 @@
-package com.epam.esm.dao.jpa;
+package com.epam.esm.dao;
 
 import com.epam.esm.exception.ResourceNotFoundException;
 
@@ -23,7 +23,7 @@ public interface CrdDao<T> {
      *
      * @return List of EntityModels.
      */
-    Collection<T> findAll();
+    Collection<T> findAll(Integer pageNumber, Integer pageSize);
 
     /**
      * Adds new Entity to the database.

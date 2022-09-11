@@ -24,30 +24,35 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Repository
 @Transactional
 public class JPAGiftCertificateDAO extends AbstractCrdDao<GiftCertificate> implements GiftCertificateDAO {
+
+    private final GiftCertificateQueryBuilder queryBuilder;
+
     @Autowired
-    private GiftCertificateQueryBuilder queryBuilder;
-
-    public JPAGiftCertificateDAO() {
+    public JPAGiftCertificateDAO(GiftCertificateQueryBuilder queryBuilder) {
         setClazz(GiftCertificate.class);
+        this.queryBuilder = queryBuilder;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<GiftCertificate> findAll() {
-        return (List<GiftCertificate>) super.findAll();
+    public List<GiftCertificate> findAll(Integer pageNumber, Integer pageSize) {
+        return (List<GiftCertificate>) super.findAll(pageNumber, pageSize);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<GiftCertificate> findAllMatchingPrams(CertificateSearchCriteria searchCriteria)
-            throws InvalidSortTypeException {
+    public List<GiftCertificate> findAllMatchingPrams(CertificateSearchCriteria searchCriteria, Integer pageNumber,
+                                                      Integer pageSize) throws InvalidSortTypeException {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<GiftCertificate> criteriaQuery = queryBuilder.buildCriteriaQuery(criteriaBuilder, searchCriteria);
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        return entityManager.createQuery(criteriaQuery)
+                .setFirstResult(pageSize * (pageNumber - 1))
+                .setMaxResults(pageSize)
+                .getResultList();
     }
 
     /**

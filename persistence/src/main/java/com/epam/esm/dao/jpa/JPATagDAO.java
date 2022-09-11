@@ -30,8 +30,8 @@ public class JPATagDAO extends AbstractCrdDao<Tag> implements TagDAO {
      * {@inheritDoc}
      */
     @Override
-    public Set<Tag> findAll() {
-        return new HashSet<>(super.findAll());
+    public Set<Tag> findAll(Integer page, Integer size) {
+        return new HashSet<>(super.findAll(page, size));
     }
 
     /**

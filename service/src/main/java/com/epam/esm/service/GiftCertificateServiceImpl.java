@@ -89,15 +89,16 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      * {@inheritDoc}
      */
     @Override
-    public List<GiftCertificateBusinessModel> findAllMatching(Optional<CertificateSearchCriteria> searchCriteria)
+    public List<GiftCertificateBusinessModel> findAllMatching(Optional<CertificateSearchCriteria> searchCriteria,
+                                                              Integer pageNumber, Integer pageSize)
             throws InvalidSortTypeException {
         if (searchCriteria.isEmpty()) {
-            return giftCertificateDAO.findAll()
+            return giftCertificateDAO.findAll(pageNumber, pageSize)
                     .stream()
                     .map(g -> giftCertificateMapper.toGiftCertificateBusinessModel(g))
                     .collect(Collectors.toList());
         }
-        return giftCertificateDAO.findAllMatchingPrams(searchCriteria.get())
+        return giftCertificateDAO.findAllMatchingPrams(searchCriteria.get(), pageNumber, pageSize)
                 .stream()
                 .map(g -> giftCertificateMapper.toGiftCertificateBusinessModel(g))
                 .collect(Collectors.toList());

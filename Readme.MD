@@ -50,8 +50,8 @@ The system should be extended to expose the following REST APIs:
 - [ ] Get the most widely used tag of a user with the highest cost of all orders.
   - [ ] Create separate endpoint for this query.
   - [ ] Demonstrate SQL execution plan for this query (explain).
-- [ ] Search for gift certificates by several tags (“and” condition).
-- [ ] Pagination should be implemented for all GET endpoints. Please, create a flexible and non-erroneous solution. Handle all exceptional cases.
+- [x] Search for gift certificates by several tags (“and” condition).
+- [x] Pagination should be implemented for all GET endpoints. Please, create a flexible and non-erroneous solution. Handle all exceptional cases.
 - [ ] Support HATEOAS on REST endpoints.
 
 ##### Application requirements
