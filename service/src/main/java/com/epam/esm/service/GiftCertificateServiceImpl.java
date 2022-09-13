@@ -7,11 +7,11 @@ import com.epam.esm.exception.InvalidSortTypeException;
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.model.GiftCertificateBusinessModel;
 import com.epam.esm.model.GiftCertificateMapper;
+import com.epam.esm.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -22,14 +22,16 @@ import java.util.stream.Collectors;
 @Transactional
 public class GiftCertificateServiceImpl implements GiftCertificateService {
 
-    @Autowired
-    GiftCertificateDAO giftCertificateDAO;
+    private final GiftCertificateDAO giftCertificateDAO;
+    private final TagService tagService;
+    private final GiftCertificateMapper giftCertificateMapper;
 
     @Autowired
-    TagService tagService;
-
-    @Autowired
-    GiftCertificateMapper giftCertificateMapper;
+    public GiftCertificateServiceImpl(GiftCertificateDAO giftCertificateDAO, TagService tagService, GiftCertificateMapper giftCertificateMapper) {
+        this.giftCertificateDAO = giftCertificateDAO;
+        this.tagService = tagService;
+        this.giftCertificateMapper = giftCertificateMapper;
+    }
 
     /**
      * {@inheritDoc}
@@ -80,7 +82,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private void prepareTags(GiftCertificateBusinessModel certificate) {
         var preparedTags = certificate.getTags()
                 .stream()
-                .map(t->tagService.addNewTag(t))
+                .map(tagService::addNewTag)
                 .collect(Collectors.toSet());
         certificate.setTags(preparedTags);
     }
@@ -89,18 +91,22 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      * {@inheritDoc}
      */
     @Override
-    public List<GiftCertificateBusinessModel> findAllMatching(Optional<CertificateSearchCriteria> searchCriteria,
+    public Page<GiftCertificateBusinessModel> findAllMatching(Optional<CertificateSearchCriteria> searchCriteria,
                                                               Integer pageNumber, Integer pageSize)
             throws InvalidSortTypeException {
         if (searchCriteria.isEmpty()) {
-            return giftCertificateDAO.findAll(pageNumber, pageSize)
+            var total = giftCertificateDAO.getTotal();
+            var certificates =  giftCertificateDAO.findAll(pageNumber, pageSize)
                     .stream()
-                    .map(g -> giftCertificateMapper.toGiftCertificateBusinessModel(g))
+                    .map(giftCertificateMapper::toGiftCertificateBusinessModel)
                     .collect(Collectors.toList());
+            return new Page<>(pageNumber, pageSize, total, certificates);
         }
-        return giftCertificateDAO.findAllMatchingPrams(searchCriteria.get(), pageNumber, pageSize)
+        var total = giftCertificateDAO.getTotal(searchCriteria.get());
+        var certificates =  giftCertificateDAO.findAllMatchingPrams(searchCriteria.get(), pageNumber, pageSize)
                 .stream()
-                .map(g -> giftCertificateMapper.toGiftCertificateBusinessModel(g))
+                .map(giftCertificateMapper::toGiftCertificateBusinessModel)
                 .collect(Collectors.toList());
+        return new Page<>(pageNumber, pageSize, total, certificates);
     }
 }

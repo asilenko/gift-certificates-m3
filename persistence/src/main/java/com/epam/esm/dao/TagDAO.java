@@ -15,4 +15,8 @@ public interface TagDAO extends CrdDao<Tag> {
 
     Optional<Tag> findByName(String name);
 
+    /**
+     * Calculate total number of entities.
+     */
+    int getTotal();
 }

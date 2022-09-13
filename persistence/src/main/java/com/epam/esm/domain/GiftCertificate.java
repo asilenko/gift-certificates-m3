@@ -1,7 +1,5 @@
 package com.epam.esm.domain;
 
-import org.springframework.stereotype.Component;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,7 +20,6 @@ import java.util.Set;
 /**
  * Model for gift certificate entity.
  */
-@Component
 @Entity
 @Table(name = "GiftCertificates")
 public class GiftCertificate implements Serializable {

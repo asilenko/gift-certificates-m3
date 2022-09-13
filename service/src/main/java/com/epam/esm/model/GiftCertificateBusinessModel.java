@@ -1,6 +1,7 @@
 package com.epam.esm.model;
 
-import org.springframework.stereotype.Component;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -12,8 +13,8 @@ import java.util.Set;
  *
  * @see com.epam.esm.domain.GiftCertificate
  */
-@Component
-public class GiftCertificateBusinessModel {
+@Relation(itemRelation = "gift certificate", collectionRelation = "gift certificates")
+public class GiftCertificateBusinessModel extends RepresentationModel<GiftCertificateBusinessModel> implements BusinessModel{
     private Long id;
     private String name;
     private String description;

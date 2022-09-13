@@ -37,14 +37,6 @@ public class JPAGiftCertificateDAO extends AbstractCrdDao<GiftCertificate> imple
      * {@inheritDoc}
      */
     @Override
-    public List<GiftCertificate> findAll(Integer pageNumber, Integer pageSize) {
-        return (List<GiftCertificate>) super.findAll(pageNumber, pageSize);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public List<GiftCertificate> findAllMatchingPrams(CertificateSearchCriteria searchCriteria, Integer pageNumber,
                                                       Integer pageSize) throws InvalidSortTypeException {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -83,5 +75,16 @@ public class JPAGiftCertificateDAO extends AbstractCrdDao<GiftCertificate> imple
         entityManager.getTransaction().commit();
         entityManager.clear();
         return certificateToUpdate;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public int getTotal(CertificateSearchCriteria searchCriteria) throws InvalidSortTypeException {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<GiftCertificate> criteriaQuery = queryBuilder.buildCriteriaQuery(criteriaBuilder, searchCriteria);
+        return entityManager.createQuery(criteriaQuery)
+                .getResultList()
+                .size();
     }
 }

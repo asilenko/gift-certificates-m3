@@ -3,9 +3,8 @@ package com.epam.esm.service;
 
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.model.TagBusinessModel;
+import com.epam.esm.pagination.Page;
 import org.springframework.stereotype.Service;
-
-import java.util.Set;
 
 /**
  * Provides business operations for tag.
@@ -29,7 +28,7 @@ public interface TagService {
      *
      * @return List of tags.
      */
-    Set<TagBusinessModel> getAll(Integer pageNumber, Integer pageSize);
+    Page<TagBusinessModel> getAll(Integer pageNumber, Integer pageSize);
 
     /**
      * Adds new tag to database.

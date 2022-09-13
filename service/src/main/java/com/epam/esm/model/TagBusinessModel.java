@@ -1,6 +1,7 @@
 package com.epam.esm.model;
 
-import org.springframework.stereotype.Component;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.util.Objects;
 
@@ -9,8 +10,8 @@ import java.util.Objects;
  *
  * @see com.epam.esm.domain.Tag
  */
-@Component
-public class TagBusinessModel {
+@Relation(itemRelation = "tag", collectionRelation = "tags")
+public class TagBusinessModel extends RepresentationModel<GiftCertificateBusinessModel> implements BusinessModel {
     private Long id;
     private String name;
 

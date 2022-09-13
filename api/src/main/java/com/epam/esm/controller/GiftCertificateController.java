@@ -3,10 +3,12 @@ package com.epam.esm.controller;
 import com.epam.esm.dao.jpa.CertificateSearchCriteria;
 import com.epam.esm.exception.InvalidSortTypeException;
 import com.epam.esm.exception.ResourceNotFoundException;
+import com.epam.esm.hateoas.GiftCertificateLinker;
 import com.epam.esm.model.GiftCertificateBusinessModel;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.InvalidFieldValueException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,11 +30,13 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/certificates")
 public class GiftCertificateController {
-    private GiftCertificateService giftCertificateService;
+    private final GiftCertificateService giftCertificateService;
+    private final GiftCertificateLinker giftCertificateLinker;
 
     @Autowired
-    private GiftCertificateController(GiftCertificateService giftCertificateService) {
+    public GiftCertificateController(GiftCertificateService giftCertificateService, GiftCertificateLinker giftCertificateLinker) {
         this.giftCertificateService = giftCertificateService;
+        this.giftCertificateLinker = giftCertificateLinker;
     }
 
     /**
@@ -44,6 +48,7 @@ public class GiftCertificateController {
     @GetMapping("/{id}")
     public ResponseEntity<GiftCertificateBusinessModel> getById(@PathVariable Long id) throws ResourceNotFoundException {
         var giftCertificate = giftCertificateService.findCertificateById(id);
+        giftCertificateLinker.addLink(giftCertificate);
         return new ResponseEntity<>(giftCertificate, HttpStatus.OK);
     }
 
@@ -74,7 +79,7 @@ public class GiftCertificateController {
      * @throws InvalidSortTypeException
      */
     @GetMapping
-    public ResponseEntity<List<GiftCertificateBusinessModel>> getAllMatching
+    public ResponseEntity<CollectionModel<GiftCertificateBusinessModel>> getAllMatching
     (@RequestParam(required = false) List<String> tags,
      @RequestParam(required = false) String name,
      @RequestParam(required = false) String description,
@@ -82,12 +87,14 @@ public class GiftCertificateController {
      @RequestParam(required = false) String sortByDateType,
      @RequestParam(defaultValue = "1") Integer pageNumber,
      @RequestParam(defaultValue = "20") Integer pageSize)
-            throws InvalidSortTypeException {
+            throws InvalidSortTypeException, ResourceNotFoundException {
         CertificateSearchCriteria searchCriteria = new CertificateSearchCriteria(tags, name, description,
                 sortByNameType, sortByDateType);
-        var giftCertificates = giftCertificateService.findAllMatching(
+        var page = giftCertificateService.findAllMatching(
                 Optional.of(searchCriteria), pageNumber, pageSize);
-        return new ResponseEntity<>(giftCertificates, HttpStatus.OK);
+        CollectionModel<GiftCertificateBusinessModel> collectionModel = giftCertificateLinker.addLinks(page, tags, name,
+                description, sortByNameType, sortByDateType);
+        return ResponseEntity.ok(collectionModel);
     }
 
     /**
@@ -146,6 +153,7 @@ public class GiftCertificateController {
     @PostMapping
     public ResponseEntity<GiftCertificateBusinessModel> create(@RequestBody GiftCertificateBusinessModel certificate) {
         var giftCertificate = giftCertificateService.addNewCertificate(certificate);
+        giftCertificateLinker.addLink(giftCertificate);
         return new ResponseEntity<>(giftCertificate, HttpStatus.CREATED);
     }
 
@@ -199,6 +207,7 @@ public class GiftCertificateController {
     public ResponseEntity<GiftCertificateBusinessModel> updateCertificate(@RequestBody GiftCertificateBusinessModel certificate)
             throws ResourceNotFoundException, InvalidFieldValueException {
         var giftCertificate = giftCertificateService.updateCertificate(certificate);
+        giftCertificateLinker.addLink(giftCertificate);
         return new ResponseEntity<>(giftCertificate, HttpStatus.OK);
     }
 }

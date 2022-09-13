@@ -32,4 +32,14 @@ public interface GiftCertificateDAO extends CrdDao<GiftCertificate> {
      * @throws ResourceNotFoundException
      */
     GiftCertificate update(GiftCertificate dao) throws ResourceNotFoundException;
+
+    /**
+     * Calculate total number of entities matching search criteria.
+     */
+    int getTotal(CertificateSearchCriteria searchCriteria) throws InvalidSortTypeException;
+
+    /**
+     * Calculate total number of entities.
+     */
+    int getTotal();
 }

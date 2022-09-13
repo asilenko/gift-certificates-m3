@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -57,12 +58,12 @@ class TagServiceImplTest {
     @Test
     void shouldReturnTagsListWhenResourceIsFound() {
         //GIVEN
-        Set<TagBusinessModel> expected = Set.of(tagBusinessModel);
-        Set<Tag> tags = Set.of(tag);
+        List<TagBusinessModel> expected = List.of(tagBusinessModel);
+        List<Tag> tags = List.of(tag);
         //WHEN
         when(JPATagDAO.findAll(PAGE_NUMBER, PAGE_SIZE)).thenReturn(tags);
         when(tagMapper.toTagBusinessModel(tag)).thenReturn(tagBusinessModel);
-        Set <TagBusinessModel> actual = tagService.getAll(PAGE_NUMBER,PAGE_SIZE);
+        List <TagBusinessModel> actual = tagService.getAll(PAGE_NUMBER,PAGE_SIZE).getContent();
         //THEN
         assertEquals(expected, actual);
     }

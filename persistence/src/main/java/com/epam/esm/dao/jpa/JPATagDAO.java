@@ -6,9 +6,7 @@ import com.epam.esm.domain.Tag;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * Holds logic to access data for Tag Entity.
@@ -24,14 +22,6 @@ public class JPATagDAO extends AbstractCrdDao<Tag> implements TagDAO {
 
     public JPATagDAO() {
         setClazz(Tag.class);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Set<Tag> findAll(Integer page, Integer size) {
-        return new HashSet<>(super.findAll(page, size));
     }
 
     /**

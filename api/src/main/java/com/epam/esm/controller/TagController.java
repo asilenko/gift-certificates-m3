@@ -1,9 +1,11 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.exception.ResourceNotFoundException;
+import com.epam.esm.hateoas.TagLinker;
 import com.epam.esm.model.TagBusinessModel;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Set;
-
 /**
  * Process requests for Tag resources.
  */
@@ -24,8 +24,14 @@ import java.util.Set;
 @RequestMapping("/tags")
 public class TagController {
 
+    private final TagService tagservice;
+    private final TagLinker tagLinker;
+
     @Autowired
-    private TagService tagservice;
+    public TagController(TagService tagservice, TagLinker tagLinker) {
+        this.tagservice = tagservice;
+        this.tagLinker = tagLinker;
+    }
 
     /**
      * Get tag resource by specified id.
@@ -36,6 +42,7 @@ public class TagController {
     @GetMapping("/{id}")
     public ResponseEntity<TagBusinessModel> getByID(@PathVariable Long id) throws ResourceNotFoundException {
         var tag = tagservice.getTagById(id);
+        tagLinker.addLink(tag);
         return new ResponseEntity<>(tag, HttpStatus.OK);
     }
 
@@ -50,12 +57,13 @@ public class TagController {
      * </pre>
      */
     @GetMapping
-    public ResponseEntity<Set<TagBusinessModel>> getAll(
+    public ResponseEntity<CollectionModel<TagBusinessModel>> getAll(
             @RequestParam(defaultValue = "1") Integer pageNumber,
             @RequestParam(defaultValue = "20") Integer pageSize
     ) {
-        var tag = tagservice.getAll(pageNumber, pageSize);
-        return new ResponseEntity<>(tag, HttpStatus.OK);
+        var page = tagservice.getAll(pageNumber, pageSize);
+        CollectionModel<TagBusinessModel> collectionModel = tagLinker.addLinks(page);
+        return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
 
     /**
@@ -79,6 +87,7 @@ public class TagController {
     @PostMapping
     public ResponseEntity<TagBusinessModel> create(@RequestBody TagBusinessModel tag) {
         var createdTag = tagservice.addNewTag(tag);
+        tagLinker.addLink(createdTag);
         return new ResponseEntity<>(createdTag, HttpStatus.CREATED);
     }
 

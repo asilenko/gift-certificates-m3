@@ -4,8 +4,8 @@ import com.epam.esm.dao.jpa.CertificateSearchCriteria;
 import com.epam.esm.exception.InvalidSortTypeException;
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.model.GiftCertificateBusinessModel;
+import com.epam.esm.pagination.Page;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -53,11 +53,11 @@ public interface GiftCertificateService {
      * Return list of gift certificates with tags. Results might be sorted by certificate name or creation date.
      *
      * @param searchCriteria
-     * @return List of matching certificates with tags according to search criteria. All existing certificates will be
-     * returned in case no search criteria or no request body provided.
+     * @return Page with list of matching certificates with tags according to search criteria. All existing certificates
+     * will be returned in case no search criteria or no request body provided.
      * @throws InvalidSortTypeException
      */
-    List<GiftCertificateBusinessModel> findAllMatching(Optional<CertificateSearchCriteria> searchCriteria,
+    Page<GiftCertificateBusinessModel> findAllMatching(Optional<CertificateSearchCriteria> searchCriteria,
                                                        Integer pageNumber, Integer pageSize)
             throws InvalidSortTypeException;
 }

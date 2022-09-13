@@ -5,12 +5,12 @@ import com.epam.esm.domain.Tag;
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.model.TagBusinessModel;
 import com.epam.esm.model.TagMapper;
+import com.epam.esm.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -20,11 +20,14 @@ import java.util.stream.Collectors;
 @Transactional
 public class TagServiceImpl implements TagService {
 
-    @Autowired
-    TagMapper tagMapper;
+    private final TagMapper tagMapper;
+    private final TagDAO tagDAO;
 
     @Autowired
-    private TagDAO tagDAO;
+    public TagServiceImpl(TagMapper tagMapper, TagDAO tagDAO) {
+        this.tagMapper = tagMapper;
+        this.tagDAO = tagDAO;
+    }
 
     /**
      * {@inheritDoc}
@@ -39,11 +42,13 @@ public class TagServiceImpl implements TagService {
      * {@inheritDoc}
      */
     @Override
-    public Set<TagBusinessModel> getAll(Integer pageNumber, Integer pageSize) {
-        return tagDAO.findAll(pageNumber, pageSize)
+    public Page<TagBusinessModel> getAll(Integer pageNumber, Integer pageSize) {
+        var tags = tagDAO.findAll(pageNumber, pageSize)
                 .stream()
                 .map(tagMapper::toTagBusinessModel)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
+        var total = tagDAO.getTotal();
+        return new Page<>(pageNumber, pageSize, total, tags);
     }
 
     /**
@@ -51,7 +56,7 @@ public class TagServiceImpl implements TagService {
      */
     @Override
     public TagBusinessModel addNewTag(TagBusinessModel tagBusinessModel) {
-        Optional<Tag> tagFromDB = tagDAO.findByName(tagBusinessModel.getName());
+        Optional<Tag> tagFromDB = tagDAO.findByName(tagBusinessModel.getName().toLowerCase().trim());
         if (tagFromDB.isEmpty()) {
             tagBusinessModel.setId(null);
             var createdTag = tagDAO.create(tagMapper.toTag(tagBusinessModel));

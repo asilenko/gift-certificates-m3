@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -31,9 +31,9 @@ public abstract class AbstractCrdDao<T extends Serializable> implements CrdDao<T
     /**
      * {@inheritDoc}
      */
-    public Collection<T> findAll(Integer pageNumber, Integer pageSize) {
+    public List<T> findAll(Integer pageNumber, Integer pageSize) {
         return entityManager.createQuery("from " + clazz.getName(), clazz)
-                .setFirstResult(pageSize * (pageNumber-1))
+                .setFirstResult(pageSize * (pageNumber - 1))
                 .setMaxResults(pageSize)
                 .getResultList();
     }
@@ -62,5 +62,14 @@ public abstract class AbstractCrdDao<T extends Serializable> implements CrdDao<T
             entityManager.getTransaction().commit();
             entityManager.clear();
         }
+    }
+
+    /**
+     * Calculate total number of entities.
+     */
+    public int getTotal() {
+        return entityManager.createQuery("from " + clazz.getName(), clazz)
+                .getResultList()
+                .size();
     }
 }
