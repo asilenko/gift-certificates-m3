@@ -34,7 +34,7 @@ public class Page<T extends BusinessModel> {
     }
 
     public boolean hasNext(){
-        return number + 1 < getTotalPages();
+        return number + 1 <= getTotalPages();
 
     }
 
