@@ -41,7 +41,7 @@ public class GiftCertificateMapper {
         giftCertificateBusinessModel.setDuration(giftCertificate.getDuration());
         giftCertificateBusinessModel.setCreateDate(dateAsISO8601(giftCertificate.getCreateDate()));
         giftCertificateBusinessModel.setLastUpdateDate(dateAsISO8601(giftCertificate.getLastUpdateDate()));
-        giftCertificateBusinessModel.setTags(mapToTagBMSet(giftCertificate));
+        giftCertificateBusinessModel.setTags(extractTags(giftCertificate));
         return giftCertificateBusinessModel;
     }
 
@@ -59,19 +59,19 @@ public class GiftCertificateMapper {
         giftCertificate.setDuration(certificateBusinessModel.getDuration());
         giftCertificate.setCreateDate(prepareDate(certificateBusinessModel.getCreateDate()));
         giftCertificate.setLastUpdateDate(prepareDate(certificateBusinessModel.getLastUpdateDate()));
-        giftCertificate.setTags(new HashSet<>(mapToTagSet(certificateBusinessModel)));
+        giftCertificate.setTags(new HashSet<>(extractTags(certificateBusinessModel)));
         return giftCertificate;
     }
 
 
-    private Set<Tag> mapToTagSet(GiftCertificateBusinessModel certificateBusinessModel) {
+    private Set<Tag> extractTags(GiftCertificateBusinessModel certificateBusinessModel) {
         return certificateBusinessModel.getTags()
                 .stream()
                 .map(tagMapper::toTag)
                 .collect(Collectors.toSet());
     }
 
-    private Set<TagBusinessModel> mapToTagBMSet(GiftCertificate giftCertificate) {
+    private Set<TagBusinessModel> extractTags(GiftCertificate giftCertificate) {
         return giftCertificate.getTags()
                 .stream()
                 .map(tagMapper::toTagBusinessModel)

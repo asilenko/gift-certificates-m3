@@ -1,7 +1,6 @@
 package com.epam.esm.service;
 
 
-import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.model.TagBusinessModel;
 import com.epam.esm.pagination.Page;
 import org.springframework.stereotype.Service;
@@ -12,37 +11,14 @@ import org.springframework.stereotype.Service;
  * @see com.epam.esm.domain.Tag
  */
 @Service
-public interface TagService {
+public interface TagService extends CrdService <TagBusinessModel>{
 
-    /**
-     * Finds tag with specified id.
-     *
-     * @param id
-     * @return tag.
-     * @throws ResourceNotFoundException
-     */
-    TagBusinessModel getTagById(Long id) throws ResourceNotFoundException;
 
     /**
      * Finds all existing tags.
      *
      * @return List of tags.
      */
-    Page<TagBusinessModel> getAll(Integer pageNumber, Integer pageSize);
-
-    /**
-     * Adds new tag to database.
-     *
-     * @param tagBusinessModel
-     * @return tag with the assigned id.
-     */
-    TagBusinessModel addNewTag(TagBusinessModel tagBusinessModel);
-
-    /**
-     * Removes tag with specified id.
-     *
-     * @param id
-     */
-    void removeTag(Long id) throws ResourceNotFoundException;
+    Page<TagBusinessModel> findAll(Integer pageNumber, Integer pageSize);
 
 }

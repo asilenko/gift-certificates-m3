@@ -6,7 +6,6 @@ import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.model.TagBusinessModel;
 import com.epam.esm.model.TagMapper;
 import com.epam.esm.pagination.Page;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +22,6 @@ public class TagServiceImpl implements TagService {
     private final TagMapper tagMapper;
     private final TagDAO tagDAO;
 
-    @Autowired
     public TagServiceImpl(TagMapper tagMapper, TagDAO tagDAO) {
         this.tagMapper = tagMapper;
         this.tagDAO = tagDAO;
@@ -33,7 +31,7 @@ public class TagServiceImpl implements TagService {
      * {@inheritDoc}
      */
     @Override
-    public TagBusinessModel getTagById(Long id) throws ResourceNotFoundException {
+    public TagBusinessModel find(Long id) throws ResourceNotFoundException {
         return tagMapper.toTagBusinessModel(tagDAO.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No resource with id " + id)));
     }
@@ -42,7 +40,7 @@ public class TagServiceImpl implements TagService {
      * {@inheritDoc}
      */
     @Override
-    public Page<TagBusinessModel> getAll(Integer pageNumber, Integer pageSize) {
+    public Page<TagBusinessModel> findAll(Integer pageNumber, Integer pageSize) {
         var tags = tagDAO.findAll(pageNumber, pageSize)
                 .stream()
                 .map(tagMapper::toTagBusinessModel)
@@ -55,7 +53,7 @@ public class TagServiceImpl implements TagService {
      * {@inheritDoc}
      */
     @Override
-    public TagBusinessModel addNewTag(TagBusinessModel tagBusinessModel) {
+    public TagBusinessModel create(TagBusinessModel tagBusinessModel) {
         Optional<Tag> tagFromDB = tagDAO.findByName(tagBusinessModel.getName().toLowerCase().trim());
         if (tagFromDB.isEmpty()) {
             tagBusinessModel.setId(null);
@@ -70,7 +68,7 @@ public class TagServiceImpl implements TagService {
      * {@inheritDoc}
      */
     @Override
-    public void removeTag(Long id) throws ResourceNotFoundException {
+    public void delete(Long id) throws ResourceNotFoundException {
         tagDAO.delete(id);
     }
 }

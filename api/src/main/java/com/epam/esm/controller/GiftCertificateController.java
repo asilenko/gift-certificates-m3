@@ -7,7 +7,6 @@ import com.epam.esm.hateoas.GiftCertificateLinker;
 import com.epam.esm.model.GiftCertificateBusinessModel;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.InvalidFieldValueException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +32,6 @@ public class GiftCertificateController {
     private final GiftCertificateService giftCertificateService;
     private final GiftCertificateLinker giftCertificateLinker;
 
-    @Autowired
     public GiftCertificateController(GiftCertificateService giftCertificateService, GiftCertificateLinker giftCertificateLinker) {
         this.giftCertificateService = giftCertificateService;
         this.giftCertificateLinker = giftCertificateLinker;
@@ -47,7 +45,7 @@ public class GiftCertificateController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<GiftCertificateBusinessModel> getById(@PathVariable Long id) throws ResourceNotFoundException {
-        var giftCertificate = giftCertificateService.findCertificateById(id);
+        var giftCertificate = giftCertificateService.find(id);
         giftCertificateLinker.addLink(giftCertificate);
         return new ResponseEntity<>(giftCertificate, HttpStatus.OK);
     }
@@ -104,7 +102,7 @@ public class GiftCertificateController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteByID(@PathVariable Long id) throws ResourceNotFoundException {
-        giftCertificateService.deleteById(id);
+        giftCertificateService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -152,7 +150,7 @@ public class GiftCertificateController {
      */
     @PostMapping
     public ResponseEntity<GiftCertificateBusinessModel> create(@RequestBody GiftCertificateBusinessModel certificate) {
-        var giftCertificate = giftCertificateService.addNewCertificate(certificate);
+        var giftCertificate = giftCertificateService.create(certificate);
         giftCertificateLinker.addLink(giftCertificate);
         return new ResponseEntity<>(giftCertificate, HttpStatus.CREATED);
     }
@@ -206,7 +204,7 @@ public class GiftCertificateController {
     @PatchMapping
     public ResponseEntity<GiftCertificateBusinessModel> updateCertificate(@RequestBody GiftCertificateBusinessModel certificate)
             throws ResourceNotFoundException, InvalidFieldValueException {
-        var giftCertificate = giftCertificateService.updateCertificate(certificate);
+        var giftCertificate = giftCertificateService.update(certificate);
         giftCertificateLinker.addLink(giftCertificate);
         return new ResponseEntity<>(giftCertificate, HttpStatus.OK);
     }

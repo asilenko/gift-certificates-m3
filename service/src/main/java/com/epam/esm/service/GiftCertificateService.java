@@ -13,31 +13,7 @@ import java.util.Optional;
  *
  * @see com.epam.esm.domain.GiftCertificate
  */
-public interface GiftCertificateService {
-
-    /**
-     * Finds a gift certificate with tags by specified id.
-     *
-     * @param id
-     * @return tag.
-     * @throws ResourceNotFoundException
-     */
-    GiftCertificateBusinessModel findCertificateById(Long id) throws ResourceNotFoundException;
-
-    /**
-     * Creates new gift certificate with tags.
-     *
-     * @param giftCertificateBusinessModel
-     * @return
-     */
-    GiftCertificateBusinessModel addNewCertificate(GiftCertificateBusinessModel giftCertificateBusinessModel);
-
-    /**
-     * Deletes gift certificate by specified id.
-     *
-     * @param id
-     */
-    void deleteById(Long id) throws ResourceNotFoundException;
+public interface GiftCertificateService extends CrdService <GiftCertificateBusinessModel>{
 
     /**
      * Updates gift certificate with tags.
@@ -46,7 +22,7 @@ public interface GiftCertificateService {
      * @return
      * @throws ResourceNotFoundException
      */
-    GiftCertificateBusinessModel updateCertificate(GiftCertificateBusinessModel giftCertificateBusinessModel)
+    GiftCertificateBusinessModel update(GiftCertificateBusinessModel giftCertificateBusinessModel)
             throws ResourceNotFoundException, InvalidFieldValueException;
 
     /**

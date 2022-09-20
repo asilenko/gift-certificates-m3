@@ -50,7 +50,7 @@ class TagServiceImplTest {
         when(tagMapper.toTagBusinessModel(tag)).thenReturn(tagBusinessModel);
         TagBusinessModel expected = tagBusinessModel;
         //WHEN
-        var actual = tagService.getTagById(TAG_ID);
+        var actual = tagService.find(TAG_ID);
         //THEN
         assertEquals(expected, actual);
     }
@@ -63,7 +63,7 @@ class TagServiceImplTest {
         //WHEN
         when(JPATagDAO.findAll(PAGE_NUMBER, PAGE_SIZE)).thenReturn(tags);
         when(tagMapper.toTagBusinessModel(tag)).thenReturn(tagBusinessModel);
-        List <TagBusinessModel> actual = tagService.getAll(PAGE_NUMBER,PAGE_SIZE).getContent();
+        List <TagBusinessModel> actual = tagService.findAll(PAGE_NUMBER,PAGE_SIZE).getContent();
         //THEN
         assertEquals(expected, actual);
     }
@@ -76,7 +76,7 @@ class TagServiceImplTest {
         when(JPATagDAO.create(tag)).thenReturn(tag);
         when(tagMapper.toTag(tagBusinessModel)).thenReturn(tag);
         when(tagMapper.toTagBusinessModel(tag)).thenReturn(tagBusinessModel);
-        TagBusinessModel actual = tagService.addNewTag(tagBusinessModel);
+        TagBusinessModel actual = tagService.create(tagBusinessModel);
         //THEN
         assertEquals(expected, actual);
     }
@@ -85,7 +85,7 @@ class TagServiceImplTest {
     void deleteMethodShouldBeCalledWhileTagIsBeingRemoved() throws ResourceNotFoundException {
         //GIVEN
         //WHEN
-        tagService.removeTag(TAG_ID);
+        tagService.delete(TAG_ID);
         //THEN
         verify(JPATagDAO, Mockito.times(NUMBER_OF_INVOCATIONS)).delete(TAG_ID);
     }

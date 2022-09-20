@@ -8,7 +8,6 @@ import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.model.GiftCertificateBusinessModel;
 import com.epam.esm.model.GiftCertificateMapper;
 import com.epam.esm.pagination.Page;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +25,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final TagService tagService;
     private final GiftCertificateMapper giftCertificateMapper;
 
-    @Autowired
     public GiftCertificateServiceImpl(GiftCertificateDAO giftCertificateDAO, TagService tagService, GiftCertificateMapper giftCertificateMapper) {
         this.giftCertificateDAO = giftCertificateDAO;
         this.tagService = tagService;
@@ -37,7 +35,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      * {@inheritDoc}
      */
     @Override
-    public GiftCertificateBusinessModel findCertificateById(Long id) throws ResourceNotFoundException {
+    public GiftCertificateBusinessModel find(Long id) throws ResourceNotFoundException {
         var giftCertificate = giftCertificateDAO.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No resource with id " + id));
         return giftCertificateMapper.toGiftCertificateBusinessModel(giftCertificate);
@@ -47,7 +45,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      * {@inheritDoc}
      */
     @Override
-    public GiftCertificateBusinessModel addNewCertificate(GiftCertificateBusinessModel certificate) {
+    public GiftCertificateBusinessModel create(GiftCertificateBusinessModel certificate) {
         prepareTags(certificate);
         var giftCertificateToCreate = giftCertificateMapper.toGiftCertificateEntityModel(certificate);
         giftCertificateToCreate.setId(null);
@@ -59,7 +57,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      * {@inheritDoc}
      */
     @Override
-    public void deleteById(Long id) throws ResourceNotFoundException {
+    public void delete(Long id) throws ResourceNotFoundException {
         giftCertificateDAO.delete(id);
     }
 
@@ -67,7 +65,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      * {@inheritDoc}
      */
     @Override
-    public GiftCertificateBusinessModel updateCertificate(GiftCertificateBusinessModel certificate)
+    public GiftCertificateBusinessModel update(GiftCertificateBusinessModel certificate)
             throws ResourceNotFoundException, InvalidFieldValueException {
         Long certificateID = certificate.getId();
         if (certificateID == null) {
@@ -82,7 +80,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private void prepareTags(GiftCertificateBusinessModel certificate) {
         var preparedTags = certificate.getTags()
                 .stream()
-                .map(tagService::addNewTag)
+                .map(tagService::create)
                 .collect(Collectors.toSet());
         certificate.setTags(preparedTags);
     }

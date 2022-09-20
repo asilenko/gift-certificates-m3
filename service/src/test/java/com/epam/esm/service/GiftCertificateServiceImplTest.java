@@ -52,7 +52,7 @@ class GiftCertificateServiceImplTest {
                 .thenReturn(giftCertificateBusinessModel);
         GiftCertificateBusinessModel expected = dataProvider.createGifCertificateBusinessModel();
         //WHEN
-        var actual = giftCertificateService.findCertificateById(ID);
+        var actual = giftCertificateService.find(ID);
         //THEN
         assertEquals(expected, actual);
     }
@@ -67,7 +67,7 @@ class GiftCertificateServiceImplTest {
         when(giftCertificateDAO.create(giftCertificate)).thenReturn(giftCertificate);
         when(giftCertificateMapper.toGiftCertificateBusinessModel(giftCertificate))
                 .thenReturn(giftCertificateBusinessModel);
-        GiftCertificateBusinessModel actual = giftCertificateService.addNewCertificate(giftCertificateBusinessModel);
+        GiftCertificateBusinessModel actual = giftCertificateService.create(giftCertificateBusinessModel);
         //THEN
         assertEquals(expected, actual);
     }
@@ -76,7 +76,7 @@ class GiftCertificateServiceImplTest {
     void deleteMethodShouldBeCalledWhileCertificateIsBeingRemoved() throws ResourceNotFoundException {
         //GIVEN
         //WHEN
-        giftCertificateService.deleteById(ID);
+        giftCertificateService.delete(ID);
         //THEN
         verify(giftCertificateDAO, Mockito.times(NUMBER_OF_INVOCATIONS)).delete(ID);
     }
@@ -87,7 +87,7 @@ class GiftCertificateServiceImplTest {
         GiftCertificateBusinessModel certificate = new GiftCertificateBusinessModel();
         //WHEN
         Exception exception = assertThrows(InvalidFieldValueException.class,
-                () -> giftCertificateService.updateCertificate(certificate));
+                () -> giftCertificateService.update(certificate));
         String expectedMessage = "Certificate ID must be specified for update.";
         String actualMessage = exception.getMessage();
         //THEN

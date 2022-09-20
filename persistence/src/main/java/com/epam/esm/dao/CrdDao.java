@@ -38,4 +38,9 @@ public interface CrdDao<T> {
      * @param id
      */
     void delete(Long id) throws ResourceNotFoundException;
+
+    /**
+     * Calculate total number of entities.
+     */
+    int getTotal();
 }

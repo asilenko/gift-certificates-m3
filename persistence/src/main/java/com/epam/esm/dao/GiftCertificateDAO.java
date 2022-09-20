@@ -37,9 +37,4 @@ public interface GiftCertificateDAO extends CrdDao<GiftCertificate> {
      * Calculate total number of entities matching search criteria.
      */
     int getTotal(CertificateSearchCriteria searchCriteria) throws InvalidSortTypeException;
-
-    /**
-     * Calculate total number of entities.
-     */
-    int getTotal();
 }
