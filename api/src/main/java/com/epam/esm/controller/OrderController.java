@@ -70,7 +70,7 @@ public class OrderController {
      * @param order
      * @return OrderBusinessModel
      */
-    @PostMapping
+    @PostMapping //FIXME: use RequestParam to place an order
     public ResponseEntity<OrderBusinessModel> create(@RequestBody OrderBusinessModel order) {
         var createdOrder = orderService.create(order);
         orderLinker.addLink(createdOrder);

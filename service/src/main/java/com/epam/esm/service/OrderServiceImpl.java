@@ -37,7 +37,6 @@ class OrderServiceImpl implements OrderService {
     public OrderBusinessModel find(Long id) throws ResourceNotFoundException {
         return orderMapper.toOrderBusinessModel(orderDAO.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No resource with id " + id)));
-
     }
 
     /**
