@@ -7,6 +7,7 @@ import com.epam.esm.model.BusinessModel;
  * CRD methods common for all entities.
  */
 public interface CrdService <T extends BusinessModel> {
+
     /**
      * Finds a model by specified id.
      *

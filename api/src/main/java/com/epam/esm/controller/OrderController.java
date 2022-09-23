@@ -3,6 +3,7 @@ package com.epam.esm.controller;
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.hateoas.OrderLinker;
 import com.epam.esm.model.OrderBusinessModel;
+import com.epam.esm.service.InvalidFieldValueException;
 import com.epam.esm.service.OrderService;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
@@ -11,10 +12,11 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * Process requests for Order resources.
@@ -40,7 +42,7 @@ public class OrderController {
     @GetMapping("/{id}")
     public ResponseEntity<OrderBusinessModel> getByID(@PathVariable Long id) throws ResourceNotFoundException {
         var order = orderService.find(id);
-        orderLinker.addLink(order);
+        orderLinker.addLinkWithCertificates(order);
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
@@ -48,7 +50,7 @@ public class OrderController {
      * Gets all orders.
      *
      * @return List of OrderBusinessModel
-     *
+     * <p>
      * Request example:
      * <pre>
      * GET /orders/?pageNumber=2&pageSize=10 HTTP/1.1
@@ -67,13 +69,22 @@ public class OrderController {
     /**
      * Creates new order resource.
      *
-     * @param order
+     * @param userId of user who is placing the order
+     * @param certificateIds list of certificates bough by user
      * @return OrderBusinessModel
+     *
+     * Request example:
+     * <pre>
+     * POST /orders/?userId=1&certificateIds=4,5,6 HTTP/1.1
+     * </pre>
      */
-    @PostMapping //FIXME: use RequestParam to place an order
-    public ResponseEntity<OrderBusinessModel> create(@RequestBody OrderBusinessModel order) {
-        var createdOrder = orderService.create(order);
-        orderLinker.addLink(createdOrder);
+    @PostMapping
+    public ResponseEntity<OrderBusinessModel> placeOrder(
+            @RequestParam Long userId,
+            @RequestParam List<Long> certificateIds)
+            throws InvalidFieldValueException, ResourceNotFoundException {
+        var createdOrder = orderService.placeOrder(userId, certificateIds);
+        orderLinker.addLinkWithCertificates(createdOrder);
         return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
     }
 

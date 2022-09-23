@@ -38,7 +38,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public GiftCertificateBusinessModel find(Long id) throws ResourceNotFoundException {
         var giftCertificate = giftCertificateDAO.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No resource with id " + id));
-        return giftCertificateMapper.toGiftCertificateBusinessModel(giftCertificate);
+        return giftCertificateMapper.toGiftCertificateBusinessModelWithTags(giftCertificate);
     }
 
     /**
@@ -50,7 +50,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         var giftCertificateToCreate = giftCertificateMapper.toGiftCertificateEntityModel(certificate);
         giftCertificateToCreate.setId(null);
         var giftCertificateCreated = giftCertificateDAO.create(giftCertificateToCreate);
-        return giftCertificateMapper.toGiftCertificateBusinessModel(giftCertificateCreated);
+        return giftCertificateMapper.toGiftCertificateBusinessModelWithTags(giftCertificateCreated);
     }
 
     /**
@@ -74,7 +74,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         prepareTags(certificate);
         var certificateToUpdate = giftCertificateMapper.toGiftCertificateEntityModel(certificate);
         var updatedGCEM = giftCertificateDAO.update(certificateToUpdate);
-        return giftCertificateMapper.toGiftCertificateBusinessModel(updatedGCEM);
+        return giftCertificateMapper.toGiftCertificateBusinessModelWithTags(updatedGCEM);
     }
 
     private void prepareTags(GiftCertificateBusinessModel certificate) {
@@ -96,14 +96,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             var total = giftCertificateDAO.getTotal();
             var certificates =  giftCertificateDAO.findAll(pageNumber, pageSize)
                     .stream()
-                    .map(giftCertificateMapper::toGiftCertificateBusinessModel)
+                    .map(giftCertificateMapper::toGiftCertificateBusinessModelWithTags)
                     .collect(Collectors.toList());
             return new Page<>(pageNumber, pageSize, total, certificates);
         }
         var total = giftCertificateDAO.getTotal(searchCriteria.get());
         var certificates =  giftCertificateDAO.findAllMatchingPrams(searchCriteria.get(), pageNumber, pageSize)
                 .stream()
-                .map(giftCertificateMapper::toGiftCertificateBusinessModel)
+                .map(giftCertificateMapper::toGiftCertificateBusinessModelWithTags)
                 .collect(Collectors.toList());
         return new Page<>(pageNumber, pageSize, total, certificates);
     }

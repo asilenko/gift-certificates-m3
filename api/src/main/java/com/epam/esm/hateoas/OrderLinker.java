@@ -17,6 +17,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
  */
 @Component
 public class OrderLinker {
+
+    private final GiftCertificateLinker giftCertificateLinker;
+
+    public OrderLinker(GiftCertificateLinker giftCertificateLinker) {
+        this.giftCertificateLinker = giftCertificateLinker;
+    }
+
     /**
      * Add links for:
      * <ul>
@@ -40,14 +47,20 @@ public class OrderLinker {
                 .withRel("next")
                 .expand();
 
-        orders.forEach(this::addLink);
+        orders.forEach(this::addLinkWithCertificates);
         return CollectionModel.of(orders, previousPageLink, selfPageLink, nextPageLink);
     }
 
     /**
-     * Add links to single order.
+     * Add links to single order and related certificates.
      */
-    public void addLink(OrderBusinessModel order){
+    public void addLinkWithCertificates(OrderBusinessModel order){
         order.add(linkTo(OrderController.class).slash(order.getId()).withSelfRel());
+        addCertificatesLinks(order);
+    }
+
+    private void addCertificatesLinks(OrderBusinessModel order) {
+        var certificates = order.getGiftCertificates();
+        certificates.forEach(giftCertificateLinker::addLink);
     }
 }

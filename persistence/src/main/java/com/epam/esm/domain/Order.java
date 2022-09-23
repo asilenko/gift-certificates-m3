@@ -2,7 +2,6 @@ package com.epam.esm.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,7 +36,7 @@ public class Order implements Serializable {
     @Column(name = "user_id", nullable = false, updatable = false)
     private Long userID;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = "GiftCertificatesOrders",
             joinColumns = @JoinColumn(name = "order_id"),

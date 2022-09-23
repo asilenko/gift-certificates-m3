@@ -14,7 +14,7 @@ This repository holds solution for [Java Laboratory task](https://github.com/mjc
 - [ ] App should be designed and written with respect to OOD and SOLID principles.
 - [ ] Code should contain valuable comments where appropriate.
 - [x] Public APIs should be documented (Javadoc).
-- [ ] Clear layered structure should be used with responsibilities of each application layer defined.
+- [x] Clear layered structure should be used with responsibilities of each application layer defined.
 - [x] JSON should be used as a format of client-server communication messages.
 - [x] Convenient error/exception handling mechanism should be implemented: all errors should be meaningful and localized on backend side. Example: handle 404 error:
 
@@ -41,12 +41,12 @@ This sub-module is an extension of [REST API Basics](https://github.com/mjc-scho
 
 The system should be extended to expose the following REST APIs:
 - [x] Change single field of gift certificate (e.g. implement the possibility to change only duration of a certificate or only price).
-- [ ] Add new entity User.
-  - [ ] implement only get operations for user entity.
-- [ ] Make an order on gift certificate for a user (user should have an ability to buy a certificate).
-- [ ] Get information about user’s orders.
-- [ ] Get information about user’s order: cost and timestamp of a purchase.
-  - [ ] The order cost should not be changed if the price of the gift certificate is changed.
+- [x] Add new entity User.
+  - [x] implement only get operations for user entity.
+- [x] Make an order on gift certificate for a user (user should have an ability to buy a certificate).
+- [x] Get information about user’s orders.
+- [x] Get information about user’s order: cost and timestamp of a purchase.
+  - [x] The order cost should not be changed if the price of the gift certificate is changed.
 - [ ] Get the most widely used tag of a user with the highest cost of all orders.
   - [ ] Create separate endpoint for this query.
   - [ ] Demonstrate SQL execution plan for this query (explain).

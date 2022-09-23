@@ -32,15 +32,9 @@ public class GiftCertificateMapper {
      *
      * @return GiftCertificateBusinessModel
      */
-    public GiftCertificateBusinessModel toGiftCertificateBusinessModel(GiftCertificate giftCertificate) {
+    public GiftCertificateBusinessModel toGiftCertificateBusinessModelWithTags(GiftCertificate giftCertificate) {
         GiftCertificateBusinessModel giftCertificateBusinessModel = new GiftCertificateBusinessModel();
-        giftCertificateBusinessModel.setId(giftCertificate.getId());
-        giftCertificateBusinessModel.setName(giftCertificate.getName());
-        giftCertificateBusinessModel.setDescription(giftCertificate.getDescription());
-        giftCertificateBusinessModel.setPrice(giftCertificate.getPrice());
-        giftCertificateBusinessModel.setDuration(giftCertificate.getDuration());
-        giftCertificateBusinessModel.setCreateDate(dateAsISO8601(giftCertificate.getCreateDate()));
-        giftCertificateBusinessModel.setLastUpdateDate(dateAsISO8601(giftCertificate.getLastUpdateDate()));
+        setBasicFields(giftCertificate, giftCertificateBusinessModel);
         giftCertificateBusinessModel.setTags(extractTags(giftCertificate));
         return giftCertificateBusinessModel;
     }
@@ -85,5 +79,21 @@ public class GiftCertificateMapper {
 
     private LocalDateTime prepareDate(String date) {
         return date == null ? LocalDateTime.now() : LocalDateTime.parse(date);
+    }
+
+    public GiftCertificateBusinessModel toGiftCertificateBusinessModel(GiftCertificate giftCertificate) {
+        GiftCertificateBusinessModel giftCertificateBusinessModel = new GiftCertificateBusinessModel();
+        setBasicFields(giftCertificate, giftCertificateBusinessModel);
+        return giftCertificateBusinessModel;
+    }
+
+    private void setBasicFields(GiftCertificate giftCertificate, GiftCertificateBusinessModel giftCertificateBusinessModel) {
+        giftCertificateBusinessModel.setId(giftCertificate.getId());
+        giftCertificateBusinessModel.setName(giftCertificate.getName());
+        giftCertificateBusinessModel.setDescription(giftCertificate.getDescription());
+        giftCertificateBusinessModel.setPrice(giftCertificate.getPrice());
+        giftCertificateBusinessModel.setDuration(giftCertificate.getDuration());
+        giftCertificateBusinessModel.setCreateDate(dateAsISO8601(giftCertificate.getCreateDate()));
+        giftCertificateBusinessModel.setLastUpdateDate(dateAsISO8601(giftCertificate.getLastUpdateDate()));
     }
 }

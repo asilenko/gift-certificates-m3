@@ -1,8 +1,11 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.exception.ResourceNotFoundException;
+import com.epam.esm.hateoas.OrderLinker;
 import com.epam.esm.hateoas.UserLinker;
+import com.epam.esm.model.OrderBusinessModel;
 import com.epam.esm.model.UserBusinessModel;
+import com.epam.esm.service.OrderService;
 import com.epam.esm.service.UserService;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
@@ -22,10 +25,14 @@ public class UserController {
 
     private final UserService userService;
     private final UserLinker userLinker;
+    private final OrderService orderService;
+    private final OrderLinker orderLinker;
 
-    public UserController(UserService userService, UserLinker userLinker) {
+    public UserController(UserService userService, UserLinker userLinker, OrderService orderService, OrderLinker orderLinker) {
         this.userService = userService;
         this.userLinker = userLinker;
+        this.orderService = orderService;
+        this.orderLinker = orderLinker;
     }
 
     /**
@@ -47,9 +54,7 @@ public class UserController {
      * @return List of UserBusinessModel
      *
      * Request example:
-     * <pre>
      * GET /users/?pageNumber=1&pageSize=3 HTTP/1.1
-     * </pre>
      */
     @GetMapping
     public ResponseEntity<CollectionModel<UserBusinessModel>> getAll(
@@ -58,6 +63,26 @@ public class UserController {
     ) {
         var page = userService.findAll(pageNumber, pageSize);
         CollectionModel<UserBusinessModel> collectionModel = userLinker.addLinks(page);
+        return new ResponseEntity<>(collectionModel, HttpStatus.OK);
+    }
+
+    /**
+     * Gets user's orders.
+     *
+     * @param id of user
+     * @return List of OrderBusinessModel
+     *
+     * Request example:
+     * GET /users/1/orders/?pageNumber=1&pageSize=2 HTTP/1.1
+     */
+    @GetMapping("/{id}/orders")
+    public ResponseEntity<CollectionModel<OrderBusinessModel>> findOrders(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "1") Integer pageNumber,
+            @RequestParam(defaultValue = "20") Integer pageSize
+    ) {
+        var page = orderService.findByUser(id, pageNumber, pageSize);
+        CollectionModel<OrderBusinessModel> collectionModel = orderLinker.addLinks(page);
         return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
 }

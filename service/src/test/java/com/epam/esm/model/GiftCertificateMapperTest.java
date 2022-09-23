@@ -20,7 +20,7 @@ class GiftCertificateMapperTest {
         GiftCertificate giftCertificateBeMapped = dataProvider.createGifCertificate();
         //WHEN
         GiftCertificateBusinessModel actual = giftCertificateMapper
-                .toGiftCertificateBusinessModel(giftCertificateBeMapped);
+                .toGiftCertificateBusinessModelWithTags(giftCertificateBeMapped);
         //THEN
         assertEquals(expected, actual);
     }

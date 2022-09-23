@@ -1,12 +1,9 @@
 package com.epam.esm.service;
 
 import com.epam.esm.exception.ResourceNotFoundException;
-import com.epam.esm.model.OrderBusinessModel;
 import com.epam.esm.model.UserBusinessModel;
 import com.epam.esm.pagination.Page;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * Provides business operations for user.
@@ -16,9 +13,19 @@ import java.util.List;
 @Service
 public interface UserService {
 
+    /**
+     * Finds user by specified id.
+     *
+     * @param id
+     * @return user
+     * @throws ResourceNotFoundException
+     */
     UserBusinessModel find(Long id) throws ResourceNotFoundException;
 
-    List<OrderBusinessModel> findOrders(Long userId);
-
+    /**
+     * Finds all existing users.
+     *
+     * @return List of users.
+     */
     Page<UserBusinessModel> findAll(Integer pageNumber, Integer pageSize);
 }

@@ -36,7 +36,13 @@ public class GiftCertificateLinker {
      *     <li>previous, current and next page</li>
      * </ul>
      */
-    public CollectionModel<GiftCertificateBusinessModel> addLinks(Page<GiftCertificateBusinessModel> page, List<String> tags, String name, String description, String sortByNameType, String sortByDateType) throws InvalidSortTypeException, ResourceNotFoundException {
+    public CollectionModel<GiftCertificateBusinessModel> addLinks(Page<GiftCertificateBusinessModel> page,
+                                                                  List<String> tags,
+                                                                  String name,
+                                                                  String description,
+                                                                  String sortByNameType,
+                                                                  String sortByDateType)
+            throws InvalidSortTypeException, ResourceNotFoundException {
         List<GiftCertificateBusinessModel> giftCertificates = page.getContent();
         int pageNumber = page.getNumber();
         int previousPage = page.getPreviousPageNumber();
@@ -55,20 +61,27 @@ public class GiftCertificateLinker {
                 .withRel("next")
                 .expand();
 
-        giftCertificates.forEach(this::addLink);
+        giftCertificates.forEach(this::addLinkWithTags);
         return CollectionModel.of(giftCertificates, previousPageLink, selfPageLink, nextPageLink);
     }
 
     /**
      * Add links to single certificate and related tags.
      */
+    public void addLinkWithTags(GiftCertificateBusinessModel certificate) {
+        addLink(certificate);
+        addTagsLinks(certificate);
+    }
+
+    /**
+     * Add links to single certificate.
+     */
     public void addLink(GiftCertificateBusinessModel certificate) {
         certificate.add(linkTo(GiftCertificateController.class).slash(certificate.getId()).withSelfRel());
-        addTagsLinks(certificate);
     }
 
     private void addTagsLinks(GiftCertificateBusinessModel certificate) {
         var tags = certificate.getTags();
-        tags.forEach(tag -> tagLinker.addLink(tag));
+        tags.forEach(tagLinker::addLink);
     }
 }

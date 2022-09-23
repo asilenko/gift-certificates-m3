@@ -46,7 +46,7 @@ public class GiftCertificateController {
     @GetMapping("/{id}")
     public ResponseEntity<GiftCertificateBusinessModel> getById(@PathVariable Long id) throws ResourceNotFoundException {
         var giftCertificate = giftCertificateService.find(id);
-        giftCertificateLinker.addLink(giftCertificate);
+        giftCertificateLinker.addLinkWithTags(giftCertificate);
         return new ResponseEntity<>(giftCertificate, HttpStatus.OK);
     }
 
@@ -151,7 +151,7 @@ public class GiftCertificateController {
     @PostMapping
     public ResponseEntity<GiftCertificateBusinessModel> create(@RequestBody GiftCertificateBusinessModel certificate) {
         var giftCertificate = giftCertificateService.create(certificate);
-        giftCertificateLinker.addLink(giftCertificate);
+        giftCertificateLinker.addLinkWithTags(giftCertificate);
         return new ResponseEntity<>(giftCertificate, HttpStatus.CREATED);
     }
 
@@ -205,7 +205,7 @@ public class GiftCertificateController {
     public ResponseEntity<GiftCertificateBusinessModel> updateCertificate(@RequestBody GiftCertificateBusinessModel certificate)
             throws ResourceNotFoundException, InvalidFieldValueException {
         var giftCertificate = giftCertificateService.update(certificate);
-        giftCertificateLinker.addLink(giftCertificate);
+        giftCertificateLinker.addLinkWithTags(giftCertificate);
         return new ResponseEntity<>(giftCertificate, HttpStatus.OK);
     }
 }

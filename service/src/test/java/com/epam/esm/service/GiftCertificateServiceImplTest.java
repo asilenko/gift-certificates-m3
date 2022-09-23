@@ -48,7 +48,7 @@ class GiftCertificateServiceImplTest {
     void shouldReturnProperGiftCertificateBusinessModelWhenResourceIsFound() throws ResourceNotFoundException {
         //GIVEN
         when(giftCertificateDAO.findById(ID)).thenReturn(Optional.of(giftCertificate));
-        when(giftCertificateMapper.toGiftCertificateBusinessModel(giftCertificate))
+        when(giftCertificateMapper.toGiftCertificateBusinessModelWithTags(giftCertificate))
                 .thenReturn(giftCertificateBusinessModel);
         GiftCertificateBusinessModel expected = dataProvider.createGifCertificateBusinessModel();
         //WHEN
@@ -65,7 +65,7 @@ class GiftCertificateServiceImplTest {
         when(giftCertificateMapper.toGiftCertificateEntityModel(giftCertificateBusinessModel))
                 .thenReturn(giftCertificate);
         when(giftCertificateDAO.create(giftCertificate)).thenReturn(giftCertificate);
-        when(giftCertificateMapper.toGiftCertificateBusinessModel(giftCertificate))
+        when(giftCertificateMapper.toGiftCertificateBusinessModelWithTags(giftCertificate))
                 .thenReturn(giftCertificateBusinessModel);
         GiftCertificateBusinessModel actual = giftCertificateService.create(giftCertificateBusinessModel);
         //THEN
