@@ -99,4 +99,16 @@ public class TagController {
         tagService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    /**
+     * Get the most widely used tag of a user with the highest cost of all orders.
+     *
+     * @return TagBusinessModel
+     */
+    @GetMapping("/most_used")
+    public ResponseEntity<TagBusinessModel> getMostWidelyUsed() {
+        var tag = tagService.mostWidelyUsed();
+        tagLinker.addLink(tag);
+        return new ResponseEntity<>(tag, HttpStatus.OK);
+    }
 }

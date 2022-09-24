@@ -62,7 +62,7 @@ public class TagServiceImpl implements TagService {
         } else {
             return tagMapper.toTagBusinessModel(tagFromDB.get());
         }
-}
+    }
 
     /**
      * {@inheritDoc}
@@ -70,5 +70,13 @@ public class TagServiceImpl implements TagService {
     @Override
     public void delete(Long id) throws ResourceNotFoundException {
         tagDAO.delete(id);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public TagBusinessModel mostWidelyUsed() {
+        return tagMapper.toTagBusinessModel(tagDAO.mostWidelyUsed());
     }
 }

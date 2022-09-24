@@ -21,4 +21,11 @@ public interface TagDAO extends CrdDao<Tag> {
      */
     Optional<Tag> findByName(String name);
 
+    /**
+     * Finds the most widely used tag of a user with the highest cost of all orders.
+     *
+     * @return Tag
+     */
+    Tag mostWidelyUsed();
+
 }

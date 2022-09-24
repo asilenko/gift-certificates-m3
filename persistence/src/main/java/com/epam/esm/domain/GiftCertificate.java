@@ -24,7 +24,7 @@ import java.util.Set;
 public class GiftCertificate implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long certificate_id;
+    private Long id;
 
     @Column(nullable = false, length = 40)
     private String name;
@@ -53,11 +53,11 @@ public class GiftCertificate implements Serializable {
 
 
     public Long getId() {
-        return this.certificate_id;
+        return this.id;
     }
 
     public void setId(Long certificate_id) {
-        this.certificate_id = certificate_id;
+        this.id = certificate_id;
     }
 
     public String getName() {
@@ -119,7 +119,7 @@ public class GiftCertificate implements Serializable {
     @Override
     public String toString() {
         return "GiftCertificate{" +
-                "id=" + certificate_id +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
@@ -134,7 +134,7 @@ public class GiftCertificate implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GiftCertificate that = (GiftCertificate) o;
-        return Objects.equals(certificate_id, that.certificate_id)
+        return Objects.equals(id, that.id)
                 && Objects.equals(name, that.name)
                 && Objects.equals(description, that.description)
                 && Objects.equals(price, that.price)
@@ -144,6 +144,6 @@ public class GiftCertificate implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(certificate_id);
+        return Objects.hash(id);
     }
 }
