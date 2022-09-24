@@ -11,8 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -47,13 +45,13 @@ class OrderServiceImpl implements OrderService {
      * {@inheritDoc}
      */
     @Override
-    public OrderBusinessModel placeOrder(Long userId, List<Long> certificateIds)
-            throws ResourceNotFoundException, InvalidFieldValueException {
+    public OrderBusinessModel placeOrder(Long userId, Long certificateId)
+            throws ResourceNotFoundException {
         userService.find(userId);
-        List<GiftCertificateBusinessModel> certificates = prepareCertificates(certificateIds);
-        BigDecimal cost = calculateCost(certificates);
+        GiftCertificateBusinessModel certificate = giftCertificateService.find(certificateId);
+        BigDecimal cost = certificate.getPrice();
         OrderBusinessModel order = new OrderBusinessModel();
-        order.setGiftCertificates(certificates);
+        order.setGiftCertificate(certificate);
         order.setUserID(userId);
         order.setCost(cost);
         order.setPurchaseDate(LocalDateTime.now());
@@ -62,24 +60,6 @@ class OrderServiceImpl implements OrderService {
         orderToCreate.setId(null);
         var orderCreated = orderDAO.create(orderToCreate);
         return orderMapper.toOrderBusinessModel(orderCreated);
-    }
-
-    private BigDecimal calculateCost(List<GiftCertificateBusinessModel> certificates) throws InvalidFieldValueException {
-        var cost = certificates.stream()
-                .map(GiftCertificateBusinessModel::getPrice)
-                .reduce(BigDecimal::add);
-        return cost.orElseThrow(() -> new InvalidFieldValueException("Order should contain at least once certificate"));
-    }
-
-    private List<GiftCertificateBusinessModel> prepareCertificates(List<Long> certificateId)
-            throws ResourceNotFoundException {
-        List<GiftCertificateBusinessModel> certificates = new ArrayList<>();
-
-        for (Long aLong : certificateId) {
-            GiftCertificateBusinessModel giftCertificateBusinessModel = giftCertificateService.find(aLong);
-            certificates.add(giftCertificateBusinessModel);
-        }
-        return certificates;
     }
 
     /**

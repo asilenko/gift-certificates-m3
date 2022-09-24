@@ -13,6 +13,12 @@ import java.util.Optional;
 @Repository
 public interface TagDAO extends CrdDao<Tag> {
 
+    /**
+     * Finds tag by provided name.
+     *
+     * @param name of tag.
+     * @return Tag.
+     */
     Optional<Tag> findByName(String name);
 
 }

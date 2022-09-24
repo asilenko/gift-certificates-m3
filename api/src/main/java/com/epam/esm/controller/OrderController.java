@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 /**
  * Process requests for Order resources.
  */
@@ -70,20 +68,20 @@ public class OrderController {
      * Creates new order resource.
      *
      * @param userId of user who is placing the order
-     * @param certificateIds list of certificates bough by user
+     * @param certificateId list of certificates bough by user
      * @return OrderBusinessModel
      *
      * Request example:
      * <pre>
-     * POST /orders/?userId=1&certificateIds=4,5,6 HTTP/1.1
+     * POST /orders/?userId=1&certificateId=4 HTTP/1.1
      * </pre>
      */
     @PostMapping
     public ResponseEntity<OrderBusinessModel> placeOrder(
             @RequestParam Long userId,
-            @RequestParam List<Long> certificateIds)
+            @RequestParam Long certificateId)
             throws InvalidFieldValueException, ResourceNotFoundException {
-        var createdOrder = orderService.placeOrder(userId, certificateIds);
+        var createdOrder = orderService.placeOrder(userId, certificateId);
         orderLinker.addLinkWithCertificates(createdOrder);
         return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
     }

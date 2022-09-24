@@ -24,8 +24,7 @@ import java.util.Set;
 public class GiftCertificate implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
-    private Long id;
+    private Long certificate_id;
 
     @Column(nullable = false, length = 40)
     private String name;
@@ -54,11 +53,11 @@ public class GiftCertificate implements Serializable {
 
 
     public Long getId() {
-        return this.id;
+        return this.certificate_id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(Long certificate_id) {
+        this.certificate_id = certificate_id;
     }
 
     public String getName() {
@@ -120,7 +119,7 @@ public class GiftCertificate implements Serializable {
     @Override
     public String toString() {
         return "GiftCertificate{" +
-                "id=" + id +
+                "id=" + certificate_id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
@@ -135,13 +134,16 @@ public class GiftCertificate implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GiftCertificate that = (GiftCertificate) o;
-        return duration == that.duration && id.equals(that.id) && name.equals(that.name)
-                && description.equals(that.description) && price.equals(that.price)
+        return Objects.equals(certificate_id, that.certificate_id)
+                && Objects.equals(name, that.name)
+                && Objects.equals(description, that.description)
+                && Objects.equals(price, that.price)
+                && Objects.equals(duration, that.duration)
                 && Objects.equals(tags, that.tags);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(certificate_id);
     }
 }

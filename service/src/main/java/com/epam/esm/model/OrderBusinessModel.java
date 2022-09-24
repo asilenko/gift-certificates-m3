@@ -4,8 +4,6 @@ import org.springframework.hateoas.RepresentationModel;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -19,7 +17,7 @@ public class OrderBusinessModel extends RepresentationModel<OrderBusinessModel> 
     private BigDecimal cost;
     private LocalDateTime purchaseDate;
     private Long userID;
-    private List<GiftCertificateBusinessModel> giftCertificates = new ArrayList<>();
+    private GiftCertificateBusinessModel giftCertificate;
 
     public Long getId() {
         return id;
@@ -53,12 +51,12 @@ public class OrderBusinessModel extends RepresentationModel<OrderBusinessModel> 
         this.userID = userID;
     }
 
-    public List<GiftCertificateBusinessModel> getGiftCertificates() {
-        return giftCertificates;
+    public GiftCertificateBusinessModel getGiftCertificate() {
+        return giftCertificate;
     }
 
-    public void setGiftCertificates(List<GiftCertificateBusinessModel> giftCertificates) {
-        this.giftCertificates = giftCertificates;
+    public void setGiftCertificate(GiftCertificateBusinessModel giftCertificate) {
+        this.giftCertificate = giftCertificate;
     }
 
     @Override
@@ -70,7 +68,7 @@ public class OrderBusinessModel extends RepresentationModel<OrderBusinessModel> 
                 && Objects.equals(cost, that.cost)
                 && Objects.equals(purchaseDate, that.purchaseDate)
                 && Objects.equals(userID, that.userID)
-                && Objects.equals(giftCertificates, that.giftCertificates);
+                && Objects.equals(giftCertificate, that.giftCertificate);
     }
 
     @Override

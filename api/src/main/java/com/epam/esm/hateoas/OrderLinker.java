@@ -60,7 +60,7 @@ public class OrderLinker {
     }
 
     private void addCertificatesLinks(OrderBusinessModel order) {
-        var certificates = order.getGiftCertificates();
-        certificates.forEach(giftCertificateLinker::addLink);
+        var certificate = order.getGiftCertificate();
+        giftCertificateLinker.addLink(certificate);
     }
 }

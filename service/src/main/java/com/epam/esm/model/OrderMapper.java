@@ -1,6 +1,5 @@
 package com.epam.esm.model;
 
-import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.Order;
 import org.springframework.stereotype.Component;
 
@@ -37,15 +36,9 @@ public class OrderMapper {
         order.setCost(orderBusinessModel.getCost());
         order.setPurchaseDate(orderBusinessModel.getPurchaseDate());
         order.setUserID(orderBusinessModel.getUserID());
-        order.setGiftCertificates(extractCertificates(orderBusinessModel));
+        order.setGiftCertificate(
+                giftCertificateMapper.toGiftCertificateEntityModel(orderBusinessModel.getGiftCertificate()));
         return order;
-    }
-
-    private List<GiftCertificate> extractCertificates(OrderBusinessModel orderBusinessModel) {
-        return orderBusinessModel.getGiftCertificates()
-                .stream()
-                .map(giftCertificateMapper::toGiftCertificateEntityModel)
-                .collect(Collectors.toList());
     }
 
     /**
@@ -62,14 +55,8 @@ public class OrderMapper {
         orderBusinessModel.setCost(order.getCost());
         orderBusinessModel.setPurchaseDate(order.getPurchaseDate());
         orderBusinessModel.setUserID(order.getUserID());
-        orderBusinessModel.setGiftCertificates(extractCertificates(order));
+        orderBusinessModel.
+                setGiftCertificate(giftCertificateMapper.toGiftCertificateBusinessModel(order.getGiftCertificates()));
         return orderBusinessModel;
-    }
-
-    private List<GiftCertificateBusinessModel> extractCertificates(Order order) {
-        return order.getGiftCertificates()
-                .stream()
-                .map(giftCertificateMapper::toGiftCertificateBusinessModel)
-                .collect(Collectors.toList());
     }
 }

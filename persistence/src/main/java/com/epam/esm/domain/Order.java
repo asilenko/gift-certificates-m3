@@ -6,14 +6,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -24,7 +21,6 @@ import java.util.Objects;
 public class Order implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
     private Long id;
 
     @Column(nullable = false)
@@ -36,12 +32,9 @@ public class Order implements Serializable {
     @Column(name = "user_id", nullable = false, updatable = false)
     private Long userID;
 
-    @ManyToMany
-    @JoinTable(
-            name = "GiftCertificatesOrders",
-            joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "gift_certificate_id"))
-    private List<GiftCertificate> giftCertificates = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "certificate_id")
+    private GiftCertificate giftCertificate;
 
     public Long getId() {
         return id;
@@ -75,12 +68,12 @@ public class Order implements Serializable {
         this.userID = userID;
     }
 
-    public List<GiftCertificate> getGiftCertificates() {
-        return giftCertificates;
+    public GiftCertificate getGiftCertificates() {
+        return giftCertificate;
     }
 
-    public void setGiftCertificates(List<GiftCertificate> giftCertificates) {
-        this.giftCertificates = giftCertificates;
+    public void setGiftCertificate(GiftCertificate giftCertificate) {
+        this.giftCertificate = giftCertificate;
     }
 
     @Override
@@ -92,7 +85,7 @@ public class Order implements Serializable {
                 && cost.equals(order.cost)
                 && purchaseDate.equals(order.purchaseDate)
                 && userID.equals(order.userID)
-                && giftCertificates.equals(order.giftCertificates);
+                && giftCertificate.equals(order.giftCertificate);
     }
 
     @Override

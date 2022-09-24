@@ -27,10 +27,10 @@ public interface OrderService {
      * Place a new order for specified user.
      *
      * @param userId
-     * @param certificateIds
+     * @param certificateId
      * @return created model
      */
-    OrderBusinessModel placeOrder(Long userId, List<Long> certificateIds) throws ResourceNotFoundException, InvalidFieldValueException;
+    OrderBusinessModel placeOrder(Long userId, Long certificateId) throws ResourceNotFoundException, InvalidFieldValueException;
 
     /**
      * Deletes order by specified id.
