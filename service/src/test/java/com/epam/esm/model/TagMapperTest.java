@@ -1,6 +1,6 @@
 package com.epam.esm.model;
 
-import com.epam.esm.service.DataProvider;
+import com.epam.esm.dataprovider.DataProvider;
 import com.epam.esm.domain.Tag;
 import org.junit.jupiter.api.Test;
 

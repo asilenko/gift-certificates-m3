@@ -12,12 +12,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserMapper {
 
-    private final OrderMapper orderMapper;
-
-    public UserMapper(OrderMapper orderMapper) {
-        this.orderMapper = orderMapper;
-    }
-
     /**
      * Maps BusinessModel to EntityModel.
      *

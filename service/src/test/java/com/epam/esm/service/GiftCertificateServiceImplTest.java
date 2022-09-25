@@ -2,6 +2,7 @@ package com.epam.esm.service;
 
 import com.epam.esm.dao.jpa.CertificateSearchCriteria;
 import com.epam.esm.dao.jpa.JPAGiftCertificateDAO;
+import com.epam.esm.dataprovider.DataProvider;
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.exception.InvalidSortTypeException;
 import com.epam.esm.exception.ResourceNotFoundException;
@@ -41,8 +42,8 @@ class GiftCertificateServiceImplTest {
     private GiftCertificateServiceImpl giftCertificateService;
 
     private final GiftCertificateBusinessModel giftCertificateBusinessModel = dataProvider
-            .createGifCertificateBusinessModel();
-    private final GiftCertificate giftCertificate = dataProvider.createGifCertificate();
+            .createGifCertificateBusinessModelWithTags();
+    private final GiftCertificate giftCertificate = dataProvider.createGifCertificateWithTags();
 
     @Test
     void shouldReturnProperGiftCertificateBusinessModelWhenResourceIsFound() throws ResourceNotFoundException {
@@ -50,7 +51,7 @@ class GiftCertificateServiceImplTest {
         when(giftCertificateDAO.findById(ID)).thenReturn(Optional.of(giftCertificate));
         when(giftCertificateMapper.toGiftCertificateBusinessModelWithTags(giftCertificate))
                 .thenReturn(giftCertificateBusinessModel);
-        GiftCertificateBusinessModel expected = dataProvider.createGifCertificateBusinessModel();
+        GiftCertificateBusinessModel expected = dataProvider.createGifCertificateBusinessModelWithTags();
         //WHEN
         var actual = giftCertificateService.find(ID);
         //THEN

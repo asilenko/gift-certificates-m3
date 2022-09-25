@@ -2,7 +2,7 @@ package com.epam.esm.model;
 
 
 import com.epam.esm.domain.GiftCertificate;
-import com.epam.esm.service.DataProvider;
+import com.epam.esm.dataprovider.DataProvider;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,8 +16,8 @@ class GiftCertificateMapperTest {
     @Test
     void giftCertificateBusinessModelMappedFromGiftCertificateShouldHaveProperFieldsValues() {
         //GIVEN
-        GiftCertificateBusinessModel expected = dataProvider.createGifCertificateBusinessModel();
-        GiftCertificate giftCertificateBeMapped = dataProvider.createGifCertificate();
+        GiftCertificateBusinessModel expected = dataProvider.createGifCertificateBusinessModelWithTags();
+        GiftCertificate giftCertificateBeMapped = dataProvider.createGifCertificateWithTags();
         //WHEN
         GiftCertificateBusinessModel actual = giftCertificateMapper
                 .toGiftCertificateBusinessModelWithTags(giftCertificateBeMapped);
@@ -28,8 +28,8 @@ class GiftCertificateMapperTest {
     @Test
     void giftCertificateMappedFromGiftCertificateBusinessModelShouldHaveProperFieldsValues() {
         //GIVEN
-        GiftCertificate expected = dataProvider.createGifCertificate();
-        GiftCertificateBusinessModel certificateToMap = dataProvider.createGifCertificateBusinessModel();
+        GiftCertificate expected = dataProvider.createGifCertificateWithTags();
+        GiftCertificateBusinessModel certificateToMap = dataProvider.createGifCertificateBusinessModelWithTags();
         //WHEN
         GiftCertificate actual = giftCertificateMapper.toGiftCertificateEntityModel(certificateToMap);
         //THEN

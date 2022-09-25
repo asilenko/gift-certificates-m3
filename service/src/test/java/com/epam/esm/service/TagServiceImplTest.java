@@ -1,6 +1,7 @@
 package com.epam.esm.service;
 
 import com.epam.esm.dao.jpa.JPATagDAO;
+import com.epam.esm.dataprovider.DataProvider;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.model.TagBusinessModel;
@@ -14,7 +15,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -40,8 +40,6 @@ class TagServiceImplTest {
 
     private final TagBusinessModel tagBusinessModel = dataProvider.createTestTagBusinessModel();
     private final Tag tag = dataProvider.createTestTag();
-    private final Set<Tag> tags = dataProvider.createTagsSet();
-    private final Set<TagBusinessModel>tagsBusinessModel = dataProvider.createTagsBMSet();
 
     @Test
     void shouldReturnProperTagBusinessModelWhenResourceIsFound() throws ResourceNotFoundException {
