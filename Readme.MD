@@ -47,9 +47,9 @@ The system should be extended to expose the following REST APIs:
 - [x] Get information about user’s orders.
 - [x] Get information about user’s order: cost and timestamp of a purchase.
   - [x] The order cost should not be changed if the price of the gift certificate is changed.
-- [ ] Get the most widely used tag of a user with the highest cost of all orders.
-  - [ ] Create separate endpoint for this query.
-  - [ ] Demonstrate SQL execution plan for this query (explain).
+- [x] Get the most widely used tag of a user with the highest cost of all orders.
+  - [x] Create separate endpoint for this query.
+  - [x] Demonstrate SQL execution plan for this query (explain).
 - [x] Search for gift certificates by several tags (“and” condition).
 - [x] Pagination should be implemented for all GET endpoints. Please, create a flexible and non-erroneous solution. Handle all exceptional cases.
 - [x] Support HATEOAS on REST endpoints.
