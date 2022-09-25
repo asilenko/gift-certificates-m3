@@ -77,7 +77,7 @@ This sub-module covers following topics:
 
 - [x] Hibernate should be used as a JPA implementation for data access.
 - [x] Spring Transaction should be used in all necessary areas of the application.
-- [ ] Audit data should be populated using JPA features (an example can be found in materials).
+- [x] Audit data should be populated using JPA features (an example can be found in materials).
 
 ##### Application restrictions
 

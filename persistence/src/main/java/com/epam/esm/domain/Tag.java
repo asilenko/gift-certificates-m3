@@ -2,9 +2,6 @@ package com.epam.esm.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Objects;
@@ -14,24 +11,13 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "Tags")
-public class Tag implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Tag extends AuditableEntity implements Serializable {
 
     @Column(nullable = false, unique = true, length = 40)
     private String name;
 
-    public Long getId() {
-        return this.id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public void setName(String name) {
@@ -41,7 +27,7 @@ public class Tag implements Serializable {
     @Override
     public String toString() {
         return "Tag{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", name='" + name + '\'' +
                 '}';
     }

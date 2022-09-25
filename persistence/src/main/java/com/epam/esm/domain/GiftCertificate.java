@@ -2,9 +2,6 @@ package com.epam.esm.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -21,10 +18,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "GiftCertificates")
-public class GiftCertificate implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class GiftCertificate extends AuditableEntity implements Serializable {
 
     @Column(nullable = false, length = 40)
     private String name;
@@ -50,15 +44,6 @@ public class GiftCertificate implements Serializable {
             joinColumns = @JoinColumn(name = "gift_certificate_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
-
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long certificate_id) {
-        this.id = certificate_id;
-    }
 
     public String getName() {
         return name;
@@ -119,7 +104,7 @@ public class GiftCertificate implements Serializable {
     @Override
     public String toString() {
         return "GiftCertificate{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
@@ -134,7 +119,7 @@ public class GiftCertificate implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GiftCertificate that = (GiftCertificate) o;
-        return Objects.equals(id, that.id)
+        return Objects.equals(getId(), that.getId())
                 && Objects.equals(name, that.name)
                 && Objects.equals(description, that.description)
                 && Objects.equals(price, that.price)
@@ -144,6 +129,6 @@ public class GiftCertificate implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(getId());
     }
 }
