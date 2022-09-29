@@ -15,12 +15,12 @@ import javax.persistence.Persistence;
 public class SpringConfig {
 
     /**
-     * Creates EntityManagerFactory for "prod" profile, based on persistence.xml
+     * Creates EntityManagerFactory for "prod" and "demo" profiles, based on persistence.xml
      *
      * @return EntityManageFactory
      */
     @Bean
-    @Profile("prod")
+    @Profile({"prod", "demo"})
     public EntityManagerFactory entityManagerFactory() {
         return Persistence.createEntityManagerFactory("prod");
     }

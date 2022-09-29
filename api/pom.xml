@@ -12,13 +12,13 @@
     <version>1.0</version>
     <name>api</name>
 
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>11</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <version.service>1.0</version.service>
+        <version.datafactory>0.8</version.datafactory>
     </properties>
 
     <dependencies>
@@ -31,6 +31,10 @@
             <artifactId>service</artifactId>
             <version>${version.service}</version>
         </dependency>
+        <dependency>
+            <groupId>org.fluttercode.datafactory</groupId>
+            <artifactId>datafactory</artifactId>
+            <version>${version.datafactory}</version>
+        </dependency>
     </dependencies>
-
 </project>
