@@ -4,7 +4,7 @@ import com.epam.esm.dao.jpa.JPATagDAO;
 import com.epam.esm.dataprovider.DataProvider;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.exception.ResourceNotFoundException;
-import com.epam.esm.model.TagBusinessModel;
+import com.epam.esm.model.TagModel;
 import com.epam.esm.model.TagMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,15 +38,15 @@ class TagServiceImplTest {
     @InjectMocks
     private TagServiceImpl tagService;
 
-    private final TagBusinessModel tagBusinessModel = dataProvider.createTestTagBusinessModel();
+    private final TagModel tagModel = dataProvider.createTagModel();
     private final Tag tag = dataProvider.createTestTag();
 
     @Test
     void shouldReturnProperTagBusinessModelWhenResourceIsFound() throws ResourceNotFoundException {
         //GIVEN
         when(JPATagDAO.findById(TAG_ID)).thenReturn(Optional.of(tag));
-        when(tagMapper.toTagBusinessModel(tag)).thenReturn(tagBusinessModel);
-        TagBusinessModel expected = tagBusinessModel;
+        when(tagMapper.toTagBusinessModel(tag)).thenReturn(tagModel);
+        TagModel expected = tagModel;
         //WHEN
         var actual = tagService.find(TAG_ID);
         //THEN
@@ -56,12 +56,12 @@ class TagServiceImplTest {
     @Test
     void shouldReturnTagsListWhenResourceIsFound() {
         //GIVEN
-        List<TagBusinessModel> expected = List.of(tagBusinessModel);
+        List<TagModel> expected = List.of(tagModel);
         List<Tag> tags = List.of(tag);
         //WHEN
         when(JPATagDAO.findAll(PAGE_NUMBER, PAGE_SIZE)).thenReturn(tags);
-        when(tagMapper.toTagBusinessModel(tag)).thenReturn(tagBusinessModel);
-        List <TagBusinessModel> actual = tagService.findAll(PAGE_NUMBER,PAGE_SIZE).getContent();
+        when(tagMapper.toTagBusinessModel(tag)).thenReturn(tagModel);
+        List <TagModel> actual = tagService.findAll(PAGE_NUMBER,PAGE_SIZE).getContent();
         //THEN
         assertEquals(expected, actual);
     }
@@ -69,12 +69,12 @@ class TagServiceImplTest {
     @Test
     void shouldReturnProperTagBusinessModelWhenSuccessfullyAdded() {
         //GIVEN
-        TagBusinessModel expected = tagBusinessModel;
+        TagModel expected = tagModel;
         //WHEN
         when(JPATagDAO.create(tag)).thenReturn(tag);
-        when(tagMapper.toTag(tagBusinessModel)).thenReturn(tag);
-        when(tagMapper.toTagBusinessModel(tag)).thenReturn(tagBusinessModel);
-        TagBusinessModel actual = tagService.create(tagBusinessModel);
+        when(tagMapper.toTag(tagModel)).thenReturn(tag);
+        when(tagMapper.toTagBusinessModel(tag)).thenReturn(tagModel);
+        TagModel actual = tagService.create(tagModel);
         //THEN
         assertEquals(expected, actual);
     }

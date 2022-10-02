@@ -15,21 +15,21 @@ class OrderMapperTest {
     private final DataProvider dataProvider = new DataProvider();
 
     @Test
-    void orderBusinessModelModelMappedFromOrderShouldHaveProperFieldsValues() {
+    void orderModelModelMappedFromOrderShouldHaveProperFieldsValues() {
         //GIVEN
-        OrderBusinessModel expected = dataProvider.createOrderBusinessModelWithCertificate();
+        OrderModel expected = dataProvider.createOrderModelWithCertificate();
         Order orderToBeMapped = dataProvider.createOrderWithCertificate();
         //WHEN
-        OrderBusinessModel actual = orderMapper.toOrderBusinessModel(orderToBeMapped);
+        OrderModel actual = orderMapper.toOrderBusinessModel(orderToBeMapped);
         //THEN
         assertEquals(expected, actual);
     }
 
     @Test
-    void orderMappedFromOrderBusinessModelShouldHaveProperFieldsValues() {
+    void orderMappedFromOrderModelShouldHaveProperFieldsValues() {
         //GIVEN
         Order expected = dataProvider.createOrderWithCertificate();
-        OrderBusinessModel orderToMap = dataProvider.createOrderBusinessModelWithCertificate();
+        OrderModel orderToMap = dataProvider.createOrderModelWithCertificate();
         //WHEN
         Order actual = orderMapper.toOrder(orderToMap);
         //THEN

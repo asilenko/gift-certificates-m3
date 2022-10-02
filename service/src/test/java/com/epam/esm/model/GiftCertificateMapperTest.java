@@ -14,22 +14,22 @@ class GiftCertificateMapperTest {
     private final DataProvider dataProvider = new DataProvider();
 
     @Test
-    void giftCertificateBusinessModelMappedFromGiftCertificateShouldHaveProperFieldsValues() {
+    void giftCertificateModelMappedFromGiftCertificateShouldHaveProperFieldsValues() {
         //GIVEN
-        GiftCertificateBusinessModel expected = dataProvider.createGifCertificateBusinessModelWithTags();
+        GiftCertificateModel expected = dataProvider.createGifCertificateModelWithTags();
         GiftCertificate giftCertificateBeMapped = dataProvider.createGifCertificateWithTags();
         //WHEN
-        GiftCertificateBusinessModel actual = giftCertificateMapper
+        GiftCertificateModel actual = giftCertificateMapper
                 .toGiftCertificateBusinessModelWithTags(giftCertificateBeMapped);
         //THEN
         assertEquals(expected, actual);
     }
 
     @Test
-    void giftCertificateMappedFromGiftCertificateBusinessModelShouldHaveProperFieldsValues() {
+    void giftCertificateMappedFromGiftCertificateModelShouldHaveProperFieldsValues() {
         //GIVEN
         GiftCertificate expected = dataProvider.createGifCertificateWithTags();
-        GiftCertificateBusinessModel certificateToMap = dataProvider.createGifCertificateBusinessModelWithTags();
+        GiftCertificateModel certificateToMap = dataProvider.createGifCertificateModelWithTags();
         //WHEN
         GiftCertificate actual = giftCertificateMapper.toGiftCertificateEntityModel(certificateToMap);
         //THEN

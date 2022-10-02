@@ -2,7 +2,7 @@ package com.epam.esm.controller;
 
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.hateoas.OrderLinker;
-import com.epam.esm.model.OrderBusinessModel;
+import com.epam.esm.model.OrderModel;
 import com.epam.esm.service.InvalidFieldValueException;
 import com.epam.esm.service.OrderService;
 import org.springframework.hateoas.CollectionModel;
@@ -35,10 +35,10 @@ public class OrderController {
      * Get order resource by specified id.
      *
      * @param id
-     * @return OrderBusinessModel
+     * @return OrderModel
      */
     @GetMapping("/{id}")
-    public ResponseEntity<OrderBusinessModel> getByID(@PathVariable Long id) throws ResourceNotFoundException {
+    public ResponseEntity<OrderModel> getByID(@PathVariable Long id) throws ResourceNotFoundException {
         var order = orderService.find(id);
         orderLinker.addLinkWithCertificates(order);
         return new ResponseEntity<>(order, HttpStatus.OK);
@@ -47,7 +47,7 @@ public class OrderController {
     /**
      * Gets all orders.
      *
-     * @return List of OrderBusinessModel
+     * @return List of OrderModel
      * <p>
      * Request example:
      * <pre>
@@ -55,21 +55,21 @@ public class OrderController {
      * </pre>
      */
     @GetMapping
-    public ResponseEntity<CollectionModel<OrderBusinessModel>> getAll(
+    public ResponseEntity<CollectionModel<OrderModel>> getAll(
             @RequestParam(defaultValue = "1") Integer pageNumber,
             @RequestParam(defaultValue = "20") Integer pageSize
     ) {
         var page = orderService.findAll(pageNumber, pageSize);
-        CollectionModel<OrderBusinessModel> collectionModel = orderLinker.addLinks(page);
+        CollectionModel<OrderModel> collectionModel = orderLinker.addLinks(page);
         return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
 
     /**
      * Creates new order resource.
      *
-     * @param userId of user who is placing the order
-     * @param certificateId list of certificates bough by user
-     * @return OrderBusinessModel
+     * @param userId of user who is placing the order – must not be null
+     * @param certificateId id of certificate bough by user – must not be null
+     * @return OrderModel
      *
      * Request example:
      * <pre>
@@ -77,7 +77,7 @@ public class OrderController {
      * </pre>
      */
     @PostMapping
-    public ResponseEntity<OrderBusinessModel> placeOrder(
+    public ResponseEntity<OrderModel> placeOrder(
             @RequestParam Long userId,
             @RequestParam Long certificateId)
             throws InvalidFieldValueException, ResourceNotFoundException {

@@ -3,8 +3,8 @@ package com.epam.esm.controller;
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.hateoas.OrderLinker;
 import com.epam.esm.hateoas.UserLinker;
-import com.epam.esm.model.OrderBusinessModel;
-import com.epam.esm.model.UserBusinessModel;
+import com.epam.esm.model.OrderModel;
+import com.epam.esm.model.UserModel;
 import com.epam.esm.service.OrderService;
 import com.epam.esm.service.UserService;
 import org.springframework.hateoas.CollectionModel;
@@ -39,10 +39,10 @@ public class UserController {
      * Get User resource by specified id.
      *
      * @param id of user
-     * @return UserBusinessModel
+     * @return UserModel
      */
     @GetMapping("/{id}")
-    public ResponseEntity<UserBusinessModel> getById(@PathVariable Long id) throws ResourceNotFoundException {
+    public ResponseEntity<UserModel> getById(@PathVariable Long id) throws ResourceNotFoundException {
         var user = userService.find(id);
         userLinker.addLink(user);
         return new ResponseEntity<>(user, HttpStatus.OK);
@@ -51,18 +51,18 @@ public class UserController {
     /**
      * Gets all users.
      *
-     * @return List of UserBusinessModel
+     * @return List of UserModel
      *
      * Request example:
      * GET /users/?pageNumber=1&pageSize=3 HTTP/1.1
      */
     @GetMapping
-    public ResponseEntity<CollectionModel<UserBusinessModel>> getAll(
+    public ResponseEntity<CollectionModel<UserModel>> getAll(
             @RequestParam(defaultValue = "1") Integer pageNumber,
             @RequestParam(defaultValue = "20") Integer pageSize
     ) {
         var page = userService.findAll(pageNumber, pageSize);
-        CollectionModel<UserBusinessModel> collectionModel = userLinker.addLinks(page);
+        CollectionModel<UserModel> collectionModel = userLinker.addLinks(page);
         return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
 
@@ -70,19 +70,19 @@ public class UserController {
      * Gets user's orders.
      *
      * @param id of user
-     * @return List of OrderBusinessModel
+     * @return List of OrderModel
      *
      * Request example:
      * GET /users/1/orders/?pageNumber=1&pageSize=2 HTTP/1.1
      */
     @GetMapping("/{id}/orders")
-    public ResponseEntity<CollectionModel<OrderBusinessModel>> findOrders(
+    public ResponseEntity<CollectionModel<OrderModel>> findOrders(
             @PathVariable Long id,
             @RequestParam(defaultValue = "1") Integer pageNumber,
             @RequestParam(defaultValue = "20") Integer pageSize
     ) {
         var page = orderService.findByUser(id, pageNumber, pageSize);
-        CollectionModel<OrderBusinessModel> collectionModel = orderLinker.addLinks(page);
+        CollectionModel<OrderModel> collectionModel = orderLinker.addLinks(page);
         return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
 }

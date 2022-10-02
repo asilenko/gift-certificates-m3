@@ -11,7 +11,7 @@ import java.util.Objects;
  * @see com.epam.esm.domain.Tag
  */
 @Relation(itemRelation = "tag", collectionRelation = "tags")
-public class TagBusinessModel extends RepresentationModel<GiftCertificateBusinessModel> implements BusinessModel {
+public class TagModel extends RepresentationModel<TagModel> {
     private Long id;
     private String name;
 
@@ -35,7 +35,7 @@ public class TagBusinessModel extends RepresentationModel<GiftCertificateBusines
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TagBusinessModel that = (TagBusinessModel) o;
+        TagModel that = (TagModel) o;
         return Objects.equals(id, that.id) && name.equals(that.name);
     }
 

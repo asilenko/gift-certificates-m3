@@ -4,7 +4,7 @@ import com.epam.esm.dao.jpa.JPAOrderDAO;
 import com.epam.esm.dataprovider.DataProvider;
 import com.epam.esm.domain.Order;
 import com.epam.esm.exception.ResourceNotFoundException;
-import com.epam.esm.model.OrderBusinessModel;
+import com.epam.esm.model.OrderModel;
 import com.epam.esm.model.OrderMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +31,7 @@ class OrderServiceImplTest {
     private static final int NUMBER_OF_ORDERS = 1;
     private final DataProvider dataProvider = new DataProvider();
     private final Order order = dataProvider.createOrderWithCertificate();
-    private final OrderBusinessModel orderBusinessModel = dataProvider.createOrderBusinessModelWithCertificate();
+    private final OrderModel orderModel = dataProvider.createOrderModelWithCertificate();
 
     @Mock
     private JPAOrderDAO jpaOrderDAO;
@@ -47,8 +47,8 @@ class OrderServiceImplTest {
     void shouldReturnProperOrderBusinessModelWhenResourceIsFound() throws ResourceNotFoundException {
         //GIVEN
         when(jpaOrderDAO.findById(ID)).thenReturn(Optional.of(order));
-        when(orderMapper.toOrderBusinessModel(order)).thenReturn(orderBusinessModel);
-        OrderBusinessModel expected = orderBusinessModel;
+        when(orderMapper.toOrderBusinessModel(order)).thenReturn(orderModel);
+        OrderModel expected = orderModel;
         //WHEN
         var actual = orderService.find(ID);
         //THEN
@@ -58,12 +58,12 @@ class OrderServiceImplTest {
     @Test
     void shouldReturnOrdersListWhenResourceIsFound() {
         //GIVEN
-        List<OrderBusinessModel> expected = List.of(orderBusinessModel);
+        List<OrderModel> expected = List.of(orderModel);
         List<Order> orders = List.of(order);
         //WHEN
         when(jpaOrderDAO.findAll(PAGE_NUMBER, PAGE_SIZE)).thenReturn(orders);
-        when(orderMapper.toOrderBusinessModel(order)).thenReturn(orderBusinessModel);
-        List<OrderBusinessModel> actual = orderService.findAll(PAGE_NUMBER, PAGE_SIZE).getContent();
+        when(orderMapper.toOrderBusinessModel(order)).thenReturn(orderModel);
+        List<OrderModel> actual = orderService.findAll(PAGE_NUMBER, PAGE_SIZE).getContent();
         //THEN
         assertEquals(expected, actual);
     }
@@ -71,13 +71,13 @@ class OrderServiceImplTest {
     @Test
     void shouldReturnOrdersListForUserWhenResourceIsFound() {
         //GIVEN
-        List<OrderBusinessModel> expected = List.of(orderBusinessModel);
+        List<OrderModel> expected = List.of(orderModel);
         List<Order> orders = List.of(order);
         //WHEN
         when(jpaOrderDAO.getTotal(ID)).thenReturn(NUMBER_OF_ORDERS);
         when(jpaOrderDAO.findByUser(ID, PAGE_NUMBER, PAGE_SIZE)).thenReturn(orders);
-        when(orderMapper.toOrderBusinessModel(order)).thenReturn(orderBusinessModel);
-        List<OrderBusinessModel> actual = orderService.findByUser(ID, PAGE_NUMBER, PAGE_SIZE).getContent();
+        when(orderMapper.toOrderBusinessModel(order)).thenReturn(orderModel);
+        List<OrderModel> actual = orderService.findByUser(ID, PAGE_NUMBER, PAGE_SIZE).getContent();
         //THEN
         assertEquals(expected, actual);
     }

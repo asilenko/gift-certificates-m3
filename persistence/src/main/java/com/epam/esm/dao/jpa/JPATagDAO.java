@@ -26,9 +26,7 @@ public class JPATagDAO extends AbstractCrdDao<Tag> implements TagDAO {
                     "   ON Tags.id = GiftCertificatesTags.tag_id " +
                     "INNER JOIN Orders " +
                     "   ON GiftCertificatesTags.gift_certificate_id = Orders.certificate_id " +
-                    "INNER JOIN Users " +
-                    "   ON Users.id = Orders.user_id " +
-                    "WHERE Users.id= " +
+                    "WHERE Orders.user_id= " +
                     "   (SELECT user_id " +
                     "    FROM Orders " +
                     "    GROUP BY user_id " +

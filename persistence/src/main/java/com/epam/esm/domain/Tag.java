@@ -7,7 +7,10 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * Model for tag entity.
+ * Model for tag entity. Tag is a category which all gift certificates are grouped by, f.e. "beauty", "sports".
+ * One certificate can have multiple but always globally unique tags.
+ *
+ * @see GiftCertificate
  */
 @Entity
 @Table(name = "Tags")
@@ -37,7 +40,8 @@ public class Tag extends AuditableEntity implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Tag tag = (Tag) o;
-        return name.equalsIgnoreCase(tag.name);
+        return Objects.equals(getId(), tag.getId())
+                && Objects.equals(name, tag.name);
     }
 
     @Override

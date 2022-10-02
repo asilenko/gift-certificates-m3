@@ -1,12 +1,13 @@
 package com.epam.esm.hateoas;
 
 import com.epam.esm.controller.UserController;
-import com.epam.esm.model.UserBusinessModel;
+import com.epam.esm.model.UserModel;
 import com.epam.esm.pagination.Page;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -25,30 +26,38 @@ public class UserLinker {
      * </ul>
      */
 
-    public CollectionModel<UserBusinessModel> addLinks(Page<UserBusinessModel> page) {
-        List<UserBusinessModel> users = page.getContent();
-        int pageNumber = page.getNumber();
-        int previousPage = page.getPreviousPageNumber();
-        int nextPage = page.getNextPageNumber();
-        int size = page.getSize();
-        Link previousPageLink = linkTo(methodOn(UserController.class).getAll(previousPage,size))
-                .withRel("previous")
-                .expand();
-        Link selfPageLink = linkTo(methodOn(UserController.class).getAll(pageNumber,size))
-                .withRel("current")
-                .expand();
-        Link nextPageLink = linkTo(methodOn(UserController.class).getAll(nextPage,size))
-                .withRel("next")
-                .expand();
-
+    public CollectionModel<UserModel> addLinks(Page<UserModel> page) {
+        List<UserModel> users = page.getContent();
+        List<Link> pages = generatePagesLinks(page);
         users.forEach(this::addLink);
-        return CollectionModel.of(users, previousPageLink, selfPageLink, nextPageLink);
+        return CollectionModel.of(users, pages);
+    }
+
+    private List<Link> generatePagesLinks(Page<UserModel> page) {
+        List<Link> pages = new ArrayList<>();
+        int size = page.getSize();
+        int previousPageNumber = page.getPreviousPageNumber();
+        Link previousPageLink = generatePageLink(previousPageNumber, size, PageRel.PREVIOUS.name());
+        pages.add(previousPageLink);
+        int currentPageNumber = page.getCurrentNumber();
+        Link selfPageLink = generatePageLink(currentPageNumber, size, PageRel.CURRENT.name());
+        pages.add(selfPageLink);
+        int nextPageNumber = page.getNextPageNumber();
+        Link nextPageLink = generatePageLink(nextPageNumber, size, PageRel.NEXT.name());
+        pages.add(nextPageLink);
+        return pages;
+    }
+
+    private Link generatePageLink(int pageNumber, int size, String pageRel) {
+        return linkTo(methodOn(UserController.class).getAll(pageNumber, size))
+                .withRel(pageRel.toLowerCase())
+                .expand();
     }
 
     /**
      * Add links to single user.
      */
-    public void addLink(UserBusinessModel user){
+    public void addLink(UserModel user){
         user.add(linkTo(UserController.class).slash(user.getId()).withSelfRel());
     }
 }

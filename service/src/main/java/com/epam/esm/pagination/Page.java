@@ -1,13 +1,13 @@
 package com.epam.esm.pagination;
 
-import com.epam.esm.model.BusinessModel;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.util.List;
 
 /**
  * Provides methods to help implement HATEOAS links to pages.
  */
-public class Page<T extends BusinessModel> {
+public class Page<T extends RepresentationModel<?>> {
     private static final int FIRST_PAGE = 1;
     private final int number;
     private final int size;
@@ -21,7 +21,7 @@ public class Page<T extends BusinessModel> {
         this.content = content;
     }
 
-    public int getNumber() {
+    public int getCurrentNumber() {
         return number;
     }
 

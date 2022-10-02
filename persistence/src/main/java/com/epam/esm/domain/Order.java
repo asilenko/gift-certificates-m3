@@ -11,7 +11,11 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
- * Model for order entity.
+ * Model for order entity. A user can purchase one gift certificate by placing an order. The cost of the order
+ * is calculated when the order is created and does not change if certificate price updates.
+ *
+ * @see GiftCertificate
+ * @see User
  */
 @Entity
 @Table(name = "Orders")
@@ -67,11 +71,11 @@ public class Order extends AuditableEntity implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return getId().equals(order.getId())
-                && cost.equals(order.cost)
-                && purchaseDate.equals(order.purchaseDate)
-                && userID.equals(order.userID)
-                && giftCertificate.equals(order.giftCertificate);
+        return Objects.equals(getId(), order.getId())
+                && Objects.equals(cost, order.cost)
+                && Objects.equals(purchaseDate, order.purchaseDate)
+                && Objects.equals(userID, order.userID)
+                && Objects.equals(giftCertificate, order.giftCertificate);
     }
 
     @Override

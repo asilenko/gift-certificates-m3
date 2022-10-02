@@ -11,13 +11,13 @@ import java.util.Objects;
  *
  * @see com.epam.esm.domain.Order
  */
-public class OrderBusinessModel extends RepresentationModel<OrderBusinessModel> implements BusinessModel{
+public class OrderModel extends RepresentationModel<OrderModel> {
 
     private Long id;
     private BigDecimal cost;
     private LocalDateTime purchaseDate;
     private Long userID;
-    private GiftCertificateBusinessModel giftCertificate;
+    private GiftCertificateModel giftCertificate;
 
     public Long getId() {
         return id;
@@ -51,11 +51,11 @@ public class OrderBusinessModel extends RepresentationModel<OrderBusinessModel> 
         this.userID = userID;
     }
 
-    public GiftCertificateBusinessModel getGiftCertificate() {
+    public GiftCertificateModel getGiftCertificate() {
         return giftCertificate;
     }
 
-    public void setGiftCertificate(GiftCertificateBusinessModel giftCertificate) {
+    public void setGiftCertificate(GiftCertificateModel giftCertificate) {
         this.giftCertificate = giftCertificate;
     }
 
@@ -63,7 +63,7 @@ public class OrderBusinessModel extends RepresentationModel<OrderBusinessModel> 
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        OrderBusinessModel that = (OrderBusinessModel) o;
+        OrderModel that = (OrderModel) o;
         return Objects.equals(id, that.id)
                 && Objects.equals(cost, that.cost)
                 && Objects.equals(purchaseDate, that.purchaseDate)

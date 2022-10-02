@@ -4,7 +4,7 @@ import com.epam.esm.dao.jpa.JPAUserDAO;
 import com.epam.esm.dataprovider.DataProvider;
 import com.epam.esm.domain.User;
 import com.epam.esm.exception.ResourceNotFoundException;
-import com.epam.esm.model.UserBusinessModel;
+import com.epam.esm.model.UserModel;
 import com.epam.esm.model.UserMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +25,7 @@ class UserServiceImplTest {
     private static final Integer PAGE_SIZE = 10;
     private final DataProvider dataProvider = new DataProvider();
     private final User user = dataProvider.createUser();
-    private final UserBusinessModel userBusinessModel = dataProvider.createUserBusinessModel();
+    private final UserModel userModel = dataProvider.createUserModel();
 
     @Mock
     private JPAUserDAO jpaUserDAO;
@@ -40,8 +40,8 @@ class UserServiceImplTest {
     void shouldReturnProperUserBusinessModelWhenResourceIsFound() throws ResourceNotFoundException {
         //GIVEN
         when(jpaUserDAO.findById(ID)).thenReturn(Optional.of(user));
-        when(userMapper.toUserBusinessModel(user)).thenReturn(userBusinessModel);
-        UserBusinessModel expected = userBusinessModel;
+        when(userMapper.toUserBusinessModel(user)).thenReturn(userModel);
+        UserModel expected = userModel;
         //WHEN
         var actual = userService.find(ID);
         //THEN
@@ -51,12 +51,12 @@ class UserServiceImplTest {
     @Test
     void shouldReturnUsersListWhenResourceIsFound() {
         //GIVEN
-        List<UserBusinessModel> expected = List.of(userBusinessModel);
+        List<UserModel> expected = List.of(userModel);
         List<User> users = List.of(user);
         //WHEN
         when(jpaUserDAO.findAll(PAGE_NUMBER, PAGE_SIZE)).thenReturn(users);
-        when(userMapper.toUserBusinessModel(user)).thenReturn(userBusinessModel);
-        List <UserBusinessModel> actual = userService.findAll(PAGE_NUMBER,PAGE_SIZE).getContent();
+        when(userMapper.toUserBusinessModel(user)).thenReturn(userModel);
+        List <UserModel> actual = userService.findAll(PAGE_NUMBER,PAGE_SIZE).getContent();
         //THEN
         assertEquals(expected, actual);
     }

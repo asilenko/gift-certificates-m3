@@ -4,10 +4,10 @@ import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.Order;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.domain.User;
-import com.epam.esm.model.GiftCertificateBusinessModel;
-import com.epam.esm.model.OrderBusinessModel;
-import com.epam.esm.model.TagBusinessModel;
-import com.epam.esm.model.UserBusinessModel;
+import com.epam.esm.model.GiftCertificateModel;
+import com.epam.esm.model.OrderModel;
+import com.epam.esm.model.TagModel;
+import com.epam.esm.model.UserModel;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -38,11 +38,11 @@ public class DataProvider {
         return tag;
     }
 
-    public TagBusinessModel createTestTagBusinessModel() {
-        TagBusinessModel tagBusinessModel = new TagBusinessModel();
-        tagBusinessModel.setName(NAME);
-        tagBusinessModel.setId(ID);
-        return tagBusinessModel;
+    public TagModel createTagModel() {
+        TagModel tagModel = new TagModel();
+        tagModel.setName(NAME);
+        tagModel.setId(ID);
+        return tagModel;
     }
 
     public GiftCertificate createGifCertificateWithTags() {
@@ -74,10 +74,10 @@ public class DataProvider {
         return tags;
     }
 
-    public Set<TagBusinessModel> createTagsBMSet(){
-        Set<TagBusinessModel> tags = new HashSet<>();
+    public Set<TagModel> createTagsModelSet(){
+        Set<TagModel> tags = new HashSet<>();
         for (long i = 0L; i < SET_QUANTITY; i++) {
-            TagBusinessModel tag = new TagBusinessModel();
+            TagModel tag = new TagModel();
             tag.setId(i);
             tag.setName(NAME + i);
             tags.add(tag);
@@ -85,33 +85,33 @@ public class DataProvider {
         return tags;
     }
 
-    public GiftCertificateBusinessModel createGifCertificateBusinessModelWithTags() {
-        GiftCertificateBusinessModel giftCertificateBusinessModel = createBaseGiftCertificateBusinessModel();
-        Set<TagBusinessModel> tags = createTagsBMSet();
-        giftCertificateBusinessModel.setTags(tags);
-        return giftCertificateBusinessModel;
+    public GiftCertificateModel createGifCertificateModelWithTags() {
+        GiftCertificateModel giftCertificateModel = createBaseGiftCertificateModel();
+        Set<TagModel> tags = createTagsModelSet();
+        giftCertificateModel.setTags(tags);
+        return giftCertificateModel;
     }
 
-    public GiftCertificateBusinessModel createBaseGiftCertificateBusinessModel() {
-        GiftCertificateBusinessModel giftCertificateBusinessModel = new GiftCertificateBusinessModel();
-        giftCertificateBusinessModel.setId(ID);
-        giftCertificateBusinessModel.setName(NAME);
-        giftCertificateBusinessModel.setDescription(DESCRIPTION);
-        giftCertificateBusinessModel.setPrice(PRICE);
-        giftCertificateBusinessModel.setDuration(DURATION);
-        giftCertificateBusinessModel.setCreateDate(CREATE_DATE);
-        giftCertificateBusinessModel.setLastUpdateDate(LAST_UPDATE_DATE);
-        return giftCertificateBusinessModel;
+    public GiftCertificateModel createBaseGiftCertificateModel() {
+        GiftCertificateModel giftCertificateModel = new GiftCertificateModel();
+        giftCertificateModel.setId(ID);
+        giftCertificateModel.setName(NAME);
+        giftCertificateModel.setDescription(DESCRIPTION);
+        giftCertificateModel.setPrice(PRICE);
+        giftCertificateModel.setDuration(DURATION);
+        giftCertificateModel.setCreateDate(CREATE_DATE);
+        giftCertificateModel.setLastUpdateDate(LAST_UPDATE_DATE);
+        return giftCertificateModel;
     }
 
-    public OrderBusinessModel createOrderBusinessModelWithCertificate() {
-        OrderBusinessModel orderBusinessModel = new OrderBusinessModel();
-        orderBusinessModel.setId(ID);
-        orderBusinessModel.setCost(PRICE);
-        orderBusinessModel.setPurchaseDate(CREATE_DATE_LDT);
-        orderBusinessModel.setUserID(ID);
-        orderBusinessModel.setGiftCertificate(createBaseGiftCertificateBusinessModel());
-        return orderBusinessModel;
+    public OrderModel createOrderModelWithCertificate() {
+        OrderModel orderModel = new OrderModel();
+        orderModel.setId(ID);
+        orderModel.setCost(PRICE);
+        orderModel.setPurchaseDate(CREATE_DATE_LDT);
+        orderModel.setUserID(ID);
+        orderModel.setGiftCertificate(createBaseGiftCertificateModel());
+        return orderModel;
     }
 
     public Order createOrderWithCertificate() {
@@ -124,11 +124,11 @@ public class DataProvider {
         return order;
     }
 
-    public UserBusinessModel createUserBusinessModel() {
-        UserBusinessModel userBusinessModel = new UserBusinessModel();
-        userBusinessModel.setId(ID);
-        userBusinessModel.setName(NAME);
-        return userBusinessModel;
+    public UserModel createUserModel() {
+        UserModel userModel = new UserModel();
+        userModel.setId(ID);
+        userModel.setName(NAME);
+        return userModel;
     }
 
     public User createUser() {

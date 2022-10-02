@@ -2,8 +2,8 @@ package com.epam.esm.service;
 
 import com.epam.esm.dao.OrderDAO;
 import com.epam.esm.exception.ResourceNotFoundException;
-import com.epam.esm.model.GiftCertificateBusinessModel;
-import com.epam.esm.model.OrderBusinessModel;
+import com.epam.esm.model.GiftCertificateModel;
+import com.epam.esm.model.OrderModel;
 import com.epam.esm.model.OrderMapper;
 import com.epam.esm.pagination.Page;
 import org.springframework.stereotype.Service;
@@ -36,7 +36,7 @@ class OrderServiceImpl implements OrderService {
      * {@inheritDoc}
      */
     @Override
-    public OrderBusinessModel find(Long id) throws ResourceNotFoundException {
+    public OrderModel find(Long id) throws ResourceNotFoundException {
         return orderMapper.toOrderBusinessModel(orderDAO.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No resource with id " + id)));
     }
@@ -45,12 +45,12 @@ class OrderServiceImpl implements OrderService {
      * {@inheritDoc}
      */
     @Override
-    public OrderBusinessModel placeOrder(Long userId, Long certificateId)
+    public OrderModel placeOrder(Long userId, Long certificateId)
             throws ResourceNotFoundException {
         userService.find(userId);
-        GiftCertificateBusinessModel certificate = giftCertificateService.find(certificateId);
+        GiftCertificateModel certificate = giftCertificateService.find(certificateId);
         BigDecimal cost = certificate.getPrice();
-        OrderBusinessModel order = new OrderBusinessModel();
+        OrderModel order = new OrderModel();
         order.setGiftCertificate(certificate);
         order.setUserID(userId);
         order.setCost(cost);
@@ -74,7 +74,7 @@ class OrderServiceImpl implements OrderService {
      * {@inheritDoc}
      */
     @Override
-    public Page<OrderBusinessModel> findAll(Integer pageNumber, Integer pageSize) {
+    public Page<OrderModel> findAll(Integer pageNumber, Integer pageSize) {
         var total = orderDAO.getTotal();
         var orders = orderDAO.findAll(pageNumber, pageSize)
                 .stream()
@@ -87,7 +87,7 @@ class OrderServiceImpl implements OrderService {
      * {@inheritDoc}
      */
     @Override
-    public Page<OrderBusinessModel> findByUser(Long userId, Integer pageNumber, Integer pageSize) {
+    public Page<OrderModel> findByUser(Long userId, Integer pageNumber, Integer pageSize) {
         int total = orderDAO.getTotal(userId);
         var orders = orderDAO.findByUser(userId, pageNumber, pageSize)
                 .stream()

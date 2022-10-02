@@ -3,7 +3,7 @@ package com.epam.esm.service;
 import com.epam.esm.dao.jpa.CertificateSearchCriteria;
 import com.epam.esm.exception.InvalidSortTypeException;
 import com.epam.esm.exception.ResourceNotFoundException;
-import com.epam.esm.model.GiftCertificateBusinessModel;
+import com.epam.esm.model.GiftCertificateModel;
 import com.epam.esm.pagination.Page;
 
 import java.util.Optional;
@@ -13,16 +13,16 @@ import java.util.Optional;
  *
  * @see com.epam.esm.domain.GiftCertificate
  */
-public interface GiftCertificateService extends CrdService <GiftCertificateBusinessModel>{
+public interface GiftCertificateService extends CrdService <GiftCertificateModel>{
 
     /**
      * Updates gift certificate with tags.
      *
-     * @param giftCertificateBusinessModel
+     * @param giftCertificateModel
      * @return
      * @throws ResourceNotFoundException
      */
-    GiftCertificateBusinessModel update(GiftCertificateBusinessModel giftCertificateBusinessModel)
+    GiftCertificateModel update(GiftCertificateModel giftCertificateModel)
             throws ResourceNotFoundException, InvalidFieldValueException;
 
     /**
@@ -33,7 +33,7 @@ public interface GiftCertificateService extends CrdService <GiftCertificateBusin
      * will be returned in case no search criteria or no request body provided.
      * @throws InvalidSortTypeException
      */
-    Page<GiftCertificateBusinessModel> findAllMatching(Optional<CertificateSearchCriteria> searchCriteria,
-                                                       Integer pageNumber, Integer pageSize)
+    Page<GiftCertificateModel> findAllMatching(Optional<CertificateSearchCriteria> searchCriteria,
+                                               Integer pageNumber, Integer pageSize)
             throws InvalidSortTypeException;
 }

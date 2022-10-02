@@ -4,10 +4,10 @@ import com.epam.esm.domain.User;
 import org.springframework.stereotype.Component;
 
 /**
- * Maps User from persistence layer to UserBusinessModel and vice versa.
+ * Maps User from persistence layer to UserModel and vice versa.
  *
  * @see com.epam.esm.domain.User
- * @see UserBusinessModel
+ * @see UserModel
  */
 @Component
 public class UserMapper {
@@ -16,14 +16,14 @@ public class UserMapper {
      * Maps BusinessModel to EntityModel.
      *
      * @param user
-     * @return UserBusinessModel
+     * @return UserModel
      * @see User
-     * @see UserBusinessModel
+     * @see UserModel
      */
-    public UserBusinessModel toUserBusinessModel(User user) {
-        UserBusinessModel userBusinessModel = new UserBusinessModel();
-        userBusinessModel.setId(user.getId());
-        userBusinessModel.setName(user.getName());
-        return userBusinessModel;
+    public UserModel toUserBusinessModel(User user) {
+        UserModel userModel = new UserModel();
+        userModel.setId(user.getId());
+        userModel.setName(user.getName());
+        return userModel;
     }
 }

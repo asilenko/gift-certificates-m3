@@ -2,7 +2,7 @@ package com.epam.esm.service;
 
 import com.epam.esm.dao.UserDAO;
 import com.epam.esm.exception.ResourceNotFoundException;
-import com.epam.esm.model.UserBusinessModel;
+import com.epam.esm.model.UserModel;
 import com.epam.esm.model.UserMapper;
 import com.epam.esm.pagination.Page;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public UserBusinessModel find(Long id) throws ResourceNotFoundException {
+    public UserModel find(Long id) throws ResourceNotFoundException {
         return userMapper.toUserBusinessModel(userDAO.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No resource with id " + id)));
     }
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public Page<UserBusinessModel> findAll(Integer pageNumber, Integer pageSize) {
+    public Page<UserModel> findAll(Integer pageNumber, Integer pageSize) {
         var total = userDAO.getTotal();
         var orders = userDAO.findAll(pageNumber, pageSize)
                 .stream()

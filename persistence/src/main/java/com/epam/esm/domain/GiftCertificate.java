@@ -14,7 +14,12 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * Model for gift certificate entity.
+ * Model for gift certificate entity. Gift certificate is associated with tags that describe the category of the gift
+ * certificate. The certificates can be ordered by the user by placing an order. One gift certificate can be purchased
+ * multiple times by different users.
+ *
+ * @see Order
+ * @see Tag
  */
 @Entity
 @Table(name = "GiftCertificates")

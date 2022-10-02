@@ -6,7 +6,7 @@ import com.epam.esm.dataprovider.DataProvider;
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.exception.InvalidSortTypeException;
 import com.epam.esm.exception.ResourceNotFoundException;
-import com.epam.esm.model.GiftCertificateBusinessModel;
+import com.epam.esm.model.GiftCertificateModel;
 import com.epam.esm.model.GiftCertificateMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,8 +41,8 @@ class GiftCertificateServiceImplTest {
     @InjectMocks
     private GiftCertificateServiceImpl giftCertificateService;
 
-    private final GiftCertificateBusinessModel giftCertificateBusinessModel = dataProvider
-            .createGifCertificateBusinessModelWithTags();
+    private final GiftCertificateModel giftCertificateModel = dataProvider
+            .createGifCertificateModelWithTags();
     private final GiftCertificate giftCertificate = dataProvider.createGifCertificateWithTags();
 
     @Test
@@ -50,8 +50,8 @@ class GiftCertificateServiceImplTest {
         //GIVEN
         when(giftCertificateDAO.findById(ID)).thenReturn(Optional.of(giftCertificate));
         when(giftCertificateMapper.toGiftCertificateBusinessModelWithTags(giftCertificate))
-                .thenReturn(giftCertificateBusinessModel);
-        GiftCertificateBusinessModel expected = dataProvider.createGifCertificateBusinessModelWithTags();
+                .thenReturn(giftCertificateModel);
+        GiftCertificateModel expected = dataProvider.createGifCertificateModelWithTags();
         //WHEN
         var actual = giftCertificateService.find(ID);
         //THEN
@@ -61,14 +61,14 @@ class GiftCertificateServiceImplTest {
     @Test
     void shouldReturnProperGiftCertificateBusinessModelWhenSuccessfullyAdded() {
         //GIVEN
-        GiftCertificateBusinessModel expected = giftCertificateBusinessModel;
+        GiftCertificateModel expected = giftCertificateModel;
         //WHEN
-        when(giftCertificateMapper.toGiftCertificateEntityModel(giftCertificateBusinessModel))
+        when(giftCertificateMapper.toGiftCertificateEntityModel(giftCertificateModel))
                 .thenReturn(giftCertificate);
         when(giftCertificateDAO.create(giftCertificate)).thenReturn(giftCertificate);
         when(giftCertificateMapper.toGiftCertificateBusinessModelWithTags(giftCertificate))
-                .thenReturn(giftCertificateBusinessModel);
-        GiftCertificateBusinessModel actual = giftCertificateService.create(giftCertificateBusinessModel);
+                .thenReturn(giftCertificateModel);
+        GiftCertificateModel actual = giftCertificateService.create(giftCertificateModel);
         //THEN
         assertEquals(expected, actual);
     }
@@ -85,7 +85,7 @@ class GiftCertificateServiceImplTest {
     @Test
     void updateShouldThrowWhenCertificateWithNullIDIsPassed() {
         //GIVEN
-        GiftCertificateBusinessModel certificate = new GiftCertificateBusinessModel();
+        GiftCertificateModel certificate = new GiftCertificateModel();
         //WHEN
         Exception exception = assertThrows(InvalidFieldValueException.class,
                 () -> giftCertificateService.update(certificate));

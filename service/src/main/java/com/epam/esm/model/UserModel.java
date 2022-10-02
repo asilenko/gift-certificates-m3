@@ -11,10 +11,10 @@ import java.util.Objects;
  *
  * @see com.epam.esm.domain.User
  */
-public class UserBusinessModel extends RepresentationModel<UserBusinessModel> implements BusinessModel {
+public class UserModel extends RepresentationModel<UserModel> {
     private Long id;
     private String name;
-    private List<OrderBusinessModel> orders = new ArrayList<>();
+    private List<OrderModel> orders = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -32,11 +32,11 @@ public class UserBusinessModel extends RepresentationModel<UserBusinessModel> im
         this.name = name;
     }
 
-    public List<OrderBusinessModel> getOrders() {
+    public List<OrderModel> getOrders() {
         return orders;
     }
 
-    public void setOrders(List<OrderBusinessModel> orders) {
+    public void setOrders(List<OrderModel> orders) {
         this.orders = orders;
     }
 
@@ -44,7 +44,7 @@ public class UserBusinessModel extends RepresentationModel<UserBusinessModel> im
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserBusinessModel that = (UserBusinessModel) o;
+        UserModel that = (UserModel) o;
         return Objects.equals(id, that.id)
                 && Objects.equals(name, that.name)
                 && Objects.equals(orders, that.orders);

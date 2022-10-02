@@ -1,12 +1,12 @@
 package com.epam.esm.service;
 
 import com.epam.esm.exception.ResourceNotFoundException;
-import com.epam.esm.model.BusinessModel;
+import org.springframework.hateoas.RepresentationModel;
 
 /**
  * CRD methods common for all entities.
  */
-public interface CrdService <T extends BusinessModel> {
+public interface CrdService <T extends RepresentationModel<?>> {
 
     /**
      * Finds a model by specified id.

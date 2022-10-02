@@ -2,7 +2,7 @@ package com.epam.esm.controller;
 
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.hateoas.TagLinker;
-import com.epam.esm.model.TagBusinessModel;
+import com.epam.esm.model.TagModel;
 import com.epam.esm.service.TagService;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
@@ -35,10 +35,10 @@ public class TagController {
      * Get tag resource by specified id.
      *
      * @param id
-     * @return TagBusinessModel
+     * @return TagModel
      */
     @GetMapping("/{id}")
-    public ResponseEntity<TagBusinessModel> getByID(@PathVariable Long id) throws ResourceNotFoundException {
+    public ResponseEntity<TagModel> getByID(@PathVariable Long id) throws ResourceNotFoundException {
         var tag = tagService.find(id);
         tagLinker.addLink(tag);
         return new ResponseEntity<>(tag, HttpStatus.OK);
@@ -47,7 +47,7 @@ public class TagController {
     /**
      * Gets all tags.
      *
-     * @return List of TagBusinessModel
+     * @return List of TagModel
      *
      * Request example:
      * <pre>
@@ -55,12 +55,12 @@ public class TagController {
      * </pre>
      */
     @GetMapping
-    public ResponseEntity<CollectionModel<TagBusinessModel>> getAll(
+    public ResponseEntity<CollectionModel<TagModel>> getAll(
             @RequestParam(defaultValue = "1") Integer pageNumber,
             @RequestParam(defaultValue = "20") Integer pageSize
     ) {
         var page = tagService.findAll(pageNumber, pageSize);
-        CollectionModel<TagBusinessModel> collectionModel = tagLinker.addLinks(page);
+        CollectionModel<TagModel> collectionModel = tagLinker.addLinks(page);
         return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
 
@@ -68,7 +68,7 @@ public class TagController {
      * Creates new Tag resource.
      *
      * @param tag
-     * @return TagBusinessModel
+     * @return TagModel
      * <p>
      * Request example:
      * <pre>
@@ -83,7 +83,7 @@ public class TagController {
      * </pre>
      */
     @PostMapping
-    public ResponseEntity<TagBusinessModel> create(@RequestBody TagBusinessModel tag) {
+    public ResponseEntity<TagModel> create(@RequestBody TagModel tag) {
         var createdTag = tagService.create(tag);
         tagLinker.addLink(createdTag);
         return new ResponseEntity<>(createdTag, HttpStatus.CREATED);
@@ -103,10 +103,10 @@ public class TagController {
     /**
      * Get the most widely used tag of a user with the highest cost of all orders.
      *
-     * @return TagBusinessModel
+     * @return TagModel
      */
     @GetMapping("/most_used")
-    public ResponseEntity<TagBusinessModel> getMostWidelyUsed() {
+    public ResponseEntity<TagModel> getMostWidelyUsed() {
         var tag = tagService.mostWidelyUsed();
         tagLinker.addLink(tag);
         return new ResponseEntity<>(tag, HttpStatus.OK);

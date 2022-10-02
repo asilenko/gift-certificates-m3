@@ -1,11 +1,9 @@
 package com.epam.esm.service;
 
 import com.epam.esm.exception.ResourceNotFoundException;
-import com.epam.esm.model.OrderBusinessModel;
+import com.epam.esm.model.OrderModel;
 import com.epam.esm.pagination.Page;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * Provides business operations for order.
@@ -21,7 +19,7 @@ public interface OrderService {
      * @return an order
      * @throws ResourceNotFoundException
      */
-    OrderBusinessModel find(Long id) throws ResourceNotFoundException;
+    OrderModel find(Long id) throws ResourceNotFoundException;
 
     /**
      * Place a new order for specified user.
@@ -30,7 +28,7 @@ public interface OrderService {
      * @param certificateId
      * @return created model
      */
-    OrderBusinessModel placeOrder(Long userId, Long certificateId) throws ResourceNotFoundException, InvalidFieldValueException;
+    OrderModel placeOrder(Long userId, Long certificateId) throws ResourceNotFoundException, InvalidFieldValueException;
 
     /**
      * Deletes order by specified id.
@@ -44,7 +42,7 @@ public interface OrderService {
      *
      * @return List of orders.
      */
-    Page<OrderBusinessModel> findAll(Integer pageNumber, Integer pageSize);
+    Page<OrderModel> findAll(Integer pageNumber, Integer pageSize);
 
     /**
      * Finds all orders placed by specified user.
@@ -52,5 +50,5 @@ public interface OrderService {
      * @param userId
      * @return List of orders.
      */
-    Page<OrderBusinessModel> findByUser(Long userId, Integer pageNumber, Integer pageSize);
+    Page<OrderModel> findByUser(Long userId, Integer pageNumber, Integer pageSize);
 }

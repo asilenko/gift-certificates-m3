@@ -5,7 +5,7 @@ import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.jpa.CertificateSearchCriteria;
 import com.epam.esm.exception.InvalidSortTypeException;
 import com.epam.esm.exception.ResourceNotFoundException;
-import com.epam.esm.model.GiftCertificateBusinessModel;
+import com.epam.esm.model.GiftCertificateModel;
 import com.epam.esm.model.GiftCertificateMapper;
 import com.epam.esm.pagination.Page;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final TagService tagService;
     private final GiftCertificateMapper giftCertificateMapper;
 
-    public GiftCertificateServiceImpl(GiftCertificateDAO giftCertificateDAO, TagService tagService, GiftCertificateMapper giftCertificateMapper) {
+    public GiftCertificateServiceImpl(GiftCertificateDAO giftCertificateDAO, TagService tagService,
+                                      GiftCertificateMapper giftCertificateMapper) {
         this.giftCertificateDAO = giftCertificateDAO;
         this.tagService = tagService;
         this.giftCertificateMapper = giftCertificateMapper;
@@ -35,7 +36,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      * {@inheritDoc}
      */
     @Override
-    public GiftCertificateBusinessModel find(Long id) throws ResourceNotFoundException {
+    public GiftCertificateModel find(Long id) throws ResourceNotFoundException {
         var giftCertificate = giftCertificateDAO.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No resource with id " + id));
         return giftCertificateMapper.toGiftCertificateBusinessModelWithTags(giftCertificate);
@@ -45,7 +46,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      * {@inheritDoc}
      */
     @Override
-    public GiftCertificateBusinessModel create(GiftCertificateBusinessModel certificate) {
+    public GiftCertificateModel create(GiftCertificateModel certificate) {
         prepareTags(certificate);
         var giftCertificateToCreate = giftCertificateMapper.toGiftCertificateEntityModel(certificate);
         giftCertificateToCreate.setId(null);
@@ -65,7 +66,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      * {@inheritDoc}
      */
     @Override
-    public GiftCertificateBusinessModel update(GiftCertificateBusinessModel certificate)
+    public GiftCertificateModel update(GiftCertificateModel certificate)
             throws ResourceNotFoundException, InvalidFieldValueException {
         Long certificateID = certificate.getId();
         if (certificateID == null) {
@@ -77,7 +78,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         return giftCertificateMapper.toGiftCertificateBusinessModelWithTags(updatedGCEM);
     }
 
-    private void prepareTags(GiftCertificateBusinessModel certificate) {
+    private void prepareTags(GiftCertificateModel certificate) {
         var preparedTags = certificate.getTags()
                 .stream()
                 .map(tagService::create)
@@ -89,8 +90,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      * {@inheritDoc}
      */
     @Override
-    public Page<GiftCertificateBusinessModel> findAllMatching(Optional<CertificateSearchCriteria> searchCriteria,
-                                                              Integer pageNumber, Integer pageSize)
+    public Page<GiftCertificateModel> findAllMatching(Optional<CertificateSearchCriteria> searchCriteria,
+                                                      Integer pageNumber, Integer pageSize)
             throws InvalidSortTypeException {
         if (searchCriteria.isEmpty()) {
             var total = giftCertificateDAO.getTotal();

@@ -3,14 +3,11 @@ package com.epam.esm.model;
 import com.epam.esm.domain.Order;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
- * Maps Order from persistence layer to OrderBusinessModel and vice versa.
+ * Maps Order from persistence layer to OrderModel and vice versa.
  *
  * @see com.epam.esm.domain.Order
- * @see OrderBusinessModel
+ * @see OrderModel
  */
 @Component
 public class OrderMapper {
@@ -25,19 +22,19 @@ public class OrderMapper {
     /**
      * Maps BusinessModel to EntityModel.
      *
-     * @param orderBusinessModel
+     * @param orderModel
      * @return Order
      * @see Order
-     * @see OrderBusinessModel
+     * @see OrderModel
      */
-    public Order toOrder(OrderBusinessModel orderBusinessModel) {
+    public Order toOrder(OrderModel orderModel) {
         Order order = new Order();
-        order.setId(orderBusinessModel.getId());
-        order.setCost(orderBusinessModel.getCost());
-        order.setPurchaseDate(orderBusinessModel.getPurchaseDate());
-        order.setUserID(orderBusinessModel.getUserID());
+        order.setId(orderModel.getId());
+        order.setCost(orderModel.getCost());
+        order.setPurchaseDate(orderModel.getPurchaseDate());
+        order.setUserID(orderModel.getUserID());
         order.setGiftCertificate(
-                giftCertificateMapper.toGiftCertificateEntityModel(orderBusinessModel.getGiftCertificate()));
+                giftCertificateMapper.toGiftCertificateEntityModel(orderModel.getGiftCertificate()));
         return order;
     }
 
@@ -45,18 +42,18 @@ public class OrderMapper {
      * Maps EntityModel to BusinessModel.
      *
      * @param order
-     * @return OrderBusinessModel
+     * @return OrderModel
      * @see Order
-     * @see OrderBusinessModel
+     * @see OrderModel
      */
-    public OrderBusinessModel toOrderBusinessModel(Order order) {
-        OrderBusinessModel orderBusinessModel = new OrderBusinessModel();
-        orderBusinessModel.setId(order.getId());
-        orderBusinessModel.setCost(order.getCost());
-        orderBusinessModel.setPurchaseDate(order.getPurchaseDate());
-        orderBusinessModel.setUserID(order.getUserID());
-        orderBusinessModel.
+    public OrderModel toOrderBusinessModel(Order order) {
+        OrderModel orderModel = new OrderModel();
+        orderModel.setId(order.getId());
+        orderModel.setCost(order.getCost());
+        orderModel.setPurchaseDate(order.getPurchaseDate());
+        orderModel.setUserID(order.getUserID());
+        orderModel.
                 setGiftCertificate(giftCertificateMapper.toGiftCertificateBusinessModel(order.getGiftCertificates()));
-        return orderBusinessModel;
+        return orderModel;
     }
 }

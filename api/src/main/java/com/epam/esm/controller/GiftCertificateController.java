@@ -4,7 +4,7 @@ import com.epam.esm.dao.jpa.CertificateSearchCriteria;
 import com.epam.esm.exception.InvalidSortTypeException;
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.hateoas.GiftCertificateLinker;
-import com.epam.esm.model.GiftCertificateBusinessModel;
+import com.epam.esm.model.GiftCertificateModel;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.InvalidFieldValueException;
 import org.springframework.hateoas.CollectionModel;
@@ -41,10 +41,10 @@ public class GiftCertificateController {
      * Get Gift certificate resource by specified id.
      *
      * @param id of gift certificate
-     * @return GiftCertificateBusinessModel
+     * @return GiftCertificateModel
      */
     @GetMapping("/{id}")
-    public ResponseEntity<GiftCertificateBusinessModel> getById(@PathVariable Long id) throws ResourceNotFoundException {
+    public ResponseEntity<GiftCertificateModel> getById(@PathVariable Long id) throws ResourceNotFoundException {
         var giftCertificate = giftCertificateService.find(id);
         giftCertificateLinker.addLinkWithTags(giftCertificate);
         return new ResponseEntity<>(giftCertificate, HttpStatus.OK);
@@ -77,7 +77,7 @@ public class GiftCertificateController {
      * @throws InvalidSortTypeException
      */
     @GetMapping
-    public ResponseEntity<CollectionModel<GiftCertificateBusinessModel>> getAllMatching
+    public ResponseEntity<CollectionModel<GiftCertificateModel>> getAllMatching
     (@RequestParam(required = false) List<String> tags,
      @RequestParam(required = false) String name,
      @RequestParam(required = false) String description,
@@ -90,7 +90,7 @@ public class GiftCertificateController {
                 sortByNameType, sortByDateType);
         var page = giftCertificateService.findAllMatching(
                 Optional.of(searchCriteria), pageNumber, pageSize);
-        CollectionModel<GiftCertificateBusinessModel> collectionModel = giftCertificateLinker.addLinks(page, tags, name,
+        CollectionModel<GiftCertificateModel> collectionModel = giftCertificateLinker.addLinks(page, tags, name,
                 description, sortByNameType, sortByDateType);
         return ResponseEntity.ok(collectionModel);
     }
@@ -149,7 +149,7 @@ public class GiftCertificateController {
      * </pre>
      */
     @PostMapping
-    public ResponseEntity<GiftCertificateBusinessModel> create(@RequestBody GiftCertificateBusinessModel certificate) {
+    public ResponseEntity<GiftCertificateModel> create(@RequestBody GiftCertificateModel certificate) {
         var giftCertificate = giftCertificateService.create(certificate);
         giftCertificateLinker.addLinkWithTags(giftCertificate);
         return new ResponseEntity<>(giftCertificate, HttpStatus.CREATED);
@@ -165,7 +165,7 @@ public class GiftCertificateController {
      * Fields with null values may be omitted.
      *
      * @param certificate
-     * @return GiftCertificateBusinessModel
+     * @return GiftCertificateModel
      * @throws ResourceNotFoundException
      * @throws InvalidFieldValueException
      *
@@ -202,7 +202,7 @@ public class GiftCertificateController {
      * </pre>
      */
     @PatchMapping
-    public ResponseEntity<GiftCertificateBusinessModel> updateCertificate(@RequestBody GiftCertificateBusinessModel certificate)
+    public ResponseEntity<GiftCertificateModel> updateCertificate(@RequestBody GiftCertificateModel certificate)
             throws ResourceNotFoundException, InvalidFieldValueException {
         var giftCertificate = giftCertificateService.update(certificate);
         giftCertificateLinker.addLinkWithTags(giftCertificate);

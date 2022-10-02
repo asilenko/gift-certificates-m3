@@ -12,10 +12,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Maps GiftCertificate from persistence layer to GiftCertificateBusinessModel.
+ * Maps GiftCertificate from persistence layer to GiftCertificateModel.
  *
  * @see com.epam.esm.domain.GiftCertificate
- * @see GiftCertificateBusinessModel
+ * @see GiftCertificateModel
  */
 @Component
 @Transactional
@@ -28,44 +28,44 @@ public class GiftCertificateMapper {
     }
 
     /**
-     * Maps GiftCertificate to GiftCertificateBusinessModel.
+     * Maps GiftCertificate to GiftCertificateModel.
      *
-     * @return GiftCertificateBusinessModel
+     * @return GiftCertificateModel
      */
-    public GiftCertificateBusinessModel toGiftCertificateBusinessModelWithTags(GiftCertificate giftCertificate) {
-        GiftCertificateBusinessModel giftCertificateBusinessModel = new GiftCertificateBusinessModel();
-        setBasicFields(giftCertificate, giftCertificateBusinessModel);
-        giftCertificateBusinessModel.setTags(extractTags(giftCertificate));
-        return giftCertificateBusinessModel;
+    public GiftCertificateModel toGiftCertificateBusinessModelWithTags(GiftCertificate giftCertificate) {
+        GiftCertificateModel giftCertificateModel = new GiftCertificateModel();
+        setBasicFields(giftCertificate, giftCertificateModel);
+        giftCertificateModel.setTags(extractTags(giftCertificate));
+        return giftCertificateModel;
     }
 
     /**
-     * Maps GiftCertificateBusinessModel to GiftCertificate.
+     * Maps GiftCertificateModel to GiftCertificate.
      *
      * @return GiftCertificate
      */
-    public GiftCertificate toGiftCertificateEntityModel(GiftCertificateBusinessModel certificateBusinessModel) {
+    public GiftCertificate toGiftCertificateEntityModel(GiftCertificateModel certificateModel) {
         GiftCertificate giftCertificate = new GiftCertificate();
-        giftCertificate.setId(certificateBusinessModel.getId());
-        giftCertificate.setName(certificateBusinessModel.getName());
-        giftCertificate.setDescription(certificateBusinessModel.getDescription());
-        giftCertificate.setPrice(certificateBusinessModel.getPrice());
-        giftCertificate.setDuration(certificateBusinessModel.getDuration());
-        giftCertificate.setCreateDate(prepareDate(certificateBusinessModel.getCreateDate()));
-        giftCertificate.setLastUpdateDate(prepareDate(certificateBusinessModel.getLastUpdateDate()));
-        giftCertificate.setTags(new HashSet<>(extractTags(certificateBusinessModel)));
+        giftCertificate.setId(certificateModel.getId());
+        giftCertificate.setName(certificateModel.getName());
+        giftCertificate.setDescription(certificateModel.getDescription());
+        giftCertificate.setPrice(certificateModel.getPrice());
+        giftCertificate.setDuration(certificateModel.getDuration());
+        giftCertificate.setCreateDate(prepareDate(certificateModel.getCreateDate()));
+        giftCertificate.setLastUpdateDate(prepareDate(certificateModel.getLastUpdateDate()));
+        giftCertificate.setTags(new HashSet<>(extractTags(certificateModel)));
         return giftCertificate;
     }
 
 
-    private Set<Tag> extractTags(GiftCertificateBusinessModel certificateBusinessModel) {
-        return certificateBusinessModel.getTags()
+    private Set<Tag> extractTags(GiftCertificateModel certificateModel) {
+        return certificateModel.getTags()
                 .stream()
                 .map(tagMapper::toTag)
                 .collect(Collectors.toSet());
     }
 
-    private Set<TagBusinessModel> extractTags(GiftCertificate giftCertificate) {
+    private Set<TagModel> extractTags(GiftCertificate giftCertificate) {
         return giftCertificate.getTags()
                 .stream()
                 .map(tagMapper::toTagBusinessModel)
@@ -81,19 +81,19 @@ public class GiftCertificateMapper {
         return date == null ? LocalDateTime.now() : LocalDateTime.parse(date);
     }
 
-    public GiftCertificateBusinessModel toGiftCertificateBusinessModel(GiftCertificate giftCertificate) {
-        GiftCertificateBusinessModel giftCertificateBusinessModel = new GiftCertificateBusinessModel();
-        setBasicFields(giftCertificate, giftCertificateBusinessModel);
-        return giftCertificateBusinessModel;
+    public GiftCertificateModel toGiftCertificateBusinessModel(GiftCertificate giftCertificate) {
+        GiftCertificateModel giftCertificateModel = new GiftCertificateModel();
+        setBasicFields(giftCertificate, giftCertificateModel);
+        return giftCertificateModel;
     }
 
-    private void setBasicFields(GiftCertificate giftCertificate, GiftCertificateBusinessModel giftCertificateBusinessModel) {
-        giftCertificateBusinessModel.setId(giftCertificate.getId());
-        giftCertificateBusinessModel.setName(giftCertificate.getName());
-        giftCertificateBusinessModel.setDescription(giftCertificate.getDescription());
-        giftCertificateBusinessModel.setPrice(giftCertificate.getPrice());
-        giftCertificateBusinessModel.setDuration(giftCertificate.getDuration());
-        giftCertificateBusinessModel.setCreateDate(dateAsISO8601(giftCertificate.getCreateDate()));
-        giftCertificateBusinessModel.setLastUpdateDate(dateAsISO8601(giftCertificate.getLastUpdateDate()));
+    private void setBasicFields(GiftCertificate giftCertificate, GiftCertificateModel giftCertificateModel) {
+        giftCertificateModel.setId(giftCertificate.getId());
+        giftCertificateModel.setName(giftCertificate.getName());
+        giftCertificateModel.setDescription(giftCertificate.getDescription());
+        giftCertificateModel.setPrice(giftCertificate.getPrice());
+        giftCertificateModel.setDuration(giftCertificate.getDuration());
+        giftCertificateModel.setCreateDate(dateAsISO8601(giftCertificate.getCreateDate()));
+        giftCertificateModel.setLastUpdateDate(dateAsISO8601(giftCertificate.getLastUpdateDate()));
     }
 }

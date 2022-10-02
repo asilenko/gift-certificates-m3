@@ -69,7 +69,7 @@ public class JPAGiftCertificateDAO extends AbstractCrdDao<GiftCertificate> imple
         if (giftCertificate.getDuration() != null) {
             certificateToUpdate.setDuration(giftCertificate.getDuration());
         }
-        if (giftCertificate.getTags() != null & !giftCertificate.getTags().isEmpty()) {
+        if (giftCertificate.getTags() != null && !giftCertificate.getTags().isEmpty()) {
             certificateToUpdate.setTags(giftCertificate.getTags());
         }
         entityManager.getTransaction().commit();

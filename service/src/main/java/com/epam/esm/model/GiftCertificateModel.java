@@ -14,7 +14,7 @@ import java.util.Set;
  * @see com.epam.esm.domain.GiftCertificate
  */
 @Relation(itemRelation = "gift certificate", collectionRelation = "gift certificates")
-public class GiftCertificateBusinessModel extends RepresentationModel<GiftCertificateBusinessModel> implements BusinessModel{
+public class GiftCertificateModel extends RepresentationModel<GiftCertificateModel> {
     private Long id;
     private String name;
     private String description;
@@ -22,7 +22,7 @@ public class GiftCertificateBusinessModel extends RepresentationModel<GiftCertif
     private int duration;
     private String createDate;
     private String lastUpdateDate;
-    private Set<TagBusinessModel> tags = new HashSet<>();
+    private Set<TagModel> tags = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -80,11 +80,11 @@ public class GiftCertificateBusinessModel extends RepresentationModel<GiftCertif
         this.lastUpdateDate = lastUpdateDate;
     }
 
-    public Set<TagBusinessModel> getTags() {
+    public Set<TagModel> getTags() {
         return tags;
     }
 
-    public void setTags(Set<TagBusinessModel> tags) {
+    public void setTags(Set<TagModel> tags) {
         this.tags = tags;
     }
 
@@ -92,7 +92,7 @@ public class GiftCertificateBusinessModel extends RepresentationModel<GiftCertif
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        GiftCertificateBusinessModel that = (GiftCertificateBusinessModel) o;
+        GiftCertificateModel that = (GiftCertificateModel) o;
         return duration == that.duration && Objects.equals(id, that.id)
                 && Objects.equals(name, that.name) && Objects.equals(description, that.description)
                 && Objects.equals(price, that.price) && Objects.equals(tags, that.tags);

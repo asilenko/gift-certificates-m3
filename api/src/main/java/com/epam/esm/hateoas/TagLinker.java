@@ -1,12 +1,13 @@
 package com.epam.esm.hateoas;
 
 import com.epam.esm.controller.TagController;
-import com.epam.esm.model.TagBusinessModel;
+import com.epam.esm.model.TagModel;
 import com.epam.esm.pagination.Page;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -25,30 +26,38 @@ public class TagLinker {
      *     <li>previous, current and next page</li>
      * </ul>
      */
-    public CollectionModel<TagBusinessModel> addLinks(Page<TagBusinessModel> page) {
-        List<TagBusinessModel> tags = page.getContent();
-        int pageNumber = page.getNumber();
-        int previousPage = page.getPreviousPageNumber();
-        int nextPage = page.getNextPageNumber();
-        int size = page.getSize();
-        Link previousPageLink = linkTo(methodOn(TagController.class).getAll(previousPage,size))
-                .withRel("previous")
-                .expand();
-        Link selfPageLink = linkTo(methodOn(TagController.class).getAll(pageNumber,size))
-                .withRel("current")
-                .expand();
-        Link nextPageLink = linkTo(methodOn(TagController.class).getAll(nextPage,size))
-                .withRel("next")
-                .expand();
-
+    public CollectionModel<TagModel> addLinks(Page<TagModel> page) {
+        List<TagModel> tags = page.getContent();
+        List<Link> pages = generatePagesLinks(page);
         tags.forEach(this::addLink);
-        return CollectionModel.of(tags, previousPageLink, selfPageLink, nextPageLink);
+        return CollectionModel.of(tags, pages);
+    }
+
+    private List<Link> generatePagesLinks(Page<TagModel> page) {
+        List<Link> pages = new ArrayList<>();
+        int size = page.getSize();
+        int previousPageNumber = page.getPreviousPageNumber();
+        Link previousPageLink = generatePageLink(previousPageNumber, size, PageRel.PREVIOUS.name());
+        pages.add(previousPageLink);
+        int currentPageNumber = page.getCurrentNumber();
+        Link selfPageLink = generatePageLink(currentPageNumber, size, PageRel.CURRENT.name());
+        pages.add(selfPageLink);
+        int nextPageNumber = page.getNextPageNumber();
+        Link nextPageLink = generatePageLink(nextPageNumber, size, PageRel.NEXT.name());
+        pages.add(nextPageLink);
+        return pages;
+    }
+
+    private Link generatePageLink(int pageNumber, int size, String pageRel) {
+        return linkTo(methodOn(TagController.class).getAll(pageNumber, size))
+                .withRel(pageRel.toLowerCase())
+                .expand();
     }
 
     /**
      * Add links to single tag.
      */
-    public void addLink(TagBusinessModel tag){
+    public void addLink(TagModel tag){
         tag.add(linkTo(TagController.class).slash(tag.getId()).withSelfRel());
     }
 }

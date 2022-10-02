@@ -3,8 +3,8 @@ package com.epam.esm.demo;
 import com.epam.esm.dao.UserDAO;
 import com.epam.esm.domain.User;
 import com.epam.esm.exception.ResourceNotFoundException;
-import com.epam.esm.model.GiftCertificateBusinessModel;
-import com.epam.esm.model.TagBusinessModel;
+import com.epam.esm.model.GiftCertificateModel;
+import com.epam.esm.model.TagModel;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.InvalidFieldValueException;
 import com.epam.esm.service.OrderService;
@@ -41,11 +41,11 @@ class DemoDbPopulator {
                                      OrderService orderService) {
         return args -> {
             DataFactory dataFactory = new DataFactory();
-            int numberOfUsers = 1000;
+            int numberOfUsers = 10;
 
-            Set<String> tagNames = generateTagNames(1000);
-            List<TagBusinessModel> tags = insertTags(tagService, tagNames);
-            List<GiftCertificateBusinessModel> certificates = insertCertificates(giftCertificateService, tags);
+            Set<String> tagNames = generateTagNames(10);
+            List<TagModel> tags = insertTags(tagService, tagNames);
+            List<GiftCertificateModel> certificates = insertCertificates(giftCertificateService, tags);
             insertUsers(userDAO, dataFactory, numberOfUsers);
             placeOrders(orderService, certificates,numberOfUsers);
         };
@@ -60,9 +60,9 @@ class DemoDbPopulator {
         return words;
     }
 
-    private List<TagBusinessModel> insertTags(TagService tagService, Set<String> names) {
-        List<TagBusinessModel> tags = new ArrayList<>();
-        TagBusinessModel tag = new TagBusinessModel();
+    private List<TagModel> insertTags(TagService tagService, Set<String> names) {
+        List<TagModel> tags = new ArrayList<>();
+        TagModel tag = new TagModel();
         for (String word : names) {
             tag.setName(word);
             tags.add(tagService.create(tag));
@@ -70,11 +70,11 @@ class DemoDbPopulator {
         return tags;
     }
 
-    private List<GiftCertificateBusinessModel> insertCertificates(GiftCertificateService giftCertificateService, List<TagBusinessModel> tags) {
-        List<GiftCertificateBusinessModel> certificates = new ArrayList<>();
-        GiftCertificateBusinessModel certificate = new GiftCertificateBusinessModel();
+    private List<GiftCertificateModel> insertCertificates(GiftCertificateService giftCertificateService, List<TagModel> tags) {
+        List<GiftCertificateModel> certificates = new ArrayList<>();
+        GiftCertificateModel certificate = new GiftCertificateModel();
         LocalDateTime now = LocalDateTime.now();
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 100; i++) {
             certificate.setName(wordFactory.getSentence(2));
             certificate.setDescription(wordFactory.getSentence(random.nextInt(7) + 3));
             certificate.setPrice(BigDecimal.valueOf(Math.random() * 500));
@@ -83,15 +83,15 @@ class DemoDbPopulator {
             certificate.setCreateDate(createDate.toString());
             LocalDateTime updateDate = now.minusHours(random.nextInt(3599));
             certificate.setLastUpdateDate(updateDate.toString());
-            Set<TagBusinessModel> tagsForCertificate = getRandomTags(tags);
+            Set<TagModel> tagsForCertificate = getRandomTags(tags);
             certificate.setTags(tagsForCertificate);
             certificates.add(giftCertificateService.create(certificate));
         }
         return certificates;
     }
 
-    private Set<TagBusinessModel> getRandomTags(List<TagBusinessModel> tags) {
-        Set<TagBusinessModel> randomTags = new HashSet<>();
+    private Set<TagModel> getRandomTags(List<TagModel> tags) {
+        Set<TagModel> randomTags = new HashSet<>();
         for (int i = 0; i < random.nextInt(3) + 3; i++) {
             randomTags.add(tags.get(random.nextInt(tags.size())));
         }
@@ -107,10 +107,10 @@ class DemoDbPopulator {
     }
 
     private void placeOrders(OrderService orderService,
-                             List<GiftCertificateBusinessModel> certificates,
+                             List<GiftCertificateModel> certificates,
                              int numberOfUsers)
             throws ResourceNotFoundException, InvalidFieldValueException {
-        for (GiftCertificateBusinessModel certificate : certificates) {
+        for (GiftCertificateModel certificate : certificates) {
             long userId = random.nextInt(numberOfUsers) + 1L;
             orderService.placeOrder(userId, certificate.getId());
         }

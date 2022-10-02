@@ -3,7 +3,7 @@ package com.epam.esm.service;
 import com.epam.esm.dao.TagDAO;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.exception.ResourceNotFoundException;
-import com.epam.esm.model.TagBusinessModel;
+import com.epam.esm.model.TagModel;
 import com.epam.esm.model.TagMapper;
 import com.epam.esm.pagination.Page;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class TagServiceImpl implements TagService {
      * {@inheritDoc}
      */
     @Override
-    public TagBusinessModel find(Long id) throws ResourceNotFoundException {
+    public TagModel find(Long id) throws ResourceNotFoundException {
         return tagMapper.toTagBusinessModel(tagDAO.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No resource with id " + id)));
     }
@@ -40,7 +40,7 @@ public class TagServiceImpl implements TagService {
      * {@inheritDoc}
      */
     @Override
-    public Page<TagBusinessModel> findAll(Integer pageNumber, Integer pageSize) {
+    public Page<TagModel> findAll(Integer pageNumber, Integer pageSize) {
         var tags = tagDAO.findAll(pageNumber, pageSize)
                 .stream()
                 .map(tagMapper::toTagBusinessModel)
@@ -53,11 +53,11 @@ public class TagServiceImpl implements TagService {
      * {@inheritDoc}
      */
     @Override
-    public TagBusinessModel create(TagBusinessModel tagBusinessModel) {
-        Optional<Tag> tagFromDB = tagDAO.findByName(tagBusinessModel.getName().toLowerCase().trim());
+    public TagModel create(TagModel tagModel) {
+        Optional<Tag> tagFromDB = tagDAO.findByName(tagModel.getName().toLowerCase().trim());
         if (tagFromDB.isEmpty()) {
-            tagBusinessModel.setId(null);
-            var createdTag = tagDAO.create(tagMapper.toTag(tagBusinessModel));
+            tagModel.setId(null);
+            var createdTag = tagDAO.create(tagMapper.toTag(tagModel));
             return tagMapper.toTagBusinessModel(createdTag);
         } else {
             return tagMapper.toTagBusinessModel(tagFromDB.get());
@@ -76,7 +76,7 @@ public class TagServiceImpl implements TagService {
      * {@inheritDoc}
      */
     @Override
-    public TagBusinessModel mostWidelyUsed() {
+    public TagModel mostWidelyUsed() {
         return tagMapper.toTagBusinessModel(tagDAO.mostWidelyUsed());
     }
 }
