@@ -93,7 +93,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public Page<GiftCertificateModel> findAllMatching(Optional<CertificateSearchCriteria> searchCriteria,
                                                       Integer pageNumber, Integer pageSize)
             throws InvalidSortTypeException {
-        if (searchCriteria.isEmpty()) {
+        if (searchCriteria.isEmpty() || !searchCriteria.get().hasValues()) {
             var total = giftCertificateDAO.getTotal();
             var certificates =  giftCertificateDAO.findAll(pageNumber, pageSize)
                     .stream()

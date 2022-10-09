@@ -6,6 +6,7 @@ import com.epam.esm.domain.Order;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -20,6 +21,9 @@ import java.util.List;
 @Repository
 @Transactional
 public class JPAOrderDAO extends AbstractCrdDao<Order> implements OrderDAO {
+
+    private static final String SELECT_COUNT_BY_USER_ID = "SELECT count(*) FROM Order order WHERE order.userID=:userid";
+
     public JPAOrderDAO() {
         setClazz(Order.class);
     }
@@ -29,10 +33,9 @@ public class JPAOrderDAO extends AbstractCrdDao<Order> implements OrderDAO {
      */
     @Override
     public int getTotal(Long userId) {
-        CriteriaQuery<Order> criteriaQuery = getOrderCriteriaQuery(userId);
-        return entityManager.createQuery(criteriaQuery)
-                .getResultList()
-                .size();
+        TypedQuery<Long> query = entityManager.createQuery(SELECT_COUNT_BY_USER_ID, Long.class);
+        query.setParameter("userid", userId);
+        return  query.getSingleResult().intValue();
     }
 
     /**

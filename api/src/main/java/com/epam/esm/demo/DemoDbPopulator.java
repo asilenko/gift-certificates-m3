@@ -28,7 +28,7 @@ import java.util.Set;
 @Profile("demo")
 class DemoDbPopulator {
 
-
+    private static final int ROWS = 1000;
     @Autowired
     private WordFactory wordFactory;
     Random random = new Random();
@@ -41,19 +41,17 @@ class DemoDbPopulator {
                                      OrderService orderService) {
         return args -> {
             DataFactory dataFactory = new DataFactory();
-            int numberOfUsers = 10;
-
-            Set<String> tagNames = generateTagNames(10);
+            Set<String> tagNames = generateTagNames();
             List<TagModel> tags = insertTags(tagService, tagNames);
             List<GiftCertificateModel> certificates = insertCertificates(giftCertificateService, tags);
-            insertUsers(userDAO, dataFactory, numberOfUsers);
-            placeOrders(orderService, certificates,numberOfUsers);
+            insertUsers(userDAO, dataFactory);
+            placeOrders(orderService, certificates);
         };
     }
 
-    private Set<String> generateTagNames(int numberOfNames) {
+    private Set<String> generateTagNames() {
         Set<String> words = new HashSet<>();
-        while (words.size() < numberOfNames) {
+        while (words.size() < ROWS) {
             String word = wordFactory.getRandomWord();
             words.add(word);
         }
@@ -70,11 +68,11 @@ class DemoDbPopulator {
         return tags;
     }
 
-    private List<GiftCertificateModel> insertCertificates(GiftCertificateService giftCertificateService, List<TagModel> tags) {
+    private List<GiftCertificateModel> insertCertificates(GiftCertificateService certificateService, List<TagModel> tags) {
         List<GiftCertificateModel> certificates = new ArrayList<>();
         GiftCertificateModel certificate = new GiftCertificateModel();
         LocalDateTime now = LocalDateTime.now();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < ROWS * 10; i++) {
             certificate.setName(wordFactory.getSentence(2));
             certificate.setDescription(wordFactory.getSentence(random.nextInt(7) + 3));
             certificate.setPrice(BigDecimal.valueOf(Math.random() * 500));
@@ -85,7 +83,7 @@ class DemoDbPopulator {
             certificate.setLastUpdateDate(updateDate.toString());
             Set<TagModel> tagsForCertificate = getRandomTags(tags);
             certificate.setTags(tagsForCertificate);
-            certificates.add(giftCertificateService.create(certificate));
+            certificates.add(certificateService.create(certificate));
         }
         return certificates;
     }
@@ -98,8 +96,8 @@ class DemoDbPopulator {
         return randomTags;
     }
 
-    private void insertUsers(UserDAO userDAO, DataFactory dataFactory, int numberOfUsers) {
-        for (int i = 0; i < numberOfUsers; i++) {
+    private void insertUsers(UserDAO userDAO, DataFactory dataFactory) {
+        for (int i = 0; i < ROWS; i++) {
             User user = new User();
             user.setName(dataFactory.getName());
             userDAO.create(user);
@@ -107,11 +105,10 @@ class DemoDbPopulator {
     }
 
     private void placeOrders(OrderService orderService,
-                             List<GiftCertificateModel> certificates,
-                             int numberOfUsers)
+                             List<GiftCertificateModel> certificates)
             throws ResourceNotFoundException, InvalidFieldValueException {
         for (GiftCertificateModel certificate : certificates) {
-            long userId = random.nextInt(numberOfUsers) + 1L;
+            long userId = random.nextInt(ROWS) + 1L;
             orderService.placeOrder(userId, certificate.getId());
         }
     }

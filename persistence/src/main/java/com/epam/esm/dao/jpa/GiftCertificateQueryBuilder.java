@@ -28,8 +28,7 @@ public class GiftCertificateQueryBuilder {
     private static final String DESCRIPTION = "description";
 
 
-    enum Sort {ASC, DESC}
-
+    enum Sort {ASC, DESC;}
 
     CriteriaQuery<GiftCertificate> buildCriteriaQuery(CriteriaBuilder criteriaBuilder,
                                                       CertificateSearchCriteria searchCriteria)
@@ -105,7 +104,7 @@ public class GiftCertificateQueryBuilder {
         if (sortBy != null) {
             if (!Enums.getIfPresent(Sort.class, sortBy).isPresent()) {
                 throw new InvalidSortTypeException("Invalid sort type value for name. " +
-                        "Proper value should match ACS or DESC");
+                        "Proper value should match ASC or DESC");
             } else if (sortBy.equals(Sort.ASC.name())) {
                 sortingRestrictions.add(criteriaBuilder.asc(certificate.get(column)));
             } else {

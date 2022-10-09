@@ -4,6 +4,8 @@ import com.epam.esm.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
@@ -68,8 +70,9 @@ public abstract class AbstractCrdDao<T extends Serializable> implements CrdDao<T
      * Calculate total number of entities.
      */
     public int getTotal() {
-        return entityManager.createQuery("from " + clazz.getName(), clazz)
-                .getResultList()
-                .size();
+        CriteriaBuilder qb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> cq = qb.createQuery(Long.class);
+        cq.select(qb.count(cq.from(clazz)));
+        return  entityManager.createQuery(cq).getSingleResult().intValue();
     }
 }

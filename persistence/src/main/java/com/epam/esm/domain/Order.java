@@ -2,6 +2,7 @@ package com.epam.esm.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -30,7 +31,7 @@ public class Order extends AuditableEntity implements Serializable {
     @Column(name = "user_id", nullable = false, updatable = false)
     private Long userID;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "certificate_id")
     private GiftCertificate giftCertificate;
 

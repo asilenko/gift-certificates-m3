@@ -67,4 +67,10 @@ public class CertificateSearchCriteria {
     public void setSortByDateType(String sortByDateType) {
         this.sortByDateType = sortByDateType;
     }
+
+    public boolean hasValues() {
+        return tags != null
+                || certificateName != null
+                || certificateDescription != null;
+    }
 }

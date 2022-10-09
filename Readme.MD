@@ -10,9 +10,9 @@ This repository holds solution for [Java Laboratory task](https://github.com/mjc
 ## Task
 ### General requirements
 
-- [ ] Code should be clean and should not contain any “developer-purpose” constructions.
-- [ ] App should be designed and written with respect to OOD and SOLID principles.
-- [ ] Code should contain valuable comments where appropriate.
+- [x] Code should be clean and should not contain any “developer-purpose” constructions.
+- [x] App should be designed and written with respect to OOD and SOLID principles.
+- [x] Code should contain valuable comments where appropriate.
 - [x] Public APIs should be documented (Javadoc).
 - [x] Clear layered structure should be used with responsibilities of each application layer defined.
 - [x] JSON should be used as a format of client-server communication messages.
@@ -26,7 +26,7 @@ This repository holds solution for [Java Laboratory task](https://github.com/mjc
       }
 
   where *errorCode” is your custom code (it can be based on http status and requested resource - certificate or tag)
-- [ ] Abstraction should be used everywhere to avoid code duplication.
+- [x] Abstraction should be used everywhere to avoid code duplication.
 - [x] Several configurations should be implemented.
 
 #### Part 1
@@ -68,9 +68,9 @@ The system should be extended to expose the following REST APIs:
 #### Part 3
 
 This sub-module covers following topics:
-- [ ] ORM
-- [ ] JPA & Hibernate
-- [ ] Transactions  
+- [x] ORM
+- [x] JPA & Hibernate
+- [x] Transactions  
  ORM stands for Object Relational Mapping. It’s a bit of an abstract concept – but basically it’s a technique that allows us to query and change data from the database in an object oriented way. ORMs provide a high-level abstraction upon a relational database that allows a developer to write Java code instead of SQL to create, read, update and delete data and schemas in their database. Developers can use the programming language they are comfortable with to work with a database instead of writing SQL statements or stored procedures. A JPA (Java Persistence API) is a specification of Java which is used to access, manage, and persist data between Java object and relational database. It is considered as a standard approach for Object Relational Mapping. JPA can be seen as a bridge between object-oriented domain models and relational database systems. Being a specification, JPA doesn't perform any operation by itself. Thus, it requires implementation. So, ORM tools like Hibernate, TopLink, and iBatis implements JPA specifications for data persistence. A transaction usually means a sequence of information exchange and related work (such as database updating) that is treated as a unit for the purposes of satisfying a request and for ensuring database integrity. For a transaction to be completed and database changes to made permanent, a transaction has to be completed in its entirety.
 
 ##### Application requirements
@@ -87,10 +87,10 @@ This sub-module covers following topics:
 ## Demo
 ### Practical part
 
-- [ ] Generate for a demo at least
-  - [ ] 1000 users
-  - [ ] 1000 tags
-  - [ ] 10’000 gift certificates (should be linked with tags and users)
+- [x] Generate for a demo at least
+  - [x] 1000 users
+  - [x] 1000 tags
+  - [x] 10’000 gift certificates (should be linked with tags and users)
    All values should look like more -or-less meaningful: random words, but not random letters
-- [ ] Demonstrate API using Postman tool (prepare for demo Postman collection with APIs)
+- [x] Demonstrate API using Postman tool (prepare for demo Postman collection with APIs)
 - [x] (Optional) Build & run application using command line
