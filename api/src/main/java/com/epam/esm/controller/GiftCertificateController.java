@@ -1,19 +1,23 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dao.jdbc.CertificateSearchCriteria;
+import com.epam.esm.dao.jpa.CertificateSearchCriteria;
 import com.epam.esm.exception.InvalidSortTypeException;
-import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.exception.ResourceNotFoundException;
-import com.epam.esm.model.GiftCertificateBusinessModel;
+import com.epam.esm.hateoas.GiftCertificateLinker;
+import com.epam.esm.model.GiftCertificateModel;
+import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.InvalidFieldValueException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -24,49 +28,71 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/certificates")
-class GiftCertificateController {
-    @Autowired
-    GiftCertificateService giftCertificateService;
+public class GiftCertificateController {
+    private final GiftCertificateService giftCertificateService;
+    private final GiftCertificateLinker giftCertificateLinker;
+
+    public GiftCertificateController(GiftCertificateService giftCertificateService, GiftCertificateLinker giftCertificateLinker) {
+        this.giftCertificateService = giftCertificateService;
+        this.giftCertificateLinker = giftCertificateLinker;
+    }
 
     /**
      * Get Gift certificate resource by specified id.
      *
      * @param id of gift certificate
-     * @return GiftCertificateBusinessModel
+     * @return GiftCertificateModel
      */
     @GetMapping("/{id}")
-    public GiftCertificateBusinessModel getCertificateByID(@PathVariable Long id) throws ResourceNotFoundException {
-        return giftCertificateService.findCertificateById(id);
+    public ResponseEntity<GiftCertificateModel> getById(@PathVariable Long id) throws ResourceNotFoundException {
+        var giftCertificate = giftCertificateService.find(id);
+        giftCertificateLinker.addLinkWithTags(giftCertificate);
+        return new ResponseEntity<>(giftCertificate, HttpStatus.OK);
     }
 
     /**
      * Return list of gift certificates with tags. Results might be sorted by certificate name or creation date.
      *
-     * @param searchCriteria
+     * Output can be narrowed by search criteria:
+     * <ul>
+     *     <li> list of tags related to gift certificate,
+     *     <li> gift certificate name or part of it,
+     *     <li> gift certificate description or part of it.
+     * </ul>
      * @return List of matching certificates with tags according to search criteria. All existing certificates will be
-     * returned in case no search criteria or no request body provided.
-     *
-     * Request example:
-     * <pre>
-     * GET /api/certificates/ HTTP/1.1
+     * returned in case no search criteria were provided.
+     * <p>
+     * Request example for search with few params specified:
+     * GET /certificates/?name=food&sortByDateType=DESC HTTP/1.1
      * Host: localhost:8080
-     * Content-Type: application/json
-     * Content-Length: 168
-     *
-     * {
-     *     "tagName": "drinks",
-     *     "certificateName": "Queen",
-     *     "certificateDescription": "restaurant",
-     *     "sortByNameType": "ASC",
-     *     "sortByDateType": "DESC"
-     * }
-     * </pre>
+     * <p>
+     * Request example for search with all params specified:
+     * GET /certificates/?tags=food,handmade&name=Queen&description=restaurant&sortByNameType=ASC&sortByDateType=DESC&pageNumber=1&pageSize=2 HTTP/1.1
+     * Host: localhost:8080
+     * <p>
+     * Request example to find all gift certificates:
+     * GET /certificates/ HTTP/1.1
+     * Host: localhost:8080
+     * <p>
      * @throws InvalidSortTypeException
      */
     @GetMapping
-    public List<GiftCertificateBusinessModel> getAllMatching
-    (@RequestBody(required = false) CertificateSearchCriteria searchCriteria) throws InvalidSortTypeException {
-        return giftCertificateService.findAllMatching(Optional.ofNullable(searchCriteria));
+    public ResponseEntity<CollectionModel<GiftCertificateModel>> getAllMatching
+    (@RequestParam(required = false) List<String> tags,
+     @RequestParam(required = false) String name,
+     @RequestParam(required = false) String description,
+     @RequestParam(required = false) String sortByNameType,
+     @RequestParam(required = false) String sortByDateType,
+     @RequestParam(defaultValue = "1") Integer pageNumber,
+     @RequestParam(defaultValue = "20") Integer pageSize)
+            throws InvalidSortTypeException, ResourceNotFoundException {
+        CertificateSearchCriteria searchCriteria = new CertificateSearchCriteria(tags, name, description,
+                sortByNameType, sortByDateType);
+        var page = giftCertificateService.findAllMatching(
+                Optional.of(searchCriteria), pageNumber, pageSize);
+        CollectionModel<GiftCertificateModel> collectionModel = giftCertificateLinker.addLinks(page, tags, name,
+                description, sortByNameType, sortByDateType);
+        return ResponseEntity.ok(collectionModel);
     }
 
     /**
@@ -75,12 +101,14 @@ class GiftCertificateController {
      * @param id
      */
     @DeleteMapping("/{id}")
-    public void removeCertificateByID(@PathVariable Long id) {
-        giftCertificateService.deleteById(id);
+    public ResponseEntity<Void> deleteByID(@PathVariable Long id) throws ResourceNotFoundException {
+        giftCertificateService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     /**
      * Add new gift certificate with related tags. If new tags are passed, they are being added to database.
+     * Fields with null values may be omitted.
      *
      * @param certificate
      *
@@ -121,15 +149,23 @@ class GiftCertificateController {
      * </pre>
      */
     @PostMapping
-    public GiftCertificateBusinessModel addNewCertificate(@RequestBody GiftCertificateBusinessModel certificate) {
-        return giftCertificateService.addNewCertificate(certificate);
+    public ResponseEntity<GiftCertificateModel> create(@RequestBody GiftCertificateModel certificate) {
+        var giftCertificate = giftCertificateService.create(certificate);
+        giftCertificateLinker.addLinkWithTags(giftCertificate);
+        return new ResponseEntity<>(giftCertificate, HttpStatus.CREATED);
     }
 
     /**
-     * Updates gift certificate with tags. If new tags are passed, they are being added to database.
+     * Updates gift certificate in two ways:
+     * <ul>
+     *     <li> if gift certificate is passed with tags, all other fields should be specified as well. If new tags
+     *     are passed, they are being added to database.</li>
+     *     <li>if certificate is passed without tags, only specified fields will be updated</li>
+     * </ul>
+     * Fields with null values may be omitted.
      *
      * @param certificate
-     * @return GiftCertificateBusinessModel
+     * @return GiftCertificateModel
      * @throws ResourceNotFoundException
      * @throws InvalidFieldValueException
      *
@@ -166,8 +202,10 @@ class GiftCertificateController {
      * </pre>
      */
     @PatchMapping
-    public GiftCertificateBusinessModel updateCertificate(@RequestBody GiftCertificateBusinessModel certificate)
+    public ResponseEntity<GiftCertificateModel> updateCertificate(@RequestBody GiftCertificateModel certificate)
             throws ResourceNotFoundException, InvalidFieldValueException {
-        return giftCertificateService.updateCertificate(certificate);
+        var giftCertificate = giftCertificateService.update(certificate);
+        giftCertificateLinker.addLinkWithTags(giftCertificate);
+        return new ResponseEntity<>(giftCertificate, HttpStatus.OK);
     }
 }

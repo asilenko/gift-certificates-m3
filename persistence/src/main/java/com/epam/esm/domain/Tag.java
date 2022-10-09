@@ -1,27 +1,26 @@
 package com.epam.esm.domain;
 
-import org.springframework.stereotype.Component;
-
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * Model for tag entity.
+ * Model for tag entity. Tag is a category which all gift certificates are grouped by, f.e. "beauty", "sports".
+ * One certificate can have multiple but always globally unique tags.
+ *
+ * @see GiftCertificate
  */
-@Component
-public class Tag {
-    private Long id;
-    private String name;
+@Entity
+@Table(name = "Tags")
+public class Tag extends AuditableEntity implements Serializable {
 
-    public Long getId() {
-        return this.id;
-    }
+    @Column(nullable = false, unique = true, length = 40)
+    private String name;
 
     public String getName() {
         return name;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public void setName(String name) {
@@ -31,7 +30,7 @@ public class Tag {
     @Override
     public String toString() {
         return "Tag{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", name='" + name + '\'' +
                 '}';
     }
@@ -41,7 +40,8 @@ public class Tag {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Tag tag = (Tag) o;
-        return name.equalsIgnoreCase(tag.name);
+        return Objects.equals(getId(), tag.getId())
+                && Objects.equals(name, tag.name);
     }
 
     @Override

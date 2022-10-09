@@ -1,6 +1,6 @@
 package com.epam.esm.model;
 
-import com.epam.esm.service.DataProvider;
+import com.epam.esm.dataprovider.DataProvider;
 import com.epam.esm.domain.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -11,23 +11,23 @@ class TagMapperTest {
     private final DataProvider dataProvider = new DataProvider();
 
     @Test
-    void tagMappedFromTagBusinessModelShouldHaveProperFieldsValues() {
+    void tagMappedFromTagModelShouldHaveProperFieldsValues() {
         //GIVEN
         Tag expected = dataProvider.createTestTag();
-        TagBusinessModel tagBusinessModelToBeMapped = dataProvider.createTestTagBusinessModel();
+        TagModel tagModelToBeMapped = dataProvider.createTagModel();
         //WHEN
-        Tag actual = tagMapper.toTag(tagBusinessModelToBeMapped);
+        Tag actual = tagMapper.toTag(tagModelToBeMapped);
         //THEN
         assertEquals(expected, actual);
     }
 
     @Test
-    void tagBusinessModelMappedFromTagHasProperFieldsValues() {
+    void tagModelMappedFromTagHasProperFieldsValues() {
         //GIVEN
-        TagBusinessModel expected = dataProvider.createTestTagBusinessModel();
+        TagModel expected = dataProvider.createTagModel();
         Tag tagToBeMapped = dataProvider.createTestTag();
         //WHEN
-        TagBusinessModel actual = tagMapper.toTagBusinessModel(tagToBeMapped);
+        TagModel actual = tagMapper.toTagBusinessModel(tagToBeMapped);
         //THEN
         assertEquals(expected, actual);
     }

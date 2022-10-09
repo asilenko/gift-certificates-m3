@@ -1,31 +1,54 @@
 package com.epam.esm.domain;
 
-import org.springframework.stereotype.Component;
-
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
- * Model for gift certificate entity.
+ * Model for gift certificate entity. Gift certificate is associated with tags that describe the category of the gift
+ * certificate. The certificates can be ordered by the user by placing an order. One gift certificate can be purchased
+ * multiple times by different users.
+ *
+ * @see Order
+ * @see Tag
  */
-@Component
-public class GiftCertificate {
-    private Long id;
+@Entity
+@Table(name = "GiftCertificates")
+public class GiftCertificate extends AuditableEntity implements Serializable {
+
+    @Column(nullable = false, length = 40)
     private String name;
+
+    @Column(nullable = false, length = 500)
     private String description;
+
+    @Column(nullable = false)
     private BigDecimal price;
-    private int duration;
+
+    @Column(nullable = false)
+    private Integer duration;
+
+    @Column(name = "create_date", nullable = false)
     private LocalDateTime createDate;
+
+    @Column(name = "last_update_date", nullable = false)
     private LocalDateTime lastUpdateDate;
 
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @ManyToMany
+    @JoinTable(
+            name = "GiftCertificatesTags",
+            joinColumns = @JoinColumn(name = "gift_certificate_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private Set<Tag> tags = new HashSet<>();
 
     public String getName() {
         return name;
@@ -51,11 +74,11 @@ public class GiftCertificate {
         this.price = price;
     }
 
-    public int getDuration() {
+    public Integer getDuration() {
         return duration;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(Integer duration) {
         this.duration = duration;
     }
 
@@ -75,10 +98,18 @@ public class GiftCertificate {
         this.lastUpdateDate = lastUpdateDate;
     }
 
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
+
     @Override
     public String toString() {
         return "GiftCertificate{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
@@ -93,12 +124,16 @@ public class GiftCertificate {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GiftCertificate that = (GiftCertificate) o;
-        return duration == that.duration && Objects.equals(id, that.id) && Objects.equals(name, that.name)
-                && Objects.equals(description, that.description) && Objects.equals(price, that.price);
+        return Objects.equals(getId(), that.getId())
+                && Objects.equals(name, that.name)
+                && Objects.equals(description, that.description)
+                && Objects.equals(price, that.price)
+                && Objects.equals(duration, that.duration)
+                && Objects.equals(tags, that.tags);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(getId());
     }
 }

@@ -14,17 +14,21 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.java.version>11</project.java.version>
-        <maven.compiler.source>${project.java.version}</maven.compiler.source>
-        <maven.compiler.target>${project.java.version}</maven.compiler.target>
+        <java.version>11</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
         <version.assertj>3.23.1</version.assertj>
         <version.h2>2.1.214</version.h2>
         <version.guava>31.1-jre</version.guava>
         <version.hikariCP>5.0.1</version.hikariCP>
-        <version.postgresql>42.4.0</version.postgresql>
+        <version.postgresql>42.4.2</version.postgresql>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
@@ -45,6 +49,7 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>${version.h2}</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -52,9 +57,14 @@
             <version>${version.postgresql}</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-            <version>${version.spring}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-jdbc</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
@@ -72,12 +82,14 @@
             <version>${version.assertj}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+        </dependency>
     </dependencies>
 
-    <build>
-        <pluginManagement>
-            <plugins>
-            </plugins>
-        </pluginManagement>
-    </build>
 </project>

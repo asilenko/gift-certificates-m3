@@ -2,75 +2,63 @@ package com.epam.esm.service;
 
 
 import com.epam.esm.dao.GiftCertificateDAO;
-import com.epam.esm.dao.GiftCertificatesTagsDAO;
-import com.epam.esm.dao.TagDAO;
-import com.epam.esm.dao.jdbc.CertificateSearchCriteria;
-import com.epam.esm.domain.Tag;
+import com.epam.esm.dao.jpa.CertificateSearchCriteria;
 import com.epam.esm.exception.InvalidSortTypeException;
 import com.epam.esm.exception.ResourceNotFoundException;
-import com.epam.esm.model.GiftCertificateBusinessModel;
+import com.epam.esm.model.GiftCertificateModel;
 import com.epam.esm.model.GiftCertificateMapper;
-import com.google.common.collect.Sets;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.epam.esm.pagination.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
  * {@inheritDoc}
  */
 @Service
+@Transactional
 public class GiftCertificateServiceImpl implements GiftCertificateService {
 
-    @Autowired
-    GiftCertificateDAO giftCertificateDAO;
+    private final GiftCertificateDAO giftCertificateDAO;
+    private final TagService tagService;
+    private final GiftCertificateMapper giftCertificateMapper;
 
-    @Autowired
-    TagDAO tagDAO;
-
-    @Autowired
-    GiftCertificatesTagsDAO giftCertificatesTagsDAO;
-
-    @Autowired
-    GiftCertificateMapper giftCertificateMapper;
+    public GiftCertificateServiceImpl(GiftCertificateDAO giftCertificateDAO, TagService tagService,
+                                      GiftCertificateMapper giftCertificateMapper) {
+        this.giftCertificateDAO = giftCertificateDAO;
+        this.tagService = tagService;
+        this.giftCertificateMapper = giftCertificateMapper;
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public GiftCertificateBusinessModel findCertificateById(Long id) throws ResourceNotFoundException {
+    public GiftCertificateModel find(Long id) throws ResourceNotFoundException {
         var giftCertificate = giftCertificateDAO.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No resource with id " + id));
-        Set<Tag> tags = tagDAO.findAllTagsForByGiftCertificateId(id);
-        return giftCertificateMapper.toGiftCertificateBusinessModel(giftCertificate, tags);
+        return giftCertificateMapper.toGiftCertificateBusinessModelWithTags(giftCertificate);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @Transactional
-    public GiftCertificateBusinessModel addNewCertificate(GiftCertificateBusinessModel certificate) {
-        var giftCertificateToCreate = giftCertificateMapper.extractCertificateFromBusinessModel(certificate);
-        Set<Tag> tagsToCreate = giftCertificateMapper.extractTagsFromCertificateBusinessModel(certificate);
+    public GiftCertificateModel create(GiftCertificateModel certificate) {
+        prepareTags(certificate);
+        var giftCertificateToCreate = giftCertificateMapper.toGiftCertificateEntityModel(certificate);
+        giftCertificateToCreate.setId(null);
         var giftCertificateCreated = giftCertificateDAO.create(giftCertificateToCreate);
-        long certificateId = giftCertificateCreated.getId();
-        Set<Tag> tagsCreated = tagsToCreate.stream()
-                .map(tag -> tagDAO.create(tag))
-                .collect(Collectors.toSet());
-        tagsCreated.forEach(tag -> giftCertificatesTagsDAO.createAssociation(certificateId, tag.getId()));
-        return giftCertificateMapper.toGiftCertificateBusinessModel(giftCertificateCreated, tagsCreated);
+        return giftCertificateMapper.toGiftCertificateBusinessModelWithTags(giftCertificateCreated);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void deleteById(Long id) {
+    public void delete(Long id) throws ResourceNotFoundException {
         giftCertificateDAO.delete(id);
     }
 
@@ -78,59 +66,46 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      * {@inheritDoc}
      */
     @Override
-    @Transactional
-    public GiftCertificateBusinessModel updateCertificate(GiftCertificateBusinessModel certificate)
+    public GiftCertificateModel update(GiftCertificateModel certificate)
             throws ResourceNotFoundException, InvalidFieldValueException {
         Long certificateID = certificate.getId();
         if (certificateID == null) {
             throw new InvalidFieldValueException("Certificate ID must be specified for update.");
         }
-        var certificateToUpdate = giftCertificateMapper.extractCertificateFromBusinessModel(certificate);
-        Set<Tag> newTags = giftCertificateMapper.extractTagsFromCertificateBusinessModel(certificate);
-        Set<Tag> oldTags = tagDAO.findAllTagsForByGiftCertificateId(certificateID);
-        var updatedCertificateWithNoTags = giftCertificateDAO.update(certificateToUpdate);
-        associateNewTags(newTags, certificateID, oldTags);
-        breakAssociationsWithRedundantTags(newTags, certificateID, oldTags);
-        Set<Tag> tagsAfterUpdate = tagDAO.findAllTagsForByGiftCertificateId(certificateID);
-        return giftCertificateMapper.toGiftCertificateBusinessModel(updatedCertificateWithNoTags, tagsAfterUpdate);
+        prepareTags(certificate);
+        var certificateToUpdate = giftCertificateMapper.toGiftCertificateEntityModel(certificate);
+        var updatedGCEM = giftCertificateDAO.update(certificateToUpdate);
+        return giftCertificateMapper.toGiftCertificateBusinessModelWithTags(updatedGCEM);
+    }
+
+    private void prepareTags(GiftCertificateModel certificate) {
+        var preparedTags = certificate.getTags()
+                .stream()
+                .map(tagService::create)
+                .collect(Collectors.toSet());
+        certificate.setTags(preparedTags);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @Transactional
-    public List<GiftCertificateBusinessModel> findAllMatching(Optional<CertificateSearchCriteria> searchCriteria)
+    public Page<GiftCertificateModel> findAllMatching(Optional<CertificateSearchCriteria> searchCriteria,
+                                                      Integer pageNumber, Integer pageSize)
             throws InvalidSortTypeException {
-        if (searchCriteria.isEmpty()) {
-            return giftCertificateDAO.findAll()
+        if (searchCriteria.isEmpty() || !searchCriteria.get().hasValues()) {
+            var total = giftCertificateDAO.getTotal();
+            var certificates =  giftCertificateDAO.findAll(pageNumber, pageSize)
                     .stream()
-                    .map(g -> giftCertificateMapper
-                            .toGiftCertificateBusinessModel(g, tagDAO
-                                    .findAllTagsForByGiftCertificateId(g.getId())))
+                    .map(giftCertificateMapper::toGiftCertificateBusinessModelWithTags)
                     .collect(Collectors.toList());
+            return new Page<>(pageNumber, pageSize, total, certificates);
         }
-        return giftCertificateDAO.findAllMatchingPrams(searchCriteria.get())
+        var total = giftCertificateDAO.getTotal(searchCriteria.get());
+        var certificates =  giftCertificateDAO.findAllMatchingPrams(searchCriteria.get(), pageNumber, pageSize)
                 .stream()
-                .map(g -> giftCertificateMapper
-                        .toGiftCertificateBusinessModel(g, tagDAO
-                                .findAllTagsForByGiftCertificateId(g.getId())))
+                .map(giftCertificateMapper::toGiftCertificateBusinessModelWithTags)
                 .collect(Collectors.toList());
-    }
-
-    private void breakAssociationsWithRedundantTags(Set<Tag> newTags, long certificateID, Set<Tag> oldTags) {
-        Set<Tag> tagsToBreakAssociation = Sets.difference(oldTags, newTags);
-        if (!tagsToBreakAssociation.isEmpty()) {
-            tagsToBreakAssociation.forEach(tag -> giftCertificatesTagsDAO.breakAssociation(certificateID, tag.getId()));
-        }
-    }
-
-    private Set<Tag> associateNewTags(Set<Tag> newTags, long certificateID, Set<Tag> oldTags) {
-        Set<Tag> tagsToAssociate = Sets.difference(newTags, oldTags);
-        if (!tagsToAssociate.isEmpty()) {
-            tagsToAssociate.forEach(tag -> tagDAO.create(tag));
-            tagsToAssociate.forEach(tag -> giftCertificatesTagsDAO.createAssociation(certificateID, tag.getId()));
-        }
-        return tagsToAssociate;
+        return new Page<>(pageNumber, pageSize, total, certificates);
     }
 }

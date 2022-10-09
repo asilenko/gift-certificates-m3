@@ -4,41 +4,41 @@ import com.epam.esm.domain.Tag;
 import org.springframework.stereotype.Component;
 
 /**
- * Maps Tag from persistence layer to TagBusinessModel and vice versa.
+ * Maps Tag from persistence layer to TagModel and vice versa.
  *
  * @see com.epam.esm.domain.Tag
- * @see TagBusinessModel
+ * @see TagModel
  */
 @Component
 public class TagMapper {
 
     /**
-     * Maps TagBusinessModel to Tag.
+     * Maps TagModel to Tag.
      *
-     * @param tagBusinessModel
+     * @param tagModel
      * @return Tag
      * @see Tag
-     * @see TagBusinessModel
+     * @see TagModel
      */
-    public Tag toTag(TagBusinessModel tagBusinessModel) {
+    public Tag toTag(TagModel tagModel) {
         Tag tag = new Tag();
-        tag.setName(tagBusinessModel.getName());
-        tag.setId(tagBusinessModel.getId());
+        tag.setName(tagModel.getName().toLowerCase());
+        tag.setId(tagModel.getId());
         return tag;
     }
 
     /**
-     * Maps Tag to TagBusinessModel.
+     * Maps Tag to TagModel.
      *
      * @param tag
-     * @return TagBusinessModel
+     * @return TagModel
      * @see Tag
-     * @see TagBusinessModel
+     * @see TagModel
      */
-    public TagBusinessModel toTagBusinessModel(Tag tag) {
-        TagBusinessModel tagBusinessModel = new TagBusinessModel();
-        tagBusinessModel.setName(tag.getName());
-        tagBusinessModel.setId(tag.getId());
-        return tagBusinessModel;
+    public TagModel toTagBusinessModel(Tag tag) {
+        TagModel tagModel = new TagModel();
+        tagModel.setName(tag.getName());
+        tagModel.setId(tag.getId());
+        return tagModel;
     }
 }

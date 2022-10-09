@@ -24,7 +24,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
      */
     @ExceptionHandler({ResourceNotFoundException.class})
     public ResponseEntity<ErrorResponseBody> handleResourceNotFoundException(final ResourceNotFoundException ex) {
-        ErrorResponseBody erb = new ErrorResponseBody(ex.getMessage(), ErrorCodes.ID_NOT_FOUND.toString());
+        ErrorResponseBody erb = new ErrorResponseBody(ex.getMessage(), ErrorCodes.ID_NOT_FOUND.getCode());
         return new ResponseEntity<>(erb, HttpStatus.NOT_FOUND);
     }
 
@@ -37,7 +37,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
      */
     @ExceptionHandler({InvalidFieldValueException.class})
     public ResponseEntity<ErrorResponseBody> handleInvalidFieldValueException(final InvalidFieldValueException ex) {
-        ErrorResponseBody erb = new ErrorResponseBody(ex.getMessage(), ErrorCodes.INVALID_FIELD.toString());
+        ErrorResponseBody erb = new ErrorResponseBody(ex.getMessage(), ErrorCodes.INVALID_FIELD.getCode());
         return new ResponseEntity<>(erb, HttpStatus.BAD_REQUEST);
     }
 
@@ -49,8 +49,8 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
      * @see InvalidSortTypeException
      */
     @ExceptionHandler({InvalidSortTypeException.class})
-    public ResponseEntity<ErrorResponseBody> handleInvalidFieldValueException(final InvalidSortTypeException ex) {
-        ErrorResponseBody erb = new ErrorResponseBody(ex.getMessage(), ErrorCodes.INVALID_SORT_VALUE.toString());
+    public ResponseEntity<ErrorResponseBody> handleInvalidSortValueException(final InvalidSortTypeException ex) {
+        ErrorResponseBody erb = new ErrorResponseBody(ex.getMessage(), ErrorCodes.INVALID_SORT_VALUE.getCode());
         return new ResponseEntity<>(erb, HttpStatus.BAD_REQUEST);
     }
 }

@@ -1,18 +1,20 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.service.TagService;
 import com.epam.esm.exception.ResourceNotFoundException;
-import com.epam.esm.model.TagBusinessModel;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.epam.esm.hateoas.TagLinker;
+import com.epam.esm.model.TagModel;
+import com.epam.esm.service.TagService;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Set;
 
 /**
  * Process requests for Tag resources.
@@ -21,36 +23,53 @@ import java.util.Set;
 @RequestMapping("/tags")
 public class TagController {
 
-    @Autowired
-    private TagService tagservice;
+    private final TagService tagService;
+    private final TagLinker tagLinker;
+
+    public TagController(TagService tagservice, TagLinker tagLinker) {
+        this.tagService = tagservice;
+        this.tagLinker = tagLinker;
+    }
 
     /**
      * Get tag resource by specified id.
      *
      * @param id
-     * @return TagBusinessModel
+     * @return TagModel
      */
     @GetMapping("/{id}")
-    public TagBusinessModel getTagByID(@PathVariable Long id) throws ResourceNotFoundException {
-        return tagservice.getTagById(id);
+    public ResponseEntity<TagModel> getByID(@PathVariable Long id) throws ResourceNotFoundException {
+        var tag = tagService.find(id);
+        tagLinker.addLink(tag);
+        return new ResponseEntity<>(tag, HttpStatus.OK);
     }
 
     /**
      * Gets all tags.
      *
-     * @return List of TagBusinessModel
+     * @return List of TagModel
+     *
+     * Request example:
+     * <pre>
+     * GET /tags/?pageNumber=2&pageSize=10 HTTP/1.1
+     * </pre>
      */
     @GetMapping
-    public Set<TagBusinessModel> getAllTags() {
-        return tagservice.getAll();
+    public ResponseEntity<CollectionModel<TagModel>> getAll(
+            @RequestParam(defaultValue = "1") Integer pageNumber,
+            @RequestParam(defaultValue = "20") Integer pageSize
+    ) {
+        var page = tagService.findAll(pageNumber, pageSize);
+        CollectionModel<TagModel> collectionModel = tagLinker.addLinks(page);
+        return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
 
     /**
      * Creates new Tag resource.
      *
      * @param tag
-     * @return TagBusinessModel
-     *
+     * @return TagModel
+     * <p>
      * Request example:
      * <pre>
      * POST /api/tags/ HTTP/1.1
@@ -64,8 +83,10 @@ public class TagController {
      * </pre>
      */
     @PostMapping
-    public TagBusinessModel addNewTag(@RequestBody TagBusinessModel tag) {
-        return tagservice.addNewTag(tag);
+    public ResponseEntity<TagModel> create(@RequestBody TagModel tag) {
+        var createdTag = tagService.create(tag);
+        tagLinker.addLink(createdTag);
+        return new ResponseEntity<>(createdTag, HttpStatus.CREATED);
     }
 
     /**
@@ -74,7 +95,20 @@ public class TagController {
      * @param id
      */
     @DeleteMapping("/{id}")
-    public void deleteTagById(@PathVariable Long id) {
-        tagservice.removeTag(id);
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) throws ResourceNotFoundException {
+        tagService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    /**
+     * Get the most widely used tag of a user with the highest cost of all orders.
+     *
+     * @return TagModel
+     */
+    @GetMapping("/most_used")
+    public ResponseEntity<TagModel> getMostWidelyUsed() {
+        var tag = tagService.mostWidelyUsed();
+        tagLinker.addLink(tag);
+        return new ResponseEntity<>(tag, HttpStatus.OK);
     }
 }
